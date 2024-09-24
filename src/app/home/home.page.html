@@ -1,0 +1,35 @@
+<ion-content [fullscreen]="true">
+  <ion-menu contentId="menu">
+    <ion-header>
+      <ion-toolbar>
+        <ion-title>Contenido</ion-title>
+      </ion-toolbar>
+    </ion-header>
+    <ion-content>
+      <ion-menu-toggle>   <!--para que se cierre el menu al clicar-->
+        <ion-list>
+          <ion-item routerLink="/login">Login</ion-item>
+          <ion-item>Usuarios</ion-item>
+          <ion-item>Menu 3</ion-item>
+          <ion-item>Menu 4</ion-item>
+          <ion-item>Menu 5</ion-item>
+          <ion-item>Menu 6</ion-item>
+        </ion-list>
+      </ion-menu-toggle>
+    </ion-content>
+  </ion-menu> 
+
+  <div class="ion-page" id="menu">
+    <ion-header>
+      <ion-toolbar>
+        <ion-buttons slot="start">
+        <ion-menu-button color="primary" name="menu"></ion-menu-button> 
+        </ion-buttons>
+        <ion-title>Menu</ion-title>
+      </ion-toolbar>
+    </ion-header>
+    <ion-content class="ion-padding"> Clica en el lateral para abrir el menu. </ion-content>
+  </div>
+</ion-content>
+
+

@@ -1,0 +1,77 @@
+.custom-font {
+    font-family: 'Josefin Sans', sans-serif;
+}
+
+ion-toolbar {
+    --background: linear-gradient(135deg, #062eae, #a569ef);
+    position: relative;
+}
+
+ion-title {
+    padding: 20px 0 46px 0;
+    font-weight: 900;
+    text-align: center;
+    color: #fff;
+}
+
+.back-circle {
+    z-index: -1;
+    width: 200px;
+    height: 200px;
+    background: #249cf2;
+    position: absolute;
+    border-radius: 50%;
+    margin-left: auto;
+    margin-right: auto;
+    left: 0;
+    right: 0;
+    bottom: -100px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+ion-content {
+    --background: #f7f9fc;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}
+
+ion-card {
+    width: 90%;
+    max-width: 400px;
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    background: #fff;
+}
+
+ion-item {
+    --border-radius: 10px;
+    margin-bottom: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+}
+
+ion-label {
+    font-size: 1rem;
+    color: #333;
+}
+
+ion-input {
+    font-size: 1rem;
+}
+
+ion-icon {
+    cursor: pointer;
+    color: #249cf2;
+}
+
+ion-button {
+    --border-radius: 10px;
+    --box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    margin-top: 15px;
+}
+
+.ion-text-center {
+    color: #fff;
+}
