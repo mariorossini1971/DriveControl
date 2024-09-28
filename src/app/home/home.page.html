@@ -6,7 +6,7 @@
       </ion-toolbar>
     </ion-header>
     <ion-content>
-      <ion-menu-toggle>   <!--para que se cierre el menu al clicar-->
+      <ion-menu-toggle>
         <ion-list>
           <ion-item routerLink="/login">Login</ion-item>
           <ion-item>Usuarios</ion-item>
@@ -23,12 +23,41 @@
     <ion-header>
       <ion-toolbar>
         <ion-buttons slot="start">
-        <ion-menu-button color="primary" name="menu"></ion-menu-button> 
+          <ion-menu-button color="primary" name="menu"></ion-menu-button>
         </ion-buttons>
         <ion-title>Menu</ion-title>
       </ion-toolbar>
     </ion-header>
-    <ion-content class="ion-padding"> Clica en el lateral para abrir el menu. </ion-content>
+
+    <ion-content class="ion-padding">
+      <p>Clica en el lateral para abrir el menu.</p>
+
+      <!-- Botón para capturar la fecha y hora actual  -->
+
+      <ion-button expand = "full" (click)="capturarFechaHora()">{{ esInicio ? 'INICIO' : 'FINAL' }}</ion-button>
+      <ion-button expand = "full" (click)="guardarStore()">GUARDAR</ion-button>
+
+
+      <!-- Mostrar la fecha y hora Inicio -->
+      <ion-card *ngIf="fechaHoraInicio">
+        <ion-card-header>
+          <ion-card-title>INICIO</ion-card-title>
+        </ion-card-header>
+        <ion-card-content>
+          {{ fechaHoraInicio }}
+        </ion-card-content>
+      </ion-card>
+
+      <!-- Mostrar la fecha y hora Final -->
+      <ion-card *ngIf="fechaHoraFinal">
+        <ion-card-header>
+          <ion-card-title>FINAL</ion-card-title>
+        </ion-card-header>
+        <ion-card-content>
+          {{ fechaHoraFinal }}
+        </ion-card-content>
+      </ion-card>
+    </ion-content>
   </div>
 </ion-content>
 
