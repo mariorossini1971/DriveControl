@@ -1,23 +1,4 @@
 <ion-content [fullscreen]="true">
-  <ion-menu contentId="menu">
-    <ion-header>
-      <ion-toolbar>
-        <ion-title>Contenido</ion-title>
-      </ion-toolbar>
-    </ion-header>
-    <ion-content>
-      <ion-menu-toggle>
-        <ion-list>
-          <ion-item routerLink="/login">Login</ion-item>
-          <ion-item>Usuarios</ion-item>
-          <ion-item>Menu 3</ion-item>
-          <ion-item>Menu 4</ion-item>
-          <ion-item>Menu 5</ion-item>
-          <ion-item>Menu 6</ion-item>
-        </ion-list>
-      </ion-menu-toggle>
-    </ion-content>
-  </ion-menu> 
 
   <div class="ion-page" id="menu">
     <ion-header>
@@ -57,6 +38,19 @@
           {{ fechaHoraFinal }}
         </ion-card-content>
       </ion-card>
+
+   <!--  <ion-card *ngIf="!esInicio">-->   <!-- Mostrar el temporizador solo cuando está en marcha -->
+        <ion-card> 
+        <ion-card-header>
+          <ion-card-title>Tiempo Transcurrido</ion-card-title>
+        </ion-card-header>
+        <ion-card-content>
+        <h2> {{ minuto | number:'2.0-0' }} : {{ segundo | number:'2.0-0' }} </h2>  <!-- Mostramos el tiempo transcurrido en segundos -->
+    
+      </ion-card-content>
+      </ion-card>
+
+
     </ion-content>
   </div>
 </ion-content>

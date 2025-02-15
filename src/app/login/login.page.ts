@@ -26,7 +26,7 @@ ngOnInit() {
 }
 
   public login(){
-  let tempEmail = this.email;  // Variable temporal para guardar el email
+  let tempEmail = this.email+"@gmail.com";  // Variable temporal para guardar el email
   let tempPassword = this.password;
     this.fireAuth.signInWithEmailAndPassword(tempEmail, tempPassword)
     .then(res =>{
@@ -90,7 +90,7 @@ ngOnInit() {
     })
   }
 
-  public userName(email: string): string {
+  public userName(email: string): string {               ///////  CONTROLAR, porque si uso solo el nombre no me hace falta
     const name = email.indexOf('@');
     if (name !== -1) {
       return email.substring(0, name);

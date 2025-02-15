@@ -12,6 +12,14 @@ export class HomePage implements OnInit {
   fechaHoraInicio: string | null = null;
   fechaHoraFinal: string | null = null;
   esInicio: boolean = true;
+  tiempoTranscurrido: number = 0;  // Guardar el tiempo transcurrido en segundos
+  interval: any;  // Controla el intervalo del temporizador
+  minuto: number = 0;
+  segundo: number = 0;
+  hora: number = 0;
+
+  tiempoFormateado: string = '0 segundos';  // Inicializar el formato
+
   documentCount: number = 0; // Variable para contar los documentos
   toDoList: any[] = [];
   newItem = {
@@ -39,9 +47,11 @@ export class HomePage implements OnInit {
     if (this.esInicio) {
       // Si es "INICIO", captura la fecha de inicio
       this.fechaHoraInicio = ahora;
+      this.iniciarTemporizador();  // Iniciar el temporizador
     } else {
       // Si es "FINAL", captura la fecha de final
       this.fechaHoraFinal = ahora;
+      this.detenerTemporizador();  // Detener el temporizador
       this.guardarStore();
     }
 
@@ -86,7 +96,20 @@ export class HomePage implements OnInit {
     console.log('Número de documentos en "trayecto":', this.documentCount);
   }
 
-
+  iniciarTemporizador() {
+    this.segundo = 0;  // Reiniciar el contador de tiempo
+    this.interval = setInterval(() => {
+      this.segundo++;
+      if (this.segundo == 60){
+        this.minuto ++;
+        this.segundo = 0;
+      }
+    }, 1000);  // Aumenta el tiempo cada segundo
+  }
+    
+  detenerTemporizador() {
+    clearInterval(this.interval);  // Detener el intervalo
+  }
 
 
 }
