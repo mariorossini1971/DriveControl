@@ -11,6 +11,18 @@ const routes: Routes = [
     redirectTo: 'login',
     pathMatch: 'full'
   },
+ {
+    path: 'vehiculos',
+    loadChildren: () => import('./vehiculos/vehiculos.module').then(m => m.VehiculosModule)
+  },
+  {
+    path: 'usuarios',
+    loadChildren: () => import('./usuarios/usuarios.module').then(m => m.UsuariosModule)
+  },
+  {
+    path: 'viajes',
+    loadChildren: () => import('./viajes/viajes.module').then(m => m.ViajesModule)
+  },
   {
     path: 'login',
     loadChildren: () => import('./login/login.module').then( m => m.LoginPageModule)

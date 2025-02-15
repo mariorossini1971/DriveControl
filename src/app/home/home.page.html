@@ -7,18 +7,33 @@
           <ion-menu-button color="primary" name="menu"></ion-menu-button>
         </ion-buttons>
         <ion-title>Menu</ion-title>
+        <ion-buttons slot="end">
+          <ion-back-button defaultHref="/informe" icon="return-down-back-outline"></ion-back-button>
+        </ion-buttons>
       </ion-toolbar>
     </ion-header>
 
+
+
+    <ion-item>
+      <ion-label>Selecciona un modelo</ion-label>
+      <ion-select [(ngModel)]="modeloSeleccionado" (ionChange)="calculaIdVehiculo()">
+        <ion-select-option *ngFor="let vehiculo of vehiculos" [value]="vehiculo.id">
+          {{ vehiculo.modelo }}
+        </ion-select-option>
+      </ion-select>
+    </ion-item>
+    
+  <!-- <p>id del Modelo seleccionado: {{ idCocheSeleccionado }}</p>  --> 
+
     <ion-content class="ion-padding">
-      <p>Clica en el lateral para abrir el menu.</p>
 
-      <!-- Botón para capturar la fecha y hora actual  -->
+      <!-- Botón para capturar la fecha y hora actual. Si es Inicio aparece INICIO, si no FINAL  -->
 
-      <ion-button expand = "full" (click)="capturarFechaHora()">{{ esInicio ? 'INICIO' : 'FINAL' }}</ion-button>
-      <ion-button expand = "full" (click)="guardarStore()">GUARDAR</ion-button>
-
-
+      <ion-button *ngIf = "!mostrarGuardar" expand = "full" (click)="capturarFechaHora()">{{ esInicio ? 'INICIO' : 'FINAL' }}</ion-button>
+    <!--  <ion-button *ngIf = "mostrarGuardar" expand = "full" (click)="guardarStore()">GUARDAR</ion-button> -->
+      <span *ngIf="mostrarGuardar && guardarStore()"></span>
+      <p *ngIf="mensaje">{{ mensaje }}</p>
       <!-- Mostrar la fecha y hora Inicio -->
       <ion-card *ngIf="fechaHoraInicio">
         <ion-card-header>
@@ -54,5 +69,4 @@
     </ion-content>
   </div>
 </ion-content>
-
 

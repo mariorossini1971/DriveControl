@@ -16,6 +16,7 @@ export class LoginPage implements OnInit {
   public email = '';
   public password = '';
 
+
   constructor(public fireAuth: AngularFireAuth, public router: Router, public alertController: AlertController) { }
 
   public username: string = '';
