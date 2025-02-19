@@ -16,5 +16,9 @@ export class ViajesComponent  implements OnInit {
       this.viajes = data;
     });
   }
+          // para que se ejecute cada vez que se vuelve a la pagina
+          ngOnChanges() {
+            this.apiService.getViajes();
+          }
 
 }

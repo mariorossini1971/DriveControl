@@ -1,25 +1,43 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <div class="back-circle"></div>
-    <ion-title class="ion-text-center custom-font">LOGIN</ion-title>
-  </ion-toolbar>
-</ion-header>
-
 <ion-content>
-  <ion-card>
-    <form>
-      <ion-item>
-        <ion-label position="floating">Nombre</ion-label>
-        <ion-input [(ngModel)]="email" name="email"></ion-input>
-        <ion-icon class="ion-align-self-center" slot="end" name="mail" color="primary"></ion-icon>
-      </ion-item>
-      <ion-item>
-        <ion-label position="floating">Password</ion-label>
-        <ion-input [(ngModel)]="password" name="password" [type]="showPassword ? 'text' : 'password'"></ion-input>
-        <ion-icon class="ion-align-self-center" slot="end" [name]="passwordIcono" (click)="muestraPassword()" color="primary"></ion-icon>
-      </ion-item>
-    </form>
-    <ion-button expand="block" (click)="login()" color="secondary">Login</ion-button>
-    <!--<ion-button expand="block" (click)="signup(email, password)" color="medium">Create new account</ion-button>-->
-  </ion-card>
+
+  <ion-header>
+    <ion-toolbar>
+      <ion-title>Drive Control</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+
+  <div class="card-container">
+    <ion-card>
+      <ion-row>
+        <ion-col size-md="3" size="12" class="ion-padding ion-white-bkg">
+          <img src="assets/images/Logo_ProyectoFinal.png" class="responsive-img" alt="DriveControl logo" loading="lazy" />
+
+<!-- loading="lazy" para que la imagen se descargue cuando ya esté lista, mejora rendimiento -->
+        </ion-col>
+        <ion-col size-md="9" size="12">
+          <ion-card-header>
+            <ion-card-title  class="welcome"> Bienvenido a DriveControl </ion-card-title>
+          </ion-card-header>
+
+          <ion-card-content>
+            <form>
+              <ion-item>
+                <ion-label position="floating">Nombre</ion-label>
+                <ion-input [(ngModel)]="email" name="email"></ion-input>
+                <ion-icon class="ion-align-self-center" slot="end" name="mail-outline" color="primary"></ion-icon>
+              </ion-item>
+              <ion-item>
+                <ion-label position="floating">Password</ion-label>
+                <ion-input [(ngModel)]="password" name="password" [type]="showPassword ? 'text' : 'password'"></ion-input>
+                <ion-icon class="ion-align-self-center" slot="end" [name]="passwordIcono" (click)="muestraPassword()" color="primary"></ion-icon> 
+              </ion-item>
+          </form>
+            <!--  <ion-button (click)="login()" shape="round" color="primary"> Sign in </ion-button> -->
+            <ion-button expand="block" (click)="login()"  color="secondary">Login</ion-button>
+          </ion-card-content>
+        </ion-col>
+      </ion-row>
+    </ion-card>
+  </div>
 </ion-content>

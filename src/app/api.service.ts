@@ -42,7 +42,5 @@ export class ApiService {
   createViaje(viaje: any): Observable<any> {
     return this.http.post<any>(`${apiUrl}/viajes`, viaje);
   }
-
-  // Métodos para Vehiculos y Viajes pueden ser añadidos de manera similar.
 }
 
