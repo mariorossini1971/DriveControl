@@ -1,7 +1,8 @@
-import { Component, OnInit, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, OnInit, OnChanges, SimpleChanges, OnDestroy } from '@angular/core';
 import { ApiService } from '../api.service';
 import { RouterLink } from '@angular/router';
 import { Route, Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 
 
 @Component({
@@ -9,17 +10,24 @@ import { Route, Router } from '@angular/router';
   templateUrl: './vehiculos.component.html',
   styleUrls: ['./vehiculos.component.scss']
 })
-export class VehiculosComponent implements OnInit,OnChanges {
+
+export class VehiculosComponent implements OnDestroy {
   vehiculos: any[] = [];
   modeloSeleccionado: string = "";
+
+ // modeloSeleccionado$ = Subscription;
   vehiculoSeleccionado: any = null;
   idVehiculo: number = 0;
+  //idSeleccionado$ = Subscription;
 
   constructor(private apiService: ApiService,  public router: Router) { }
 
    ngOnInit() {
     /*this.apiService.getVehiculos().subscribe((data: any[]) => {
       this.vehiculos = data;
+    });*/
+  /*  this.apiService.modeloSeleccionado.subscribe(modelo => {
+      this.modeloSeleccionado = modelo;
     });*/
     this.cargarDatosVehiculos();
   }
@@ -47,14 +55,25 @@ export class VehiculosComponent implements OnInit,OnChanges {
         if (this.vehiculoSeleccionado) {
             this.modeloSeleccionado = this.vehiculoSeleccionado.modelo;
             this.idVehiculo = this.vehiculoSeleccionado.id_vehiculo;
-            this.apiService.idCoche = this.idVehiculo;
-            console.log("Modelo guardado:", this.modeloSeleccionado);
-            console.log("id guardado:", this.idVehiculo);
+
             this.apiService.idCoche = this.idVehiculo;     //guardo en la variable "comun"
-            this.router.navigate(['/home/']);
+           
+            this.apiService.setModeloSeleccionado(this.modeloSeleccionado);
+            this.apiService.setIdCoche(this.idVehiculo);
+            //this.apiService.modeloSeleccionado = this.modeloSeleccionado;
+         //   console.log("Modelo guardado:", this.apiService.modeloSeleccionado);
+            console.log("id guardado:", this.apiService.idCoche);
+            this.cambiaPagina();
+
         } else {
             console.log("No hay vehículo seleccionado.");
         }
+      }
+      cambiaPagina(){
+        this.router.navigate(['/home']);
+      }
+      ngOnDestroy(): void {
+          
       }
 
 }

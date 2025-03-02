@@ -13,8 +13,7 @@
       </ion-toolbar>
     </ion-header>
 
-
-
+<!--
     <ion-item>
       <ion-label>Selecciona un modelo</ion-label>
       <ion-select [(ngModel)]="modeloSeleccionado" (ionChange)="calculaIdVehiculo()">
@@ -23,6 +22,12 @@
         </ion-select-option>
       </ion-select>
     </ion-item>
+    -->
+    <ion-item>
+      <ion-button (click)="cambiaPagina()">Cambia Vehiculo </ion-button>
+      <ion-input [value]="modeloSeleccionado"></ion-input>
+    </ion-item>
+
     
   <!-- <p>id del Modelo seleccionado: {{ idCocheSeleccionado }}</p>  --> 
 

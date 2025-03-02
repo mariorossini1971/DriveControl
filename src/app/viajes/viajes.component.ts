@@ -15,6 +15,7 @@ export class ViajesComponent  implements OnInit {
     this.apiService.getViajes().subscribe((data: any[]) => {
       this.viajes = data;
     });
+    console.log(this.viajes);
   }
           // para que se ejecute cada vez que se vuelve a la pagina
           ngOnChanges() {
