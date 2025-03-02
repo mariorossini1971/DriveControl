@@ -25,7 +25,7 @@ export class HomePage implements OnDestroy {
   vehiculos: any[] = [];
   modeloSeleccionado: any;
 
-  // modeloSeleccionado$ = Subscription;
+
 
   modeloSeleccionado$: Subscription = new Subscription();
   idCocheSeleccionado: number = 0;
@@ -74,12 +74,7 @@ export class HomePage implements OnDestroy {
   }
 
   ngOnInit() {
-    /*   this.apiService.modeloSeleccionado.subscribe(modelo => {
-      this.modeloSeleccionado = modelo;
-    });*/
 
-    // this.modeloSeleccionado = this.apiService.modeloSeleccionado;
-    // solo para control luego lo borro
     console.log('primero miro el coche: ' + this.modeloSeleccionado);
     this.cargarDatosVehiculos();
   }
@@ -90,17 +85,20 @@ export class HomePage implements OnDestroy {
   }
 
   capturarFechaHora() {
-    // const ahora = new Date().toLocaleString(); // Obtiene la fecha y hora actual en formato legible
-    const ahora = new Date().toISOString().split('.')[0] + 'Z'; // mismo formato que la BBDD
-    if (this.esInicio) {
+
+    const fecha = new Date();
+    const tiempo = new Date(fecha.getTime() - fecha.getTimezoneOffset() * 60000).toISOString().split('.')[0] + 'Z';  // mismo formato que la BBDD
+   
+
+  
+  if (this.esInicio) {
       // Si es "INICIO", captura la fecha de inicio
-      this.fechaHoraInicio = ahora;
+      this.fechaHoraInicio = tiempo;
       this.iniciarTemporizador(); // Iniciar el temporizador
     } else {
       // Si es "FINAL", captura la fecha de final
-      this.fechaHoraFinal = ahora;
+      this.fechaHoraFinal = tiempo;
       this.detenerTemporizador(); // Detener el temporizador
-      //     this.guardarStore();     solo para hacer pruebas, luego hay que borrarlo ********************************
       this.mostrarGuardar = true;
     }
     // Cambiar el estado del botón de INICIO a FINAL y viceversa
@@ -119,7 +117,6 @@ export class HomePage implements OnDestroy {
     this.mostrarGuardar = !this.mostrarGuardar;
 
     let viaje = {
-      id: this.documentCount + 1,
       id_usuario: 3,
       id_vehiculo: this.idCocheSeleccionado,
       fecha_inicio: this.fechaHoraInicio || 'No definido',
@@ -132,9 +129,6 @@ export class HomePage implements OnDestroy {
     this.apiService.createViaje(viaje).subscribe(
       (response) => {
         console.log('Datos guardados exitosamente en la API');
-        // Actualiza el tamaño en history.state para el próximo ID
-        history.state.size = viaje.id; // Actualiza el ID más grande
-        history.replaceState(history.state, ''); // Reemplaza el estado actual
         this.reiniciarEstado();
       },
       (error) => {
