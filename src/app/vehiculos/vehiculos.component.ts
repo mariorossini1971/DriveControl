@@ -56,8 +56,6 @@ export class VehiculosComponent implements OnDestroy {
             this.modeloSeleccionado = this.vehiculoSeleccionado.modelo;
             this.idVehiculo = this.vehiculoSeleccionado.id_vehiculo;
 
-            this.apiService.idCoche = this.idVehiculo;     //guardo en la variable "comun"
-           
             this.apiService.setModeloSeleccionado(this.modeloSeleccionado);
             this.apiService.setIdCoche(this.idVehiculo);
             //this.apiService.modeloSeleccionado = this.modeloSeleccionado;
