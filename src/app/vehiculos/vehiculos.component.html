@@ -1,17 +1,18 @@
 
-<ion-content [fullscreen]="true">
+<ion-content [fullscreen]="true" class="ion-padding">
 
   <ion-header>
     <ion-toolbar>
       <ion-buttons slot="start">
         <ion-menu-button color="primary" name="menu"></ion-menu-button>
       </ion-buttons>
-      <ion-title>Vehiculos Disponibles</ion-title>
+      <ion-title>Vehículos</ion-title>
       <ion-buttons slot="end">
         <ion-back-button defaultHref="/home" icon="return-down-back-outline"></ion-back-button>
       </ion-buttons>
     </ion-toolbar>
   </ion-header>
+
 
     <ion-content>
       <ion-list>
@@ -29,6 +30,6 @@
         </ion-checkbox>
         </ion-item>
       </ion-list>
-      <ion-button expand="block" (click)="guardarModelo()">Guardar Vehículo Seleccionado</ion-button>
+      <ion-button expand="full" (click)="guardarModelo()">Guardar</ion-button>
     </ion-content>
 </ion-content>

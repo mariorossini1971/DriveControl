@@ -1,77 +1,113 @@
-<ion-content [fullscreen]="true">
+<ion-content class="ion-padding">
+  <ion-header>
+    <ion-toolbar>
+      <ion-buttons slot="start">
+        <ion-menu-button color="primary" name="menu"></ion-menu-button>
+      </ion-buttons>
+      <ion-title>Menu</ion-title>
+      <ion-buttons slot="end">
+        <ion-back-button defaultHref="/informe" icon="return-down-back-outline"></ion-back-button>
+      </ion-buttons>
+    </ion-toolbar>
+  </ion-header>
 
-  <div class="ion-page" id="menu">
-    <ion-header>
-      <ion-toolbar>
-        <ion-buttons slot="start">
-          <ion-menu-button color="primary" name="menu"></ion-menu-button>
-        </ion-buttons>
-        <ion-title>Menu</ion-title>
-        <ion-buttons slot="end">
-          <ion-back-button defaultHref="/informe" icon="return-down-back-outline"></ion-back-button>
-        </ion-buttons>
-      </ion-toolbar>
-    </ion-header>
+  <div class="container">
+    <!-- Selección de Vehículo -->
+    <div class="vehiculo-container">
+      <ion-button expand="full" class="boton" (click)="cambiaPagina()">
+        Selecciona Vehículo
+      </ion-button>
 
-<!--
-    <ion-item>
-      <ion-label>Selecciona un modelo</ion-label>
-      <ion-select [(ngModel)]="modeloSeleccionado" (ionChange)="calculaIdVehiculo()">
-        <ion-select-option *ngFor="let vehiculo of vehiculos" [value]="vehiculo.id">
-          {{ vehiculo.modelo }}
-        </ion-select-option>
-      </ion-select>
-    </ion-item>
-    -->
-    <ion-item>
-      <ion-button (click)="cambiaPagina()">Cambia Vehiculo </ion-button>
-      <ion-input [value]="modeloSeleccionado"></ion-input>
-    </ion-item>
+      <ion-item class="vehiculo-input">
+          <!--  <ion-label position="floating">Vehículo seleccionado:</ion-label>-->
+        <ion-input [value]="modeloSeleccionado" readonly></ion-input>
+      </ion-item>
+    </div>
 
-    
-  <!-- <p>id del Modelo seleccionado: {{ idCocheSeleccionado }}</p>  --> 
+    <!-- Cronómetro -->
+    <div class="cronometro-container">
+      <h1 class="cronometro">
+        {{ hora | number:'2.0' }}:{{ minuto | number:'2.0' }}:{{ segundo | number:'2.0' }}
+      </h1>
+    </div>
 
-    <ion-content class="ion-padding">
+    <!-- Botones de acción -->
+    <div class="botones">
+      <ion-button expand="full" class="boton" (click)="capturarFechaHora()">
+        {{ esInicio ? 'Iniciar' : 'Finalizar' }}
+      </ion-button>
 
-      <!-- Botón para capturar la fecha y hora actual. Si es Inicio aparece INICIO, si no FINAL  -->
+      <ion-button expand="full" class="boton" (click)="reiniciarEstado(); mostrarGuardar = false">
+        Reiniciar
+      </ion-button>
 
-      <ion-button *ngIf = "!mostrarGuardar" expand = "full" (click)="capturarFechaHora()">{{ esInicio ? 'INICIO' : 'FINAL' }}</ion-button>
-    <!--  <ion-button *ngIf = "mostrarGuardar" expand = "full" (click)="guardarStore()">GUARDAR</ion-button> -->
-      <span *ngIf="mostrarGuardar && guardarStore()"></span>
-      <p *ngIf="mensaje">{{ mensaje }}</p>
-      <!-- Mostrar la fecha y hora Inicio -->
-      <ion-card *ngIf="fechaHoraInicio">
-        <ion-card-header>
-          <ion-card-title>INICIO</ion-card-title>
-        </ion-card-header>
-        <ion-card-content>
-          {{ fechaHoraInicio }}
-        </ion-card-content>
-      </ion-card>
+      <ion-button *ngIf="mostrarGuardar" expand="full" class="boton" (click)="guardarStore()">
+        Guardar Datos
+      </ion-button>
+    </div>
 
-      <!-- Mostrar la fecha y hora Final -->
-      <ion-card *ngIf="fechaHoraFinal">
-        <ion-card-header>
-          <ion-card-title>FINAL</ion-card-title>
-        </ion-card-header>
-        <ion-card-content>
-          {{ fechaHoraFinal }}
-        </ion-card-content>
-      </ion-card>
-
-   <!--  <ion-card *ngIf="!esInicio">-->   <!-- Mostrar el temporizador solo cuando está en marcha -->
-        <ion-card> 
-        <ion-card-header>
-          <ion-card-title>Tiempo Transcurrido</ion-card-title>
-        </ion-card-header>
-        <ion-card-content>
-        <h2> {{ minuto | number:'2.0-0' }} : {{ segundo | number:'2.0-0' }} </h2>  <!-- Mostramos el tiempo transcurrido en segundos -->
-    
-      </ion-card-content>
-      </ion-card>
-
-
-    </ion-content>
+    <p *ngIf="mensaje" class="mensaje">{{ mensaje }}</p>
   </div>
 </ion-content>
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!--
+<ion-content class="ion-padding">
+    <ion-header>
+      <ion-toolbar>
+            <ion-buttons slot="start">
+                <ion-menu-button color="primary" name="menu"></ion-menu-button>
+            </ion-buttons>
+            <ion-title>Menu</ion-title>
+            <ion-buttons slot="end">
+              <ion-back-button defaultHref="/informe" icon="return-down-back-outline"></ion-back-button>
+            </ion-buttons>
+      </ion-toolbar>
+    </ion-header>
+
+    <div class="vehiculo-container">
+      <ion-button expand="full" class="boton-seleccion" (click)="cambiaPagina()">
+        Selecciona Vehículo
+      </ion-button>
+  
+      <ion-item class="vehiculo-input">
+        <ion-label position="floating">Vehículo seleccionado:</ion-label>
+        <ion-input [value]="modeloSeleccionado" readonly></ion-input>
+      </ion-item>
+    </div>
+
+   <div class="cronometro-container">
+    <div class="cronometro">
+      <h1>{{ hora | number:'2.0' }}:{{ minuto | number:'2.0' }}:{{ segundo | number:'2.0' }}</h1>
+    </div>
+
+    <div class="botones">
+      <ion-button expand="full" class="boton-iniciar" (click)="capturarFechaHora()">
+        {{ esInicio ? 'Iniciar' : 'Finalizar' }}
+      </ion-button>
+
+      <ion-button expand="full" class="boton-reiniciar" (click)="reiniciarEstado(); mostrarGuardar = false">
+        Reiniciar
+      </ion-button>
+
+      <ion-button *ngIf="mostrarGuardar" expand="full" class="boton-guardar" (click)="guardarStore()">
+        Guardar Datos
+      </ion-button>
+    </div>
+
+    <p *ngIf="mensaje" class="mensaje">{{ mensaje }}</p>
+  </div>
+</ion-content>
+-->

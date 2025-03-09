@@ -1,28 +1,128 @@
-#container {
-  background-color: #f0f0f2;
+/* Contenedor principal: Ajuste automático */
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100vh; /* Ocupa toda la pantalla */
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+/* Contenedor del vehículo */
+.vehiculo-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 400px;
+  margin-top: 80px; /* Mayor separación del header */
+  margin-bottom: 60px; /* Espaciado en pantallas grandes */
+}
+
+/* Input de vehículo alineado */
+.vehiculo-input {
+  width: 100%;
+  max-width: 350px;
+  margin-top: 10px;
+}
+
+/* Cronómetro centrado */
+.cronometro-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  /*height: 80px;*/
+  max-width:  400px; 
+  margin-bottom: 50px; /* Más separación con los botones */
+ }
+
+.cronometro {
+  font-size: 2.5rem;
+  font-weight: bold;
+  /*background: #34495E; /* Gris oscuro */
+  background: rgb(192, 208, 247);
+  color: #34495E;
+  padding: 15px 30px;
+  border-radius: 10px;
   text-align: center;
-
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 50%;
-  transform: translateY(-50%);
+  min-width: 220px;
 }
 
-#container strong {
-  font-size: 20px;
-  line-height: 26px;
+/* Texto del cronómetro */
+.cronometro h1 {
+  font-size: 2rem;
+  font-weight: bold;
+  text-align: center;
+  color: #005BBB;
 }
 
-#container p {
-  font-size: 16px;
-  line-height: 22px;
-
-  color: #8c8c8c;
-
-  margin: 0;
+/* Botones responsivos */
+.botones {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 400px;
 }
 
-#container a {
-  text-decoration: none;
+/* Estilos unificados para botones */
+.boton {
+  width: 100%;
+  max-width: 350px; /* Controla el ancho en pantallas grandes */
+  background-color: #005BBB; /* Azul corporativo */
+  color: white;
+  font-weight: bold;
+  text-align: center;
+  /*margin: 10px 0;*/
+  height: 50px; /* Tamaño uniforme */
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 10px; /* Espacio entre botones */
+}
+
+/* Mensaje de guardado */
+.mensaje {
+  text-align: center;
+  font-size: 1rem;
+  margin-top: 10px;
+  color: #2ECC71; /* Verde para éxito */
+}
+
+/* Centrar a pantalla grande */
+@media (min-width: 1024px) {
+  .container {
+    justify-content: center; /* Contenido centrado */
+  }
+  ion-button {
+    width: 100%; /* Ocupa todo el ancho disponible */
+    max-width: 100%; /* Sin límite para pantallas grandes */
+  }
+
+}
+
+/* Ajustar en móviles (subimos un poco el botón Selecciona Vehículo) */
+@media (max-width: 768px) {
+  .vehiculo-container {
+    margin-top: -10px; /* Lo subimos solo en móvil */
+  }
+
+  @media (max-width: 1024px) and (orientation: landscape) {
+    .vehiculo-container {
+      margin-top: 50px; /* Aumentamos la separación para evitar que lo tape */
+      margin-bottom: 1px;
+    }
+    .vehiculo-input {
+      width: 100%;
+      max-width: 350px;
+      margin-top: 0px;
+    }
+    .cronometro-container {
+           margin-bottom: 1px; /* Más separación con los botones */
+     }
+  }
 }
