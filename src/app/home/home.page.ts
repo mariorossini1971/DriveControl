@@ -77,7 +77,7 @@ export class HomePage implements OnDestroy {
         this.cocheSelBehaviorSubject.next(modeloSeleccionado); // Actualizamos el BehaviorSubject
       },
       error: (err) => {
-        console.error('Error al recuperar el modelo seleccionado:', err);
+        console.error('Error al recuperar modelo seleccionado:', err);
       },
       complete: () => {
         console.log('Suscripción completada.');
