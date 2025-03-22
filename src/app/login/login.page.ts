@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { AngularFireAuth } from '@angular/fire/compat/auth';
 import { Route, Router } from '@angular/router';
 import { AlertController } from '@ionic/angular';
+import {ApiService} from '../api.service';
 
+const TOKEN = '';
 @Component({
   selector: 'app-login',
   templateUrl: './login.page.html',
@@ -15,9 +16,16 @@ export class LoginPage implements OnInit {
   public passwordIcono = 'eye';
   public email = '';
   public password = '';
+  public correo = '';
+  public contrasena = '';
+  public mensajeLoading = 'Iniciando sesión..';
 
+  
 
-  constructor(public fireAuth: AngularFireAuth, public router: Router, public alertController: AlertController) { }
+  constructor(
+    private apiService: ApiService, 
+    public router: Router, 
+    public alertController: AlertController) { }
 
   public username: string = '';
 
@@ -25,71 +33,6 @@ ngOnInit() {
   const userEmail = this.email;
   this.username = this.userName(userEmail);
 }
-
-  public login(){
-  let tempEmail = this.email+"@gmail.com";  // Variable temporal para guardar el email
-  let tempPassword = this.password;
-    this.fireAuth.signInWithEmailAndPassword(tempEmail, tempPassword)
-    .then(res =>{
-      console.log("he entrado");
-      const username = this.userName(this.email);
-    //  this.router.navigate(['/home',{ username: username }]);
-    //    this.router.navigate(['/home/'+ username]);
-    this.router.navigate(['/home/']);
-    })
-    .catch(async error =>{
-      if (error.code === 'auth/invalid-credential') { 
-        console.log("error al entrar: ",error.message);
-        const alert = await this.alertController.create({
-          message: 'Usuario no registrado',
-          buttons: [{
-            
-          text: 'Cancelar',
-          role: 'cancel',
-          handler: () => {
-            this.email = '';
-            this.password = '';
-          }
-      },
-        {
-          text: 'Crear Cuenta',
-          role: 'confirm',
-          handler: () =>this.signup(tempEmail,tempPassword)
-        }]
-        });
-        await alert.present();
-      } else {
-        const alert = await this.alertController.create({
-          message: 'Email / Password \n Invalido',
-          buttons: ['Aceptar']
-        });
-        await alert.present();
-        this.email = '';
-        this.password = '';
-      }
-
-    });
-  }
-  
-  public signup(email:string, password:string){
-    this.fireAuth.createUserWithEmailAndPassword(email, password)
-    .then(async res =>{
-      const alert = await this.alertController.create({
-        message:  'Usuario creado con éxito',
-        buttons: ['Aceptar']
-    })
-    await alert.present();
-    })
-    .catch(async error =>{
-      const alert = await this.alertController.create({
-        message:  'Email / Password \n Invalido',
-        buttons: ['Aceptar']
-    })
-    await alert.present();
-    this.email = '';
-    this.password = '';
-    })
-  }
 
   public userName(email: string): string {               ///////  CONTROLAR, porque si uso solo el nombre no me hace falta
     const name = email.indexOf('@');
@@ -108,6 +51,30 @@ ngOnInit() {
   
   }
 
+  iniciarSesion() {
+    this.apiService.loading(this.mensajeLoading);   // efecto loading
+    this.apiService.login1(this.email, this.password).subscribe({
+      next: (response: any) => {
+        this.apiService.LoadingController.dismiss();       /// quito efecto loading
+        console.log('Inicio de sesión exitoso:', response);
+        localStorage.setItem('token', response.token); // Guardar el token en almacenamiento local
+        const token = localStorage.getItem('token');
+        console.log('Token guardado:', token);
+        this.router.navigate(['/home']); // Navegar a la página principal
+      },
+      error: async (err) => {
+        this.apiService.LoadingController.dismiss();       /// quito efecto loading
+        console.error('Error al iniciar sesión:', err);
+        const alert = await this.alertController.create({
+          message: 'Email / Password \n Invalido',
+          buttons: ['Aceptar']
+        });
+        await alert.present();
+        this.email = '';
+        this.password = '';
+      }
+    });
+  }
 }
 
 

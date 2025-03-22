@@ -15,6 +15,9 @@ import { environment} from 'src/environments/environment';
 import { AngularFireAuthModule } from '@angular/fire/compat/auth';
 import { FormsModule } from '@angular/forms';
 //import { firebaseConfig } from 'src/environments/environment';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { AuthInterceptor } from './interceptor.interceptor';
+
 
 const firebaseConfig = {
   apiKey: "AIzaSyCFqrOUi_tEEAsvp4P4xCBKMcMVZHIm7pc",
@@ -28,10 +31,15 @@ const firebaseConfig = {
 
 @NgModule({
   declarations: [AppComponent],
-  imports: [HttpClientModule,BrowserModule, IonicModule.forRoot(), AppRoutingModule,FormsModule,
+  imports: [
+  HttpClientModule,BrowserModule, IonicModule.forRoot(), AppRoutingModule,FormsModule,
   AngularFireModule.initializeApp(firebaseConfig), AngularFirestoreModule,
-  AngularFireAuthModule],
-  providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy },provideHttpClient()],
+  AngularFireAuthModule
+],
+  providers: [
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }, 
+    { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }, 
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

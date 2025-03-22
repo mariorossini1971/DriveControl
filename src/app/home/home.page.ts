@@ -2,7 +2,8 @@ import { Component, OnDestroy, SimpleChange } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { ApiService } from '../api.service';
-import { Subscription } from 'rxjs';
+import { BehaviorSubject, Subscription } from 'rxjs';
+import Swiper from 'swiper';
 
 @Component({
   selector: 'app-home',
@@ -35,8 +36,20 @@ export class HomePage implements OnDestroy {
   idCocheSeleccionado$: Subscription = new Subscription();
   viaje$: Subscription = new Subscription();
 
-  tiempoFormateado: string = '0 segundos'; // Inicializar el formato
+  cocheSelBehaviorSubject = new BehaviorSubject<any>({
+    matricula: 0,
+    marca: 0,
+    modelo: 0,
+    ano: 0,
+    disponible: true,
+  });
 
+
+
+  tiempoFormateado: string = '0 segundos'; // Inicializar el formato
+  onSwiper(swiper: Swiper) {
+    console.log(swiper); // Para depuración
+  };
  
   toDoList: any[] = [];
   newItem = {
@@ -58,6 +71,22 @@ export class HomePage implements OnDestroy {
 
   ngOnInit() {
     
+    this.apiService.getModeloSeleccionado().subscribe({
+      next: (modeloSeleccionado) => {
+        console.log('Modeloooo seleccionado:', modeloSeleccionado);
+        this.cocheSelBehaviorSubject.next(modeloSeleccionado); // Actualizamos el BehaviorSubject
+      },
+      error: (err) => {
+        console.error('Error al recuperar el modelo seleccionado:', err);
+      },
+      complete: () => {
+        console.log('Suscripción completada.');
+      },
+    });
+  
+    const cocheSeleccionado = this.cocheSelBehaviorSubject.getValue();
+    console.log('Matrícula del coche seleccionado:', cocheSeleccionado.matricula);
+
     this.modeloSeleccionado$ = this.apiService.getModeloSeleccionado().subscribe({
       next: (modeloSeleccionado) => {
         this.modeloSeleccionado = modeloSeleccionado;
@@ -161,6 +190,10 @@ export class HomePage implements OnDestroy {
     this.apagoFinal = false;
     this.reiniciarEstado();
     this.router.navigate(['/guardar']);
+  }
+  onSlideComplete() {
+    console.log('¡Acción ejecutada!');
+    this.cambiaPagina();
   }
   
   ngOnDestroy() {

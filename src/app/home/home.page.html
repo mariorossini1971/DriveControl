@@ -17,12 +17,23 @@
       <ion-button expand="full" class="boton"  [disabled]="bloqueoPagina" (click)="cambiaPagina()">
         Selecciona Vehículo
       </ion-button>
-
+<!--
       <ion-item class="vehiculo-input">
-          <!--  <ion-label position="floating">Vehículo seleccionado:</ion-label>-->
-        <ion-input [value]="modeloSeleccionado" readonly></ion-input>
+        <ion-input [value]="modeloSeleccionado" readonly></ion-input> 
       </ion-item>
+-->
     </div>
+
+    <ion-card class="vehiculo-card">
+      <ion-card-header style="text-align: center;">
+        <ion-card-content>
+          <strong>VEHÍCULO SELECCIONADO</strong>
+        </ion-card-content>
+        <ion-card-title>{{ modeloSeleccionado}}</ion-card-title>
+      </ion-card-header>
+    </ion-card>
+
+
 
     <!-- Cronómetro -->
     <div class="cronometro-container">

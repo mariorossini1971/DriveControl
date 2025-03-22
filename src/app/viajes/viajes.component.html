@@ -16,13 +16,20 @@
 <ion-content>
   <ion-list>
     <ion-item *ngFor="let viaje of viajes">
+      <ion-avatar slot="start">
+        <img src="assets/images/icono_coche.png">
+      </ion-avatar>
       <ion-label>
-        <h2>Viaje ID: {{ viaje.id_viaje }}</h2>
-        <p>Inicio: {{ viaje.fecha_inicio }}</p>
+        <h3>{{ viaje.fecha_inicio | date: 'd \'de\' MMMM \'del\' y - HH:mm' }}</h3>
+        <p>Vehículo: {{viaje.marca}}  {{viaje.modelo}}</p>
+        <p>Matricula: {{viaje.matricula}}</p>
+        <!-- <p>Inicio: {{ viaje.fecha_inicio }}</p>
         <p>Fin: {{ viaje.fecha_fin }}</p>
         <p>Usuario: {{ viaje.nombre_conductor }}</p>
-        <p>Vehículo: {{viaje.marca}}  {{viaje.modelo}}</p>
+        <p>Vehículo: {{viaje.marca}}  {{viaje.modelo}}</p>-->
       </ion-label>
+      <ion-button fill="outline" color="primary" shape="round">Ver detalles</ion-button>
     </ion-item>
   </ion-list>
 </ion-content>
+

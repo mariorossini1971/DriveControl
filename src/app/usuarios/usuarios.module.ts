@@ -5,6 +5,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
 import {ApiService} from '../api.service';
 
+
 const routes: Routes = [
   { path: '', component: UsuariosComponent }
 ];
