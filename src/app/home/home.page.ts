@@ -14,13 +14,16 @@ export class HomePage implements OnDestroy {
   fechaHoraFinal: string | null = null;
   esInicio: boolean = true;
   mostrarGuardar: boolean = false;
+  bloqueoPagina: boolean = false;
+  apagoFinal: boolean = false;
+  
   tiempoTranscurrido: number = 0; // Guardar el tiempo transcurrido en segundos
   interval: any; // Controla el intervalo del temporizador
   minuto: number = 0;
   segundo: number = 0;
   hora: number = 0;
 
-  mensaje: string = ' ';
+  mensaje: string = '';
 
   vehiculos: any[] = [];
   modeloSeleccionado: any;
@@ -30,10 +33,11 @@ export class HomePage implements OnDestroy {
   modeloSeleccionado$: Subscription = new Subscription();
   idCocheSeleccionado: number = 0;
   idCocheSeleccionado$: Subscription = new Subscription();
+  viaje$: Subscription = new Subscription();
 
   tiempoFormateado: string = '0 segundos'; // Inicializar el formato
 
-  documentCount: number = 0; // Variable para contar los documentos
+ 
   toDoList: any[] = [];
   newItem = {
     final: 'final',
@@ -49,103 +53,72 @@ export class HomePage implements OnDestroy {
     public firestore: AngularFirestore,
     private apiService: ApiService, // Inyecta el servicio API
     public router: Router
-  ) {
+  ) {}
+
+
+  ngOnInit() {
+    
     this.modeloSeleccionado$ = this.apiService.getModeloSeleccionado().subscribe({
       next: (modeloSeleccionado) => {
         this.modeloSeleccionado = modeloSeleccionado;
-        console.log('dato que llega desde el servicio:', this.modeloSeleccionado);
+        console.log('Dato que llega desde el servicio (modeloSeleccionado):', this.modeloSeleccionado);
+        
+        this.apagoFinal = this.modeloSeleccionado === "";  // si no hay coche no dejo iniciar viaje
+        console.log("Valor de apagoFinal: " + this.apagoFinal);
       },
       error: (error: any) => {
         this.modeloSeleccionado = '';
-        console.log('error al recuperar datos', error);
+        console.log('Error al recuperar datos de modeloSeleccionado', error);
       },
     });
+
     this.idCocheSeleccionado$ = this.apiService.getIdCoche().subscribe({
       next: (idCoche) => {
         this.idCocheSeleccionado = idCoche;
-        console.log('dato que llega desde el servicio ID:', this.idCocheSeleccionado);
+        console.log('Dato que llega desde el servicio (idCocheSeleccionado):', this.idCocheSeleccionado);
       },
       error: (error: any) => {
         this.idCocheSeleccionado = 0;
-        console.log('error al recuperar datos', error);
+        console.log('Error al recuperar datos de idCocheSeleccionado', error);
       },
     });
-
-  }
-
-  ngOnInit() {
-
-    console.log('primero miro el coche: ' + this.modeloSeleccionado);
-    this.cargarDatosVehiculos();
-  }
-
-  ngOnChanges(changes: SimpleChange) {
-    // para actualizar datos si cambian
-    this.cargarDatosVehiculos();
   }
 
   capturarFechaHora() {
 
     const fecha = new Date();
     const tiempo = new Date(fecha.getTime() - fecha.getTimezoneOffset() * 60000).toISOString().split('.')[0] + 'Z';  // mismo formato que la BBDD
-   
+    this.bloqueoPagina = true;
 
   
-  if (this.esInicio) {
+    if (this.esInicio) {
       // Si es "INICIO", captura la fecha de inicio
+      
       this.fechaHoraInicio = tiempo;
       this.iniciarTemporizador(); // Iniciar el temporizador
     } else {
+      //this.bloqueoPagina = false;
       // Si es "FINAL", captura la fecha de final
       this.fechaHoraFinal = tiempo;
       this.detenerTemporizador(); // Detener el temporizador
-      this.mostrarGuardar = true;
+      // this.mostrarGuardar = true;
+      this.guardarStore();
+      this.cambioGuardar();
     }
     // Cambiar el estado del botón de INICIO a FINAL y viceversa
     this.esInicio = !this.esInicio;
   }
 
   async guardarStore() {
-    /*
-    if (!this.fechaHoraInicio || !this.fechaHoraFinal) {
-      console.error('Error: no se pueden guardar los datos sin un inicio y un final definidos.');
-      return;
-    }
-    */
 
-    this.mensaje = 'Guardando Datos';
     this.mostrarGuardar = !this.mostrarGuardar;
-
     let viaje = {
       id_usuario: 3,
       id_vehiculo: this.idCocheSeleccionado,
       fecha_inicio: this.fechaHoraInicio || 'No definido',
       fecha_fin: this.fechaHoraFinal || 'No definido',
     };
-
-    console.log('Preparado para guardar el viaje ');
-
-    // Guardar en la API
-    this.apiService.createViaje(viaje).subscribe(
-      (response) => {
-        console.log('Datos guardados exitosamente en la API');
-        this.reiniciarEstado();
-      },
-      (error) => {
-        console.error('Error al guardar en la API: ', error);
-      }
-    );
-
-    setTimeout(() => {
-      this.mensaje = 'Datos guardados con éxito ✅';
-      console.log('Datos guardados con éxito ✅');
-
-      setTimeout(() => {
-        this.mensaje = ''; // Borra el mensaje después de 2 segundos
-        this.mostrarGuardar = false; // Vuelve a mostrar el botón INICIO
-        this.esInicio = true; // Reinicia el estado para INICIO
-      }, 2000); // Desaparece el mensaje después de 2 segundos
-    }, 2000); // Muestra "Guardando datos..." por 2 segundos
+    this.apiService.setNewItem(viaje);
   }
 
   iniciarTemporizador() {
@@ -161,9 +134,11 @@ export class HomePage implements OnDestroy {
 
   detenerTemporizador() {
     clearInterval(this.interval); // Detener el intervalo
+    this.apagoFinal = true;
+    
   }
 
-  reiniciarEstado() {
+  async reiniciarEstado() {
     // this.esInicio = true; // Vuelve a mostrar INICIO
     this.fechaHoraInicio = null; // Limpia la hora de inicio
     this.fechaHoraFinal = null; // Limpia la hora de final
@@ -180,8 +155,16 @@ export class HomePage implements OnDestroy {
   cambiaPagina() {
     this.router.navigate(['/vehiculos']);
   }
+  cambioGuardar(){
 
+    this.bloqueoPagina = false;
+    this.apagoFinal = false;
+    this.reiniciarEstado();
+    this.router.navigate(['/guardar']);
+  }
+  
   ngOnDestroy() {
     this.modeloSeleccionado$.unsubscribe();
+    this.viaje$.unsubscribe();
   }
 }

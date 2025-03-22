@@ -1,12 +1,12 @@
 <ion-content class="ion-padding">
   <ion-header>
     <ion-toolbar>
-      <ion-buttons slot="start">
-        <ion-menu-button color="primary" name="menu"></ion-menu-button>
+      <ion-buttons slot="start" >
+        <ion-menu-button color="primary" name="menu" [disabled]="bloqueoPagina" ></ion-menu-button>
       </ion-buttons>
       <ion-title>Menu</ion-title>
       <ion-buttons slot="end">
-        <ion-back-button defaultHref="/informe" icon="return-down-back-outline"></ion-back-button>
+        <ion-back-button defaultHref="/informe" icon="return-down-back-outline" [disabled]="bloqueoPagina"></ion-back-button>
       </ion-buttons>
     </ion-toolbar>
   </ion-header>
@@ -14,7 +14,7 @@
   <div class="container">
     <!-- Selección de Vehículo -->
     <div class="vehiculo-container">
-      <ion-button expand="full" class="boton" (click)="cambiaPagina()">
+      <ion-button expand="full" class="boton"  [disabled]="bloqueoPagina" (click)="cambiaPagina()">
         Selecciona Vehículo
       </ion-button>
 
@@ -33,81 +33,18 @@
 
     <!-- Botones de acción -->
     <div class="botones">
-      <ion-button expand="full" class="boton" (click)="capturarFechaHora()">
-        {{ esInicio ? 'Iniciar' : 'Finalizar' }}
-      </ion-button>
+    <ion-button expand="full" class="boton"  [disabled]="apagoFinal"  (click)="capturarFechaHora()">
+        {{ esInicio ? 'Iniciar' : 'Finalizar'  }}
+      </ion-button>  
 
-      <ion-button expand="full" class="boton" (click)="reiniciarEstado(); mostrarGuardar = false">
+    <!--  <ion-button expand="full" class="boton" (click)="reiniciarEstado(); mostrarGuardar = false">
         Reiniciar
-      </ion-button>
+      </ion-button>-->
 
-      <ion-button *ngIf="mostrarGuardar" expand="full" class="boton" (click)="guardarStore()">
+   <!--  <ion-button *ngIf="mostrarGuardar" expand="full" class="boton" (click)="guardarStore()">
         Guardar Datos
-      </ion-button>
+      </ion-button>-->
     </div>
-
-    <p *ngIf="mensaje" class="mensaje">{{ mensaje }}</p>
+   <!-- <p *ngIf="mensaje" class="mensaje" >{{ mensaje }} </p> --> 
   </div>
 </ion-content>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<!--
-<ion-content class="ion-padding">
-    <ion-header>
-      <ion-toolbar>
-            <ion-buttons slot="start">
-                <ion-menu-button color="primary" name="menu"></ion-menu-button>
-            </ion-buttons>
-            <ion-title>Menu</ion-title>
-            <ion-buttons slot="end">
-              <ion-back-button defaultHref="/informe" icon="return-down-back-outline"></ion-back-button>
-            </ion-buttons>
-      </ion-toolbar>
-    </ion-header>
-
-    <div class="vehiculo-container">
-      <ion-button expand="full" class="boton-seleccion" (click)="cambiaPagina()">
-        Selecciona Vehículo
-      </ion-button>
-  
-      <ion-item class="vehiculo-input">
-        <ion-label position="floating">Vehículo seleccionado:</ion-label>
-        <ion-input [value]="modeloSeleccionado" readonly></ion-input>
-      </ion-item>
-    </div>
-
-   <div class="cronometro-container">
-    <div class="cronometro">
-      <h1>{{ hora | number:'2.0' }}:{{ minuto | number:'2.0' }}:{{ segundo | number:'2.0' }}</h1>
-    </div>
-
-    <div class="botones">
-      <ion-button expand="full" class="boton-iniciar" (click)="capturarFechaHora()">
-        {{ esInicio ? 'Iniciar' : 'Finalizar' }}
-      </ion-button>
-
-      <ion-button expand="full" class="boton-reiniciar" (click)="reiniciarEstado(); mostrarGuardar = false">
-        Reiniciar
-      </ion-button>
-
-      <ion-button *ngIf="mostrarGuardar" expand="full" class="boton-guardar" (click)="guardarStore()">
-        Guardar Datos
-      </ion-button>
-    </div>
-
-    <p *ngIf="mensaje" class="mensaje">{{ mensaje }}</p>
-  </div>
-</ion-content>
--->

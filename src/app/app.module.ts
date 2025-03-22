@@ -13,6 +13,7 @@ import { AngularFireModule} from '@angular/fire/compat';
 import { AngularFirestoreModule} from '@angular/fire/compat/firestore';
 import { environment} from 'src/environments/environment';
 import { AngularFireAuthModule } from '@angular/fire/compat/auth';
+import { FormsModule } from '@angular/forms';
 //import { firebaseConfig } from 'src/environments/environment';
 
 const firebaseConfig = {
@@ -27,7 +28,7 @@ const firebaseConfig = {
 
 @NgModule({
   declarations: [AppComponent],
-  imports: [HttpClientModule,BrowserModule, IonicModule.forRoot(), AppRoutingModule,
+  imports: [HttpClientModule,BrowserModule, IonicModule.forRoot(), AppRoutingModule,FormsModule,
   AngularFireModule.initializeApp(firebaseConfig), AngularFirestoreModule,
   AngularFireAuthModule],
   providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy },provideHttpClient()],

@@ -12,8 +12,16 @@ export class ApiService {
 
   /******Para mantener el valor actualizado ********/
  
-  miCocheBehaviorSubject = new BehaviorSubject<string>("sin Coche");
+  miCocheBehaviorSubject = new BehaviorSubject<string>("");
   miIdCocheBehaviorSubject = new BehaviorSubject<number>(0);
+
+  newItemSubject = new BehaviorSubject<any>({
+    id_usuario: 3,
+    id_vehiculo: 3,
+    fecha_inicio: 3,
+    fecha_fin: 4,
+  });
+
 
   /*****    TODO lo mismo con el id del coche, me será útil **********/
 
@@ -65,6 +73,16 @@ export class ApiService {
   getIdCoche(){
     return this.miIdCocheBehaviorSubject.asObservable();
   }
+  setNewItem(item:any){
+    this.newItemSubject.next(item);
+  }
+  getNewItem(){
+    return this.newItemSubject.asObservable();
+  }
+  getNewItemValue(): any {
+    return this.newItemSubject.getValue();
+  }
+  
 }
 
 

@@ -1,0 +1,28 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>guardar</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">guardar</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <ion-textarea
+  [(ngModel)]="comentarios"
+    label="comentarios"
+    label-placement="floating"
+    fill="outline"
+    placeholder="Comentarios"
+    rows="4"
+    autoGrow="true"
+></ion-textarea>
+
+  <ion-button expand="full" class="boton"  (click)="guardarStore()">GUARDAR</ion-button>
+<div class = "mensaje_guardar">
+<p *ngIf="mensaje" class="mensaje" >{{ mensaje }} </p>
+</div>
+</ion-content>

@@ -32,9 +32,9 @@ export class VehiculosComponent implements OnDestroy {
     this.cargarDatosVehiculos();
   }
 
-  ngOnChanges(changes: SimpleChanges) {       //para actualizar datos si cambian 
+ /* ngOnChanges(changes: SimpleChanges) {       //para actualizar datos si cambian 
     this.cargarDatosVehiculos();
-  }
+  }*/
 
   cargarDatosVehiculos(){
     this.apiService.getVehiculos().subscribe((data: any[]) => {
