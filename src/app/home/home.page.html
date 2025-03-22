@@ -29,7 +29,8 @@
         <ion-card-content>
           <strong>VEHÍCULO SELECCIONADO</strong>
         </ion-card-content>
-        <ion-card-title>{{modeloSeleccionado}}</ion-card-title>
+        <ion-card-title>{{cocheSelBehaviorSubject$.getValue().marca}} {{cocheSelBehaviorSubject$.getValue().modelo}}</ion-card-title>
+       <ion-card-title>Matricula: {{cocheSelBehaviorSubject$.getValue().matricula}}</ion-card-title> 
       </ion-card-header>
     </ion-card>
 

@@ -24,9 +24,11 @@ export class ApiService {
     id_vehiculo: 3,
     fecha_inicio: 3,
     fecha_fin: 4,
+    comentario:'',
   });
 
   cocheSelBehaviorSubject = new BehaviorSubject<any>({
+    id_vehiculo: 0,
     matricula: 0,
     marca: 0 ,
     modelo: 0,
@@ -73,10 +75,7 @@ export class ApiService {
       return this.http.post(`${apiUrl}/refresh-token`, {}, { headers }).toPromise();
     }
 
-
-
-
-
+//////////////////////  USUARIO /////////////////////////
   
   getUsuarios(): Observable<any> {
     return this.http.get(`${apiUrl}/usuarios`);
@@ -101,7 +100,7 @@ export class ApiService {
   getVehiculos(): Observable<any> {
     return this.http.get(`${apiUrl}/vehiculos`);
   }
-
+////////////////////////////////////////////////////////////////////////
   getViajes(): Observable<any> {
     return this.http.get<any>(`${apiUrl}/viajes`);
   }
@@ -111,7 +110,7 @@ export class ApiService {
   }
 
 
-  /////////////////////////////////////////////////////////////////
+  /////////////////////////////   vehiculo   ////////////////////////////////////
   setModeloSeleccionado(modelo: string) {
     // this.objetoModeloSeleccionado.next(modelo);
     this.miCocheBehaviorSubject.next(modelo);
@@ -126,6 +125,8 @@ export class ApiService {
   getIdCoche(){
     return this.miIdCocheBehaviorSubject.asObservable();
   }
+
+  //////////////////////////////// VIAJE /////////////////////////////////
   setNewItem(item:any){
     this.newItemSubject.next(item);
   }
@@ -135,12 +136,14 @@ export class ApiService {
   getNewItemValue(): any {
     return this.newItemSubject.getValue();
   }
+
+
   setCocheSelec(id_Vehiculo: number, coche: any): Observable<any>{
     return this.http.put(`${apiUrl}/vehiculos/${id_Vehiculo}`, coche);
   }
   
   getCocheSeleccionado() {
-    return this.cocheSelBehaviorSubject.getValue();
+    return this.cocheSelBehaviorSubject.asObservable();
   }
 
   // Setter: Actualiza el valor del BehaviorSubject

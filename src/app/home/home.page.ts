@@ -24,7 +24,7 @@ export class HomePage implements OnDestroy {
   segundo: number = 0;
   hora: number = 0;
 
-  mensaje: string = '';
+ // mensaje: string = '';
 
   vehiculos: any[] = [];
   modeloSeleccionado: any;
@@ -36,11 +36,12 @@ export class HomePage implements OnDestroy {
   idCocheSeleccionado$: Subscription = new Subscription();
   viaje$: Subscription = new Subscription();
 
-  cocheSelBehaviorSubject = new BehaviorSubject<any>({
-    matricula: 0,
-    marca: 0,
-    modelo: 0,
-    ano: 0,
+  cocheSelBehaviorSubject$ = new BehaviorSubject<any>({
+    id_vehiculo: 0,
+    matricula: '',
+    marca: '',
+    modelo: '',
+    ano: '',
     disponible: true,
   });
 
@@ -51,7 +52,7 @@ export class HomePage implements OnDestroy {
     console.log(swiper); // Para depuración
   };
  
-  toDoList: any[] = [];
+  //toDoList: any[] = [];
   newItem = {
     final: 'final',
     inicio: 'inicio',
@@ -64,17 +65,33 @@ export class HomePage implements OnDestroy {
   constructor(
     public activateRoute: ActivatedRoute,
     public firestore: AngularFirestore,
-    private apiService: ApiService, // Inyecta el servicio API
+    private apiService: ApiService,
     public router: Router
   ) {}
 
 
   ngOnInit() {
-    
+    /*
     this.apiService.getModeloSeleccionado().subscribe({
-      next: (modeloSeleccionado) => {
-        console.log('Modeloooo seleccionado:', modeloSeleccionado);
-        this.cocheSelBehaviorSubject.next(modeloSeleccionado); // Actualizamos el BehaviorSubject
+      next: (cocheSelBehaviorSubject) => {
+        console.log('Model2 seleccionado:', cocheSelBehaviorSubject);
+        //this.cocheSelBehaviorSubject.next(modeloSeleccionado); // Actualizamos el BehaviorSubject
+      },
+      error: (err) => {
+        console.error('Error al recuperar modelo seleccionado:', err);
+      },
+      complete: () => {
+        console.log('Suscripción completada.');
+        console.log('matricula: ', this.cocheSelBehaviorSubject$.getValue().id_Vehiculo)
+      },
+    });*/
+
+///////////////////////////////////
+    this.apiService.getCocheSeleccionado().subscribe({
+      next: (coche) => {
+        console.log('Modeloooo seleccionado:', coche);
+        this.cocheSelBehaviorSubject$.next(coche);
+        console.log('matricula', this.cocheSelBehaviorSubject$.getValue().matricula)
       },
       error: (err) => {
         console.error('Error al recuperar modelo seleccionado:', err);
@@ -83,10 +100,10 @@ export class HomePage implements OnDestroy {
         console.log('Suscripción completada.');
       },
     });
-  
-    const cocheSeleccionado = this.cocheSelBehaviorSubject.getValue();
-    console.log('Matrícula del coche seleccionado:', cocheSeleccionado.matricula);
-
+  //////////////////////////////////////////////////
+  //  const cocheSeleccionado = this.cocheSelBehaviorSubject$.getValue();
+  //  console.log('Matrícula del coche seleccionado:', cocheSeleccionado.matricula);
+/*
     this.modeloSeleccionado$ = this.apiService.getModeloSeleccionado().subscribe({
       next: (modeloSeleccionado) => {
         this.modeloSeleccionado = modeloSeleccionado;
@@ -110,7 +127,7 @@ export class HomePage implements OnDestroy {
         this.idCocheSeleccionado = 0;
         console.log('Error al recuperar datos de idCocheSeleccionado', error);
       },
-    });
+    });*/
   }
 
   capturarFechaHora() {
@@ -143,10 +160,12 @@ export class HomePage implements OnDestroy {
     this.mostrarGuardar = !this.mostrarGuardar;
     let viaje = {
       id_usuario: 3,
-      id_vehiculo: this.idCocheSeleccionado,
+      id_vehiculo: this.cocheSelBehaviorSubject$.getValue().id_vehiculo,
       fecha_inicio: this.fechaHoraInicio || 'No definido',
       fecha_fin: this.fechaHoraFinal || 'No definido',
+      comentario: 'no hay comentarios',
     };
+    console.log('id: ',this.cocheSelBehaviorSubject$.getValue().id_vehiculo);
     this.apiService.setNewItem(viaje);
   }
 
