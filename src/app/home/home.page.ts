@@ -1,16 +1,28 @@
-import { Component, OnDestroy, SimpleChange } from '@angular/core';
+import { Component, ElementRef, OnInit, OnDestroy, SimpleChange, ViewChild,ChangeDetectorRef,HostListener} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { ApiService } from '../api.service';
 import { BehaviorSubject, Subscription } from 'rxjs';
-import Swiper from 'swiper';
+import { GestureController,ToastController} from '@ionic/angular';
 
 @Component({
   selector: 'app-home',
   templateUrl: 'home.page.html',
   styleUrls: ['home.page.scss'],
 })
-export class HomePage implements OnDestroy {
+
+export class HomePage implements OnInit, OnDestroy {
+
+  @ViewChild('swipeButton',{read: ElementRef }) swipeButton!: ElementRef;
+  color = 'primary';
+  text = 'Swipe';
+
+  swipeInProgress = false;
+  colWidth!: number;
+  translateX!: number;
+
+  swipeGesture!: any;
+
   fechaHoraInicio: string | null = null;
   fechaHoraFinal: string | null = null;
   esInicio: boolean = true;
@@ -36,6 +48,8 @@ export class HomePage implements OnDestroy {
   idCocheSeleccionado$: Subscription = new Subscription();
   viaje$: Subscription = new Subscription();
 
+  tiempoFormateado: string = '0 segundos'; // Inicializar el formato
+
   cocheSelBehaviorSubject$ = new BehaviorSubject<any>({
     id_vehiculo: 0,
     matricula: '',
@@ -47,10 +61,7 @@ export class HomePage implements OnDestroy {
 
 
 
-  tiempoFormateado: string = '0 segundos'; // Inicializar el formato
-  onSwiper(swiper: Swiper) {
-    console.log(swiper); // Para depuración
-  };
+
  
   //toDoList: any[] = [];
   newItem = {
@@ -63,12 +74,14 @@ export class HomePage implements OnDestroy {
   };
 
   constructor(
+    private gestureCtrl: GestureController,
+    private toastCtrl: ToastController,
+    private cdr: ChangeDetectorRef,
     public activateRoute: ActivatedRoute,
     public firestore: AngularFirestore,
     private apiService: ApiService,
     public router: Router
   ) {}
-
 
   ngOnInit() {
     /*
@@ -130,18 +143,73 @@ export class HomePage implements OnDestroy {
     });*/
   }
 
+  ngAfterViewInit() {
+    this.actualizarAncho();//calcula el ancho inicial
+    this.createSwipeGesture();
+  }
+
+  private createSwipeGesture(){
+    this.swipeGesture = this.gestureCtrl.create({
+      el: this.swipeButton.nativeElement,
+      threshold:10,
+      gestureName: 'swipe',
+      onStart: () => {
+        //manejar el inicio del gesto del deslizamiento si es necesario
+        this.swipeInProgress = true;
+        //actualizar ancho para responsive
+        this.actualizarAncho();
+      },
+      onMove: (detail) => {
+        if (this.swipeInProgress && detail.deltaX > 0){
+          const deltaX = detail.deltaX;
+          console.log('deltax: ',deltaX);
+          const colWidth = this.swipeButton.nativeElement.parentElement.clientWidth;
+          this.colWidth = colWidth - (15 / 100 * colWidth);
+          console.log('colWidth: ',this.colWidth);
+          this.translateX = Math.min(deltaX, this.colWidth);
+          console.log('translatex: ', this.translateX);
+          this.swipeButton.nativeElement.style.transform = `translateX(${this.translateX}px)`;
+        }
+      },
+      onEnd:  (detail) => {
+        if(this.translateX >= this.colWidth){
+          console.log('swiped');
+          this.capturarFechaHora();
+        }
+        this.swipeInProgress = false;
+        this.swipeButton.nativeElement.style.transform = 'translateX(0)';
+      },
+    });
+    this.swipeGesture.enable(true);
+  }
+
+  delay(ms: number){
+    return new Promise (resolve => setTimeout(resolve, ms));
+  }
+
+  private actualizarAncho(){
+    //Ancho del botón responsive
+    const boton = this.swipeButton.nativeElement.closest('ion-col') || this.swipeButton.nativeElement.parentElement;
+    this.colWidth = boton.clientWidth;
+    console.log('Ancho del swipe: ',this.colWidth);
+  }
+  @HostListener('window:resize', ['$event'])
+  onResize(){
+    this.actualizarAncho();  //recalcula el ancho al cambiar de tamaño u orientación
+  }
+
   capturarFechaHora() {
 
     const fecha = new Date();
     const tiempo = new Date(fecha.getTime() - fecha.getTimezoneOffset() * 60000).toISOString().split('.')[0] + 'Z';  // mismo formato que la BBDD
     this.bloqueoPagina = true;
-
   
     if (this.esInicio) {
       // Si es "INICIO", captura la fecha de inicio
-      
+      console.log('es inicio')
       this.fechaHoraInicio = tiempo;
       this.iniciarTemporizador(); // Iniciar el temporizador
+      this.cdr.detectChanges(); //Forzar actualización de la vista 
     } else {
       //this.bloqueoPagina = false;
       // Si es "FINAL", captura la fecha de final
@@ -156,7 +224,6 @@ export class HomePage implements OnDestroy {
   }
 
   async guardarStore() {
-
     this.mostrarGuardar = !this.mostrarGuardar;
     let viaje = {
       id_usuario: 3,
@@ -173,10 +240,12 @@ export class HomePage implements OnDestroy {
     this.segundo = 0; // Reiniciar el contador de tiempo
     this.interval = setInterval(() => {
       this.segundo++;
+      console.log(this.segundo);
       if (this.segundo == 60) {
         this.minuto++;
         this.segundo = 0;
       }
+      this.cdr.detectChanges(); //Forzar el cambio en la vista cada segundo
     }, 1000); // Aumenta el tiempo cada segundo
   }
 
@@ -204,15 +273,11 @@ export class HomePage implements OnDestroy {
     this.router.navigate(['/vehiculos']);
   }
   cambioGuardar(){
-
+    console.log("dentro");
     this.bloqueoPagina = false;
     this.apagoFinal = false;
     this.reiniciarEstado();
     this.router.navigate(['/guardar']);
-  }
-  onSlideComplete() {
-    console.log('¡Acción ejecutada!');
-    this.cambiaPagina();
   }
   
   ngOnDestroy() {
