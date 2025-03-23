@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Route, Router } from '@angular/router';
 import { AlertController } from '@ionic/angular';
 import {ApiService} from '../api.service';
+import { delay } from 'rxjs';
 
 const TOKEN = '';
 @Component({
@@ -52,11 +53,14 @@ ngOnInit() {
   }
 
   iniciarSesion() {
+    console.log(" inicia sesion");
     this.apiService.loading(this.mensajeLoading);   // efecto loading
     this.apiService.login1(this.email, this.password).subscribe({
       next: (response: any) => {
-        this.apiService.LoadingController.dismiss();       /// quito efecto loading
+              /// quito efecto loading
         console.log('Inicio de sesión exitoso:', response);
+        this.apiService.LoadingController.dismiss(); 
+       
         localStorage.setItem('token', response.token); // Guardar el token en almacenamiento local
         const token = localStorage.getItem('token');
         console.log('Token guardado:', token);

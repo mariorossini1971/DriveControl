@@ -78,7 +78,6 @@ export class HomePage implements OnInit, OnDestroy {
     private toastCtrl: ToastController,
     private cdr: ChangeDetectorRef,
     public activateRoute: ActivatedRoute,
-    public firestore: AngularFirestore,
     private apiService: ApiService,
     public router: Router
   ) {}
@@ -102,10 +101,10 @@ export class HomePage implements OnInit, OnDestroy {
 ///////////////////////////////////
     this.apiService.getCocheSeleccionado().subscribe({
       next: (coche) => {
-        console.log('Modeloooo seleccionado:', coche);
         this.cocheSelBehaviorSubject$.next(coche);
-        console.log('matricula', this.cocheSelBehaviorSubject$.getValue().matricula)
-      },
+        console.log('matricula', this.cocheSelBehaviorSubject$.getValue().matricula);
+        this.apagoFinal = this.cocheSelBehaviorSubject$.getValue().matricula === "";
+            },
       error: (err) => {
         console.error('Error al recuperar modelo seleccionado:', err);
       },

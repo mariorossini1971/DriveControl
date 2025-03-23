@@ -29,9 +29,9 @@ export class ApiService {
 
   cocheSelBehaviorSubject = new BehaviorSubject<any>({
     id_vehiculo: 0,
-    matricula: 0,
-    marca: 0 ,
-    modelo: 0,
+    matricula: "",
+    marca: "" ,
+    modelo: "",
     ano: 0,
     disponible: true,
   })
