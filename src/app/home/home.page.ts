@@ -3,7 +3,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { ApiService } from '../api.service';
 import { BehaviorSubject, Subscription } from 'rxjs';
-import Swiper from 'swiper';
 
 @Component({
   selector: 'app-home',
@@ -29,8 +28,6 @@ export class HomePage implements OnDestroy {
   vehiculos: any[] = [];
   modeloSeleccionado: any;
 
-
-
   modeloSeleccionado$: Subscription = new Subscription();
   idCocheSeleccionado: number = 0;
   idCocheSeleccionado$: Subscription = new Subscription();
@@ -45,14 +42,11 @@ export class HomePage implements OnDestroy {
     disponible: true,
   });
 
-
-
   tiempoFormateado: string = '0 segundos'; // Inicializar el formato
-  onSwiper(swiper: Swiper) {
+ /* onSwiper(swiper: Swiper) {
     console.log(swiper); // Para depuración
-  };
+  };*/
  
-  //toDoList: any[] = [];
   newItem = {
     final: 'final',
     inicio: 'inicio',
@@ -64,7 +58,6 @@ export class HomePage implements OnDestroy {
 
   constructor(
     public activateRoute: ActivatedRoute,
-    public firestore: AngularFirestore,
     private apiService: ApiService,
     public router: Router
   ) {}
@@ -91,7 +84,9 @@ export class HomePage implements OnDestroy {
       next: (coche) => {
         console.log('Modeloooo seleccionado:', coche);
         this.cocheSelBehaviorSubject$.next(coche);
-        console.log('matricula', this.cocheSelBehaviorSubject$.getValue().matricula)
+        console.log('matricula', this.cocheSelBehaviorSubject$.getValue().matricula);
+        this.apagoFinal = this.cocheSelBehaviorSubject$.getValue().matricula === "";  
+
       },
       error: (err) => {
         console.error('Error al recuperar modelo seleccionado:', err);
@@ -100,6 +95,9 @@ export class HomePage implements OnDestroy {
         console.log('Suscripción completada.');
       },
     });
+
+  //  this.apagoFinal = this.cocheSelBehaviorSubject$.getValue().matricula === "";  // si no hay coche no dejo iniciar viaje
+
   //////////////////////////////////////////////////
   //  const cocheSeleccionado = this.cocheSelBehaviorSubject$.getValue();
   //  console.log('Matrícula del coche seleccionado:', cocheSeleccionado.matricula);
@@ -219,4 +217,5 @@ export class HomePage implements OnDestroy {
     this.modeloSeleccionado$.unsubscribe();
     this.viaje$.unsubscribe();
   }
+
 }
