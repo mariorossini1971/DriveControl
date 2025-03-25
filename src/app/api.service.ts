@@ -28,19 +28,11 @@ export class ApiService {
   });
 
   cocheSelBehaviorSubject = new BehaviorSubject<any>({
-<<<<<<< HEAD
-    id_vehiculo: '',
-    matricula: '',
-    marca: '' ,
-    modelo: '',
-    ano: '',
-=======
     id_vehiculo: 0,
     matricula: "",
     marca: "" ,
     modelo: "",
     ano: 0,
->>>>>>> 905bd0a6dd70c483869d16dc964ed947b23703d8
     disponible: true,
   })
 

@@ -3,10 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { ApiService } from '../api.service';
 import { BehaviorSubject, Subscription } from 'rxjs';
-<<<<<<< HEAD
-=======
 import { GestureController,ToastController} from '@ionic/angular';
->>>>>>> 905bd0a6dd70c483869d16dc964ed947b23703d8
 
 @Component({
   selector: 'app-home',
@@ -60,16 +57,9 @@ export class HomePage implements OnInit, OnDestroy {
     disponible: true,
   });
 
-<<<<<<< HEAD
-  tiempoFormateado: string = '0 segundos'; // Inicializar el formato
- /* onSwiper(swiper: Swiper) {
-    console.log(swiper); // Para depuración
-  };*/
-=======
 
 
 
->>>>>>> 905bd0a6dd70c483869d16dc964ed947b23703d8
  
   newItem = {
     final: 'final',
@@ -110,14 +100,8 @@ export class HomePage implements OnInit, OnDestroy {
       next: (coche) => {
         this.cocheSelBehaviorSubject$.next(coche);
         console.log('matricula', this.cocheSelBehaviorSubject$.getValue().matricula);
-<<<<<<< HEAD
-        this.apagoFinal = this.cocheSelBehaviorSubject$.getValue().matricula === "";  
-
-      },
-=======
         this.apagoFinal = this.cocheSelBehaviorSubject$.getValue().matricula === "";
             },
->>>>>>> 905bd0a6dd70c483869d16dc964ed947b23703d8
       error: (err) => {
         console.error('Error al recuperar modelo seleccionado:', err);
       },
