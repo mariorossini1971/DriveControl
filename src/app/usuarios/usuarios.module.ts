@@ -4,10 +4,11 @@ import { UsuariosComponent } from './usuarios.component';
 import { RouterModule, Routes } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
 import {ApiService} from '../api.service';
-
+import { FormsModule } from '@angular/forms';
 
 const routes: Routes = [
-  { path: '', component: UsuariosComponent }
+  { path: '', 
+    component: UsuariosComponent }
 ];
 
 @NgModule({
@@ -15,7 +16,8 @@ const routes: Routes = [
   imports: [
     CommonModule,
     RouterModule.forChild(routes),
-    IonicModule
+    IonicModule,
+    FormsModule
 
   ],
   providers:[ApiService],

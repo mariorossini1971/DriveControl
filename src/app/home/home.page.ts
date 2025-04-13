@@ -4,6 +4,7 @@ import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { ApiService } from '../api.service';
 import { BehaviorSubject, Subscription } from 'rxjs';
 import { GestureController,ToastController} from '@ionic/angular';
+import { Usuario } from '../models/usuario.model';
 
 @Component({
   selector: 'app-home',
@@ -46,6 +47,10 @@ export class HomePage implements OnInit, OnDestroy {
   idCocheSeleccionado$: Subscription = new Subscription();
   viaje$: Subscription = new Subscription();
 
+  public usuario: Usuario = new Usuario(0,'', '','','');
+
+  
+
   tiempoFormateado: string = '0 segundos'; // Inicializar el formato
 
   cocheSelBehaviorSubject$ = new BehaviorSubject<any>({
@@ -57,9 +62,6 @@ export class HomePage implements OnInit, OnDestroy {
     disponible: true,
   });
 
-
-
-
  
   newItem = {
     final: 'final',
@@ -69,6 +71,7 @@ export class HomePage implements OnInit, OnDestroy {
     cohe: 'moto',
     conductor: 'mario',
   };
+  rol : string | null = '';
 
   constructor(
     private gestureCtrl: GestureController,
@@ -80,22 +83,30 @@ export class HomePage implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
-    /*
-    this.apiService.getModeloSeleccionado().subscribe({
-      next: (cocheSelBehaviorSubject) => {
-        console.log('Model2 seleccionado:', cocheSelBehaviorSubject);
-        //this.cocheSelBehaviorSubject.next(modeloSeleccionado); // Actualizamos el BehaviorSubject
-      },
-      error: (err) => {
-        console.error('Error al recuperar modelo seleccionado:', err);
-      },
-      complete: () => {
-        console.log('Suscripción completada.');
-        console.log('matricula: ', this.cocheSelBehaviorSubject$.getValue().id_Vehiculo)
-      },
-    });*/
 
-///////////////////////////////////
+    this.controlRol();
+    this.funcionPrincipal();
+    
+  }
+
+  controlRol() {
+    console.log('             con localStorage ');
+    try {
+      this.rol = localStorage.getItem('rol');
+      if (this.rol) {
+        console.log('************ rol en usuario: ', this.rol);
+      } else {
+        console.warn('No se ha encontrado rol en localStorage.');
+        this.rol = 'visitante'; //
+      }
+    } catch (error) {
+      console.error('Error al leer el rol desde localStorage:', error);
+      this.rol = 'visitante'; 
+    }
+  }
+  
+
+  funcionPrincipal(){
     this.apiService.getCocheSeleccionado().subscribe({
       next: (coche) => {
         this.cocheSelBehaviorSubject$.next(coche);
@@ -110,36 +121,6 @@ export class HomePage implements OnInit, OnDestroy {
       },
     });
 
-  //  this.apagoFinal = this.cocheSelBehaviorSubject$.getValue().matricula === "";  // si no hay coche no dejo iniciar viaje
-
-  //////////////////////////////////////////////////
-  //  const cocheSeleccionado = this.cocheSelBehaviorSubject$.getValue();
-  //  console.log('Matrícula del coche seleccionado:', cocheSeleccionado.matricula);
-/*
-    this.modeloSeleccionado$ = this.apiService.getModeloSeleccionado().subscribe({
-      next: (modeloSeleccionado) => {
-        this.modeloSeleccionado = modeloSeleccionado;
-        console.log('Dato que llega desde el servicio (modeloSeleccionado):', this.modeloSeleccionado);
-        
-        this.apagoFinal = this.modeloSeleccionado === "";  // si no hay coche no dejo iniciar viaje
-        console.log("Valor de apagoFinal: " + this.apagoFinal);
-      },
-      error: (error: any) => {
-        this.modeloSeleccionado = '';
-        console.log('Error al recuperar datos de modeloSeleccionado', error);
-      },
-    });
-
-    this.idCocheSeleccionado$ = this.apiService.getIdCoche().subscribe({
-      next: (idCoche) => {
-        this.idCocheSeleccionado = idCoche;
-        console.log('Dato que llega desde el servicio (idCocheSeleccionado):', this.idCocheSeleccionado);
-      },
-      error: (error: any) => {
-        this.idCocheSeleccionado = 0;
-        console.log('Error al recuperar datos de idCocheSeleccionado', error);
-      },
-    });*/
   }
 
   ngAfterViewInit() {

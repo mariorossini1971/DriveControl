@@ -1,13 +1,19 @@
-
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+ /*  overflow: hidden; */
+  box-sizing: border-box;
+}
 
 ion-toolbar {
   --background: #005BBB;
    color: #FFFFFF;
  }
 
-.custom-font {
-  font-family: 'Open Sans', sans-serif;
-  font-weight: bold;
+ ion-title {
+  text-align: center;
+  color: #fff;
 }
 
 // Estilos parte central /
@@ -15,60 +21,97 @@ ion-toolbar {
 ion-content {
   --background:#FFFFFF;
    font-family: 'Open Sans', sans-serif;
-   display: flex;
+   /* display: flex; */
+   display: block;
    flex-direction: column;
+   justify-content: center;
+   align-items: center;
+   overflow-y: hidden; //para evitar el scroll vertical
+   /* height: 100vh; */  //que no crezca más allá de la altura de la ventana
+   height: 100%;
+   padding: 0;
+   box-sizing: border-box;
+
  }
 
 .card-container {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100%;
+  padding: 1rem;
+  height: auto;
+  width: 100%;
+  box-sizing: border-box;
 
   ion-card {
     max-width: 600px;
-     .ion-white-bkg {
-      background-color: #FFFFFF;
-      display: flex;
+    width: 100%;
+   }
+ }
+ 
+ .welcome{  
+  display: flex;      
+  color: #005BBB;
+  font-size: x-large;
+  justify-content: center;
+  margin-bottom: 16px;
+  }
 
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      img{
-        .responsive-img {
-        width: 100%; 
-        height: auto; 
-        max-width: 100vw;
-        max-height: 100vh;
-        object-fit: contain; // Ajusta sin recortar /
-        }
-      }
-    }
-      .welcome{  
-          display: flex;      
-          color: #005BBB;
-          font-size: x-large;
-          justify-content: center;
-          margin-bottom: 16px;
-    }
+ .img-col{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem;
+
+  img.responsive-img{
+    width: 100%;
+    height: auto;
+    max-height: 200px;
+    object-fit: contain;
+  }
  }
 
-@media screen and (max-width: 576px) {
-  .card-container {
-    ion-card {
-      .ion-white-bkg {
-        max-height: 200px;
-      }
-      .welcome {
-        min-height: 200px;
+@media screen and (orientation: landscape) {
 
-      }
+  html, body {
+    overflow: auto;
+  }
+
+  ion-content{
+    overflow-y:auto; // hace scroll si es necesario
+    height: auto;  //crece si el contenido lo necesita
+  }
+  .card-container ion-card ion-row {
+    display: flex;
+    flex-direction: row;
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+  
+  .img-col{
+     max-width: 200px;
+    
+
+    img.responsive-img{
+      max-height: 150px;
+      width: auto;
     }
   }
-}
+  .welcome {
+    font-size: large;
+  }
 }
 
-// Items de formulario /
+ .welcome { 
+        display: flex;
+        justify-content: center;
+        color: #005BBB;
+        font-size: x-large;
+        margin-bottom: 16px;
+
+      } 
+     
+// Items de formulario //
 
 ion-item {
   --padding-start: 0;
@@ -87,22 +130,16 @@ ion-input {
 
 //Botones /
 
-ion-button {
-  &.ion-color-primary {
+ion-button.ion-color-primary {
     --background: #005BBB;
-    color: #FFFFFF;
-    --border-radius: 10%; /*8px;*/
-  }
-
-  &.ion-color-secondary {
-    --background: #34495E;
     color: #FFFFFF;
     --border-radius: 8px;
   }
-}
 
-ion-title {
-  text-align: center;
-  color: #fff;
-}
+/*   ion-button.ion-color-secondary {
+    --background: #005BBB;
+    color: #FFFFFF;
+    --border-radius: 8px;
+  } */
+
 

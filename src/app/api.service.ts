@@ -4,6 +4,7 @@ import { Observable, BehaviorSubject } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { HttpHeaders } from '@angular/common/http';
 import { LoadingController } from '@ionic/angular';
+import { Usuario } from './models/usuario.model';
 
 const apiUrl = 'https://nice-roan-whippet.glitch.me/api';
 
@@ -18,6 +19,8 @@ export class ApiService {
   miCocheBehaviorSubject = new BehaviorSubject<string>("");
   miIdCocheBehaviorSubject = new BehaviorSubject<number>(0);
   cocheDispoBehaviorSubject = new BehaviorSubject<boolean>(true);
+  rolBehaviorSubject = new BehaviorSubject<string>("");
+  
 
   newItemSubject = new BehaviorSubject<any>({
     id_usuario: 3,
@@ -34,24 +37,36 @@ export class ApiService {
     modelo: "",
     ano: 0,
     disponible: true,
-  })
+  });
+    usaurioBehaviorSubject = new BehaviorSubject<any>({
+    id_usuario: 0,
+    nombre: "",
+    rol: "" ,
+    correo: "",
+    telefono: 0,
+    contrasena: 0,
+  });
 
+
+
+ // private usuarioSubject = new BehaviorSubject<any>(null); // Inicializa vacío o con datos desde localStorage
+//  public usuario$ = this.usuarioSubject.asObservable();
+
+
+  private usuarioSubject = new BehaviorSubject<any>(this.getUsuarioLocalStorage());
+//  private usuarioSubject: BehaviorSubject<Usuario> = new BehaviorSubject<Usuario>(
+//    new Usuario(0, 'otro', '', '', '')
+//  );
+
+//  public usuario$: Observable<Usuario> = this.usuarioSubject.asObservable();
 
   /*****    TODO lo mismo con el id del coche, me será útil **********/
 
   constructor(private http: HttpClient, public LoadingController: LoadingController) {}
 
-  login1(correo: string, contrasena: string): Observable<any> {
+  login(correo: string, contrasena: string): Observable<any> {
     return this.http.post(`${apiUrl}/login`, { correo, contrasena });
   }
-
-    login(email: string, password: string) {
-      return this.http.post<{ token: string }>(`${apiUrl}/login`, { email, password }).pipe(
-        tap(response => {
-          sessionStorage.setItem('accessToken', response.token); // Guardamos el JWT temporalmente
-        })
-      );
-    }
 
     getToken(): string | null {
       return sessionStorage.getItem('accessToken');
@@ -100,7 +115,36 @@ export class ApiService {
   getVehiculos(): Observable<any> {
     return this.http.get(`${apiUrl}/vehiculos`);
   }
-////////////////////////////////////////////////////////////////////////
+  /////////////////////////////// USUARIO OBSERVABLE /////////////////////////////
+  get usuario$() {
+    return this.usuarioSubject.asObservable();
+  }
+
+  setUsuario(usuario: any) {
+    localStorage.setItem('usuario', JSON.stringify(usuario));
+    this.usuarioSubject.next(usuario);
+  }
+
+  private getUsuarioLocalStorage() {
+    const usuario = localStorage.getItem('usuario');
+    return usuario ? JSON.parse(usuario) : null;
+  }
+
+
+ 
+  setUsuarioObs(usuario: any){
+    this.usaurioBehaviorSubject.next(usuario);
+    console.log('Usuario enviado al BehaviorSubject:', usuario);
+  }
+  getUsuarioObs(): Observable<any> {
+    return this.usaurioBehaviorSubject.asObservable();
+  }
+  getUsuarioValue(): any {
+    return this.usaurioBehaviorSubject.getValue();
+  }
+
+
+ ////////////////////////////////   VIAJES  ///////////////////////////////////////
   getViajes(): Observable<any> {
     return this.http.get<any>(`${apiUrl}/viajes`);
   }
@@ -110,7 +154,16 @@ export class ApiService {
   }
 
 
-  /////////////////////////////   vehiculo   ////////////////////////////////////
+  /////////////////////////////   vehiculo  observable ////////////////////////////////////
+  
+  setRol(rol: string){
+    this.rolBehaviorSubject.next(rol);
+    console.log('he grabado el rol: ', this.rolBehaviorSubject.value);
+  }
+  getRol(){
+    return this.rolBehaviorSubject.asObservable();
+  }
+
   setModeloSeleccionado(modelo: string) {
     // this.objetoModeloSeleccionado.next(modelo);
     this.miCocheBehaviorSubject.next(modelo);
@@ -152,6 +205,11 @@ export class ApiService {
   }
 
 ////////////////////////////////////////////////////////////////////////////////
+actualizarUsuario(usuario: Usuario): void {
+  this.usuarioSubject.next(usuario);
+}
+/////////  USUARIO ////////////////////////////////
+
 
 //////////////////   LOADING ////////////////////////
 
@@ -165,7 +223,15 @@ async loading(mensaje: string){
   return await loading.present();
 
 }
-
+//////////////////////////// CIERRE SESION ////////////////////////
+/* LIMPIO MEMORIA */
+cerrarSesion(){
+  localStorage.removeItem('token');
+  localStorage.removeItem('usuario');
+  localStorage.removeItem('rol');
+  sessionStorage.clear();
+  console.log('Sesión cerrada');
+}
   
 }
 

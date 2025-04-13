@@ -16,23 +16,35 @@ export class ViajesComponent implements OnInit {
   viajes: any[] = [];
   control: number = 0;
   mensajeLoading: string = 'cargando datos..';
+  rol : string | null = '';
 
   constructor(private apiService: ApiService, private router: Router) { }
 
   ngOnInit() {
+    console.log('            entro en viajes');
+    this.controlRol();
     this.apiService.loading(this.mensajeLoading);
 
     this.loadViajes();
-    console.log('control: ',this.control);
-    /***Para controlar que vuelvo a la pagina y volver a cargar la lista*/
-    this.router.events.subscribe(event => {
-      if (event instanceof NavigationEnd) {
-        console.log("ha entrado otra vez");
-        this.control = 1;
-       // this.loadViajes();
-      }
-    });
+   // console.log('control: ',this.control);
   }
+
+  controlRol() {
+    console.log('             con localStorage ');
+    try {
+      this.rol = localStorage.getItem('rol');
+      if (this.rol) {
+        console.log('************ rol en vehiculos: ', this.rol);
+      } else {
+        console.warn('No se ha encontrado rol en localStorage.');
+        this.rol = 'visitante'; //
+      }
+    } catch (error) {
+      console.error('Error al leer el rol desde localStorage:', error);
+      this.rol = 'visitante'; 
+    }
+  }
+
 
   loadViajes() {
   // this.apiService.loading(this.mensajeLoading);
@@ -80,6 +92,7 @@ export class ViajesComponent implements OnInit {
     });
   }
   */
+
 }
 
 

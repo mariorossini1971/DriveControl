@@ -7,19 +7,23 @@
   width: 100%; 
   //overflow: auto; 
   box-sizing: border-box; 
-  padding-top: 50px; 
+  /* padding-top: 50px;  */
+  padding-top: var(--ion-safe-area-top, 56px); /* espacio seguro para el header */
   padding-bottom: 50px; 
-  justify-content: center;//centra horizontal 
-  align-items: center; //centra vertical }
+  justify-content: flex-start;//centra horizontal 
+  align-items: center; //centra vertical 
+  }
    
   .seccion{ flex: 0.5; 
   display: flex; 
   align-items: center; 
-  justify-content: center; } 
+  justify-content: center; 
+} 
   
   .seccion2{ 
   margin-top: 0; 
-  padding-top: 0; } 
+  padding-top: 0; 
+} 
   /* Contenedor del vehículo */ 
   .vehiculo-container { 
   display: flex; 
@@ -120,19 +124,22 @@
     color: #2ECC71; 
     /* Verde para éxito */ 
     } 
+
     /* Asegurar que el body y html no interfieran */ 
     html, body { 
     height: 100%; 
     overflow: hidden; /* Prevenir scroll general */ 
     } 
+
     /*para evitar scroll innecesario*/ 
-    ion-content { --overflow: hidden; 
-    /*para evitar que haga un scroll si no es realmente necesario*/ 
-    min-height: 100vh; /*para que ocupe toda la pantalla*/ 
-    display: flex; 
-    flex-direction: column; 
-    padding-bottom: env(safe-area-inset-bottom); 
+    ion-content { 
+      --overflow: auto; 
+      overflow-y: auto;
+      display: flex; 
+      flex-direction: column; 
+      padding-bottom: env(safe-area-inset-bottom); 
     } 
+
     /* Ajustar en móviles (subimos un poco el botón Selecciona Vehículo) */ 
     @media (max-width: 768px) { 
     .container { 
@@ -144,6 +151,7 @@
     }
     /*Ajustar en móviles/tablets en horizontal*/ 
     @media (max-width: 800px) and (orientation: landscape) { 
+
     .vehiculo-container { 
     margin-top: 0px; 
     } 
@@ -153,7 +161,12 @@
     } 
     ion-content { 
     --overflow: auto; /*para evitar que haga un scroll si no es realmente necesario*/ 
+    overflow-y: auto;
     } 
+    .container{
+      justify-content: flex-start;
+      padding-top: var(--ion-safe-area-top, 56px);
     }
-  }
+    }
+  
   

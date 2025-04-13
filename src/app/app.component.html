@@ -1,6 +1,5 @@
 <ion-app>
-
-  <ion-menu side="start" menuId="menu" contentId="principal">
+  <ion-menu side="start" menuId="menu" contentId="principal" >
     <ion-header>
       <ion-toolbar>
         <ion-title>Control Flota</ion-title>
@@ -21,12 +20,44 @@
           <ion-item routerLink="/viajes" detail>Viajes Guardados
             <ion-icon slot="start" name="information" color="primary"></ion-icon>
           </ion-item>
-          <ion-item routerLink="/login" detail>Salir
+          <ion-item (click)="cerrarSesion()" detail>Salir
             <ion-icon slot="start" name="log-out" color="primary"></ion-icon>
           </ion-item>
         </ion-list>
       </ion-menu-toggle>
     </ion-content>
   </ion-menu> 
+
+  <ion-menu side="start" menuId="menuAdmin" contentId="principal" >
+    <ion-header>
+      <ion-toolbar>
+        <ion-title>  ADMINISTRADOR</ion-title>
+      </ion-toolbar>
+    </ion-header>
+    <ion-content>
+      <ion-menu-toggle>
+        <ion-list>
+          <ion-item routerLink="/home" detail>home 
+            <ion-icon slot="start" name="home" color="primary"></ion-icon>
+          </ion-item>
+          <ion-item routerLink="/usuarios" detail>Editar Usuarios
+            <ion-icon slot="start" name="person-add" color="primary"></ion-icon>
+          </ion-item>
+          <ion-item routerLink="/vehiculos" detail>Editar Vehiculos
+            <ion-icon slot="start" name="car" color="primary"></ion-icon>
+          </ion-item>
+          <ion-item routerLink="/viajes" detail>Ver Viajes Guardados
+            <ion-icon slot="start" name="information" color="primary"></ion-icon>
+          </ion-item>
+          <ion-item (click)="cerrarSesion()" detail>Salir
+            <ion-icon slot="start" name="log-out" color="primary"></ion-icon>
+          </ion-item>
+        </ion-list>
+      </ion-menu-toggle>
+    </ion-content>
+  </ion-menu> 
+
+
  <ion-router-outlet id="principal"></ion-router-outlet>
 </ion-app>
+

@@ -72,6 +72,10 @@
         },
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+          "liveReload": true
+          },
+
           "configurations": {
             "production": {
               "buildTarget": "app:build:production"

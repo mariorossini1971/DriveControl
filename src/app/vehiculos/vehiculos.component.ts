@@ -15,6 +15,7 @@ export class VehiculosComponent implements OnDestroy {
   modeloSeleccionado: string = "";
   disponible: boolean = false;
   mensajeLoading: string =  'cargando datos';
+  rol : string | null = '';
 
   vehiculoSeleccionado: any = null;
   idVehiculo: number = 0;
@@ -28,8 +29,25 @@ export class VehiculosComponent implements OnDestroy {
     public router: Router) { }
 
    ngOnInit() {
-
+    
+    this.controlRol();
     this.cargarDatosVehiculos();
+  }
+
+  controlRol() {
+    console.log('             con localStorage ');
+    try {
+      this.rol = localStorage.getItem('rol');
+      if (this.rol) {
+        console.log('************ rol en home: ', this.rol);
+      } else {
+        console.warn('No se ha encontrado rol en localStorage.');
+        this.rol = 'visitante'; //
+      }
+    } catch (error) {
+      console.error('Error al leer el rol desde localStorage:', error);
+      this.rol = 'visitante'; 
+    }
   }
 
   cargarDatosVehiculos(){

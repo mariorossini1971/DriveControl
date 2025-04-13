@@ -1,25 +1,92 @@
-<ion-content [fullscreen]="true">
-
-  <div class="ion-page" id="menu">
+ <div class="ion-page" id="menu">
     <ion-header>
       <ion-toolbar>
         <ion-buttons slot="start">
-          <ion-menu-button color="primary" name="menu"></ion-menu-button>
+          <!-- Botón para el rol de administrador -->
+          <ion-menu-button
+            color="primary"
+            *ngIf="rol === 'admin'"
+            menu="menuAdmin"
+          >
+          </ion-menu-button>
+
+          <!-- Botón para el rol de conductor -->
+          <ion-menu-button
+            color="primary"
+            *ngIf="rol === 'conductor'"
+            menu="menu"
+          >
+          </ion-menu-button>
         </ion-buttons>
-        <ion-title>USUARIOS</ion-title>
-        <ion-buttons slot="end">
+
+        <ion-title>Usuarios</ion-title>
+          <ion-buttons slot="end">
+          <ion-button *ngIf="rol === 'admin'" (click)="nuevoUsuario()">
+            <ion-icon slot="icon-only" name="person-add-outline" color="primary"></ion-icon>
+          </ion-button>
           <ion-back-button defaultHref="/home" icon="return-down-back-outline"></ion-back-button>
         </ion-buttons>
       </ion-toolbar>
     </ion-header>  
-   
-<ion-content>
-  <ion-list>
-    <ion-item *ngFor="let usuario of usuarios">
-      <ion-label>
-        <h2>{{ usuario.nombre }}</h2>
-        <p>{{ usuario.correo }}</p>
-      </ion-label>
-    </ion-item>
-  </ion-list>
-</ion-content>
+
+    <ion-content [fullscreen]="true" class="ion-padding">
+
+    <!-- Contenido para ADMIN -->
+    <div *ngIf="rol === 'admin'">
+      <ion-list>
+        <ion-card class="custom-card" *ngFor="let usuario of usuarios" (click)="verUsuario(usuario)">
+          <ion-card-header class="user-header">
+            <div class="user-info">
+              <ion-card-title>
+                    <ion-icon name="person-outline" class="icon-card"></ion-icon> 
+                  {{ usuario.nombre }}
+             </ion-card-title>
+           
+             <ion-card-content>
+                  <p class="user-email"> {{ usuario.correo }}</p>
+              </ion-card-content>
+            </div>
+    
+          </ion-card-header>
+        </ion-card>
+      </ion-list>
+    </div>
+
+    <!-- Contenido para CONDUCTOR -->
+    <div *ngIf="rol === 'conductor'">
+
+      <ion-list>
+        <ion-card class="custom-card" (click)="verUsuario(usuario)">
+          <ion-card-header class="user-header">
+            <div class="user-info">
+              <ion-card-title>
+                    <ion-icon name="person-outline" class="icon-card"></ion-icon> 
+                  {{ usuarioRecuperado.nombre  }}
+             </ion-card-title>
+           
+             <ion-card-content>
+                  <p class="user-email"> {{ usuarioRecuperado.correo }}</p>
+              </ion-card-content>
+            </div>
+    
+          </ion-card-header>
+        </ion-card>
+      </ion-list>
+
+
+
+
+
+
+
+
+    <!--   <ion-item>
+        <ion-label>
+          <h2>{{ usuarioRecuperado.nombre }}</h2>
+          <p>Email: {{ usuarioRecuperado.correo }}</p>
+          <p>id: {{ usuarioRecuperado.id_usuario }}</p>
+        </ion-label>
+      </ion-item> -->
+    </div>
+  </ion-content>
+</div>

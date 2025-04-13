@@ -2,7 +2,8 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { BehaviorSubject, Subscription } from 'rxjs';
 import { ApiService } from '../api.service';
 import { ActivatedRoute, Route, Router } from '@angular/router';
-
+import { firstValueFrom } from 'rxjs';
+import { ChangeDetectorRef } from '@angular/core';
 
 @Component({
   selector: 'app-guardar',
@@ -21,6 +22,7 @@ export class GuardarPage implements OnDestroy{
     comentario: '',
   });
 
+  rol: string = "";
 
 
   mensaje: string = '';
@@ -29,7 +31,8 @@ export class GuardarPage implements OnDestroy{
   constructor(
         public activateRoute: ActivatedRoute,
         private apiService: ApiService, // Inyecta el servicio API
-        public router: Router
+        public router: Router,
+        private cdRef: ChangeDetectorRef // Inyectamos ChangeDetectorRef
   ) { }
 
   ngOnInit() {
@@ -37,6 +40,17 @@ export class GuardarPage implements OnDestroy{
     this.apiService.getNewItem().subscribe({
       next: (viaje) => {
         console.log('viaje seleccionado:', viaje);
+
+        // Si no hay comentario, valo predeterminado
+   if (!viaje.comentario || viaje.comentario.trim() === '') {
+    viaje.comentario = '';
+   }
+
+    // Verificamos si el comentario contiene 'no hay comentarios' y lo reemplazamos por vacío
+    if (viaje.comentario === 'no hay comentarios') {
+      viaje.comentario = ''; // Lo dejamos vacío para que se vea el placeholder
+    }
+
         this.viaje$.next(viaje);
         console.log('comentario', this.viaje$.getValue().comentario)
       },
@@ -54,9 +68,17 @@ export class GuardarPage implements OnDestroy{
   
 
 async guardarStore() {
-    this.mensaje = 'Guardando Datos';
+    this.mensaje = '';
     const viaje = this.viaje$.getValue(); // Extrae el objeto viaje
     console.log('Datos preparados para guardar:', viaje);
+
+      // Si no hay comentario, lo rellenamos
+      if (!viaje.comentario || viaje.comentario.trim() === '') {
+        viaje.comentario = 'gaurdarStore: no message';
+      }
+
+      this.mensaje = 'Guardando datos...';
+      console.log('2Guardando datos...', this.mensaje);
 
     let intentos = 0; // Contador de intentos
     const maxIntentos = 3; // Máximo número de intentos
@@ -65,14 +87,16 @@ async guardarStore() {
     while (!this.datosGuardados && intentos < maxIntentos) {
       try {
         // Enviar datos a la API y esperar el resultado
-        const response = await this.apiService.createViaje(viaje).toPromise();
-        console.log('Datos guardados exitosamente:', response);
+        const response = await firstValueFrom(this.apiService.createViaje(viaje));        console.log('Datos guardados:', response);
         this.datosGuardados = true;
       } catch (error) {
         intentos++;
         console.error(`Error al guardar en la API (Intento ${intentos}):`, error);
       }
     }
+    // Usamos ChangeDetectorRef para asegurarnos de que Angular actualice la vista
+    this.cdRef.detectChanges();
+
 
     if (this.datosGuardados) {
       this.mensaje = 'Datos guardados con éxito ✅';
@@ -86,7 +110,7 @@ async guardarStore() {
     setTimeout(() => {
       this.mensaje = ''; 
       this.router.navigate(['/home']);
-    }, 2000);
+    }, 3000);
   }
 
 }

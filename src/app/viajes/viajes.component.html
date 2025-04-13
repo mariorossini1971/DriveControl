@@ -1,35 +1,53 @@
+<div class="ion-page" id="menu">
+  <ion-header>
+    <ion-toolbar>
+      <ion-buttons slot="start">
+        <ion-menu-button color="primary" name="menu"></ion-menu-button>
+      </ion-buttons>
+      <ion-title>Viajes Guardados</ion-title>
+      <ion-buttons slot="end">
+        <ion-back-button defaultHref="/home" icon="return-down-back-outline"></ion-back-button>
+      </ion-buttons>
+    </ion-toolbar>
+  </ion-header>
+
 <ion-content [fullscreen]="true">
-
-  <div class="ion-page" id="menu">
-    <ion-header>
-      <ion-toolbar>
-        <ion-buttons slot="start">
-          <ion-menu-button color="primary" name="menu"></ion-menu-button>
-        </ion-buttons>
-        <ion-title>Viajes Guardados</ion-title>
-        <ion-buttons slot="end">
-          <ion-back-button defaultHref="/home" icon="return-down-back-outline"></ion-back-button>
-        </ion-buttons>
-      </ion-toolbar>
-    </ion-header>
-
-<ion-content>
-  <ion-list>
-    <ion-item *ngFor="let viaje of viajes">
-      <ion-avatar slot="start">
-        <img src="assets/images/icono_coche.png">
-      </ion-avatar>
-      <ion-label>
-        <h3>{{ viaje.fecha_inicio | date: 'd \'de\' MMMM \'del\' y - HH:mm' }}</h3>
-        <p>Vehículo: {{viaje.marca}}  {{viaje.modelo}}</p>
-        <p>Matricula: {{viaje.matricula}}</p>
-        <!-- <p>Inicio: {{ viaje.fecha_inicio }}</p>
-        <p>Fin: {{ viaje.fecha_fin }}</p>
-        <p>Usuario: {{ viaje.nombre_conductor }}</p>
-        <p>Vehículo: {{viaje.marca}}  {{viaje.modelo}}</p>-->
-      </ion-label>
-      <ion-button fill="outline" color="primary" shape="round">Ver detalles</ion-button>
-    </ion-item>
-  </ion-list>
+<ion-list>
+  <ion-card *ngFor="let viaje of viajes">
+  <ion-card-header class="user-header">
+    <ion-card-title>
+      <ion-icon name="person-outline" class="icon-card"></ion-icon>
+      Usuario: {{ viaje.nombre_conductor }} 
+    </ion-card-title>
+    <ion-card-subtitle class="vehicle-info">
+      <ion-icon name="car-outline" class="icon-card"></ion-icon>
+      <strong>Vehículo:</strong> {{viaje.marca}}-{{viaje.modelo}} <br>
+      <p class="car-matricula"><strong>Matrícula:</strong> {{viaje.matricula}}</p>
+    </ion-card-subtitle>
+    </ion-card-header>
+  <ion-card-content>
+      <p *ngIf="viaje.fecha_inicio && viaje.fecha_inicio !== '0000-00-00 00:00:00'">
+        <ion-icon name="calendar-outline" class="icon-card-calendar"></ion-icon>
+        Inicio: {{ viaje.fecha_inicio | date: 'd \'de\' MMMM \'del\' y - HH:mm' }}
+      </p>
+      <p *ngIf="viaje.fecha_fin && viaje.fecha_fin !== '0000-00-00 00:00:00'"> 
+        <ion-icon name="calendar-outline" class="icon-card-calendar"></ion-icon>
+      Fin:{{ viaje.fecha_fin | date: 'd \'de\' MMMM \'del\' y - HH:mm' }}
+      </p>
+     
+      <div class="boton-detalles">
+      <ion-button fill="outline" color="primary" shape="round" size="small">
+        Ver detalles
+      </ion-button>
+    </div>
+    </ion-card-content>
+          
+     
+      <!-- <p>Inicio: {{ viaje.fecha_inicio }}</p>
+      <p>Fin: {{ viaje.fecha_fin }}</p>
+      <p>Usuario: {{ viaje.nombre_conductor }}</p>
+      <p>Vehículo: {{viaje.marca}}  {{viaje.modelo}}</p>-->
+    
+  </ion-card>
+</ion-list>
 </ion-content>
-
