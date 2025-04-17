@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { ApiService } from '../api.service';
-import { delay, Subscribable, Subscription } from 'rxjs';
-import {  Router } from '@angular/router';
+import { delay, filter, Subscribable, Subscription } from 'rxjs';
+import {  NavigationEnd, Router } from '@angular/router';
 import { Usuario } from '../models/usuario.model';
 
 @Component({
@@ -9,6 +9,7 @@ import { Usuario } from '../models/usuario.model';
   templateUrl: './usuarios.component.html',
   styleUrls: ['./usuarios.component.scss']
 })
+
 export class UsuariosComponent implements OnDestroy {
 
  // usuarioRecuperado: any = {};
@@ -19,10 +20,15 @@ export class UsuariosComponent implements OnDestroy {
   nombre : string | null = '';
   id : number = 0 ;
 
+  filtroTexto: string = '';
+  /* criterioOrden: 'nombre' = 'nombre';  // Solo por nombre */
+  ordenDireccion: 'asc' | 'desc' = 'asc';  // A-Z o Z-A
+
   public usuario: Usuario = new Usuario(0,'', '','','');
   public usuarioRecuperado: Usuario = new Usuario(0,'','','','');
 
   private subscription: Subscription = new Subscription;
+  private routerSubscription!: Subscription;
 
   
   constructor(
@@ -35,7 +41,21 @@ export class UsuariosComponent implements OnDestroy {
     this.controlRol();
     this.funcionPrincipal();
     this.recuperaUsuario(this.id);
-  
+
+    // Suscribirse a los eventos de navegación
+    this.routerSubscription = this.router.events
+      .pipe(filter(event => event instanceof NavigationEnd))
+      .subscribe(() => {
+        // Cuando vuelve a esta vista, actualiza usuarios
+        this.funcionPrincipal();
+      });
+    }
+
+   ngOnDestroy() {
+
+      if (this.routerSubscription) {
+        this.routerSubscription.unsubscribe();
+      }
   }
 
   controlRol() {
@@ -53,6 +73,28 @@ export class UsuariosComponent implements OnDestroy {
     }
   }
   
+  get usuariosFiltradosYOrdenados() {
+    return this.usuarios
+      .filter(usuario => {
+        const texto = this.filtroTexto.toLowerCase();
+        return (
+          usuario.nombre.toLowerCase().includes(texto) ||
+          usuario.correo.toLowerCase().includes(texto)
+        );
+      })
+      .sort((a, b) => {
+        const valA = a.nombre.toLowerCase();
+        const valB = b.nombre.toLowerCase();
+        
+        if (this.ordenDireccion === 'asc') {
+          return valA.localeCompare(valB); // Orden ascendente
+        } else {
+          return valB.localeCompare(valA); // Orden descendente
+        }
+      });
+  }
+  
+
 
 funcionPrincipal(){
  
@@ -85,12 +127,13 @@ recuperaUsuario(id: number){
 }
 verUsuario(usuario: any){
   this.router.navigate(['/usuario-detalle'],{ state: {usuario, modo: 'ver' } });
+  
 }
+
 nuevoUsuario(){
   this.router.navigate(['/usuario-detalle'], { state: { modo: 'crear' } });
 }
 
-ngOnDestroy() {
-  }
+
 }
 

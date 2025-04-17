@@ -1,6 +1,5 @@
 
 
-<div class="ion-page" id="menu">
   <ion-header>
     <ion-toolbar>
       <ion-buttons slot="start">
@@ -19,6 +18,7 @@
       <ion-card-content>
 
         <form (ngSubmit)="guardarUsuario()" *ngIf="usuario">
+
           <ion-item>
             <ion-label position="floating">Nombre</ion-label>
             <ion-input 
@@ -28,75 +28,94 @@
             <ion-icon class="ion-align-self-center" slot="end" name="person-outline" color="primary"></ion-icon>
           </ion-item>
 
-        <ion-item *ngIf="modo !== 'crear'">
-               <!-- solo mostrar en ver   -->
-          <ion-label position="floating">Id</ion-label>
-          <ion-input 
-            [(ngModel)]="usuario.id_usuario" name="id_usuario"
-            [readonly]="true" required>
-          </ion-input>
-          <ion-icon class="ion-align-self-center" slot="end" name="finger-print-outline" color="primary"></ion-icon>
-        </ion-item>
+          <ion-item *ngIf="modo !== 'crear'">
+                <!-- solo mostrar en ver   -->
+            <ion-label position="floating">Id</ion-label>
+            <ion-input 
+              [(ngModel)]="usuario.id_usuario" name="id_usuario"
+              [readonly]="true" required>
+            </ion-input>
+            <ion-icon class="ion-align-self-center" slot="end" name="finger-print-outline" color="primary"></ion-icon>
+          </ion-item>
 
           <ion-item>
             <ion-label position="floating">Correo Electrónico</ion-label>
             <ion-input 
-            [(ngModel)]="usuario.correo" name="correo" type="email"
-            [readonly]="modo === 'ver'"
-            required>
-          </ion-input>
-          <ion-icon class="ion-align-self-center" slot="end" name="mail-outline" color="primary"></ion-icon>
-        </ion-item>
+              [(ngModel)]="usuario.correo" name="correo" type="email"
+              [readonly]="modo === 'ver'"
+              required>
+              </ion-input>
+              <ion-icon class="ion-align-self-center" slot="end" name="mail-outline" color="primary"></ion-icon>
+            </ion-item>
 
-        <ion-item>
-          <ion-label position="floating">Teléfono</ion-label>
-          <ion-input 
-            [(ngModel)]="usuario.telefono" name="telefono"
-            [readonly]="modo === 'ver'" required>
-          </ion-input>
-          <ion-icon class="ion-align-self-center" slot="end" name="call-outline" color="primary"></ion-icon>
-        </ion-item>
+            <ion-item>
+              <ion-label position="floating">Teléfono</ion-label>
+              <ion-input 
+                [(ngModel)]="usuario.telefono" name="telefono"
+                [readonly]="modo === 'ver'" required>
+              </ion-input>
+              <ion-icon class="ion-align-self-center" slot="end" name="call-outline" color="primary"></ion-icon>
+            </ion-item>
 
-        <ion-item>
-          <ion-label position="floating">Rol</ion-label>
-          <ion-input 
-            [(ngModel)]="usuario.rol" name="rol"
-            [readonly]="modo === 'ver'" required>
-          </ion-input>
-          <ion-icon class="ion-align-self-center" slot="end" name="briefcase-outline" color="primary"></ion-icon>
-        </ion-item>
+            <ion-item  *ngIf="rolLogueado === 'admin'"> <!-- *ngIf="rolLogueado === 'admin'" -->
+              <ion-label position="floating">Rol</ion-label>
+              <ion-select 
+                [(ngModel)]="usuario.rol" name="rol"
+                [disabled]="modo === 'ver'" 
+                interface="popover"
+                placeholder="Selecciona un rol">
+                    <ion-select-option value="admin">Administrador</ion-select-option>
+                    <ion-select-option value="conductor">Conductor</ion-select-option>
+                    <ion-select-option value="gestor">Gestor</ion-select-option>
+              </ion-select>
+              <ion-icon class="ion-align-self-center" slot="end" name="briefcase-outline" color="primary"></ion-icon>
+            </ion-item>
 
-        <ion-item>
-          <ion-label position="floating">Contraseña</ion-label>
-          <ion-input 
-            [(ngModel)]="usuario.contrasena" name="contrasena"
-            type="password" required>
-          </ion-input>
-          <ion-icon class="ion-align-self-center" slot="end" name="lock-closed-outline" color="primary"></ion-icon>
-        </ion-item>
+            <ion-item>
+              <ion-label position="floating">Contraseña</ion-label>
+              <ion-input 
+                [(ngModel)]="usuario.contrasena" name="contrasena"
+                type="password" required>
+              </ion-input>
+              <ion-icon class="ion-align-self-center" slot="end" name="lock-closed-outline" color="primary"></ion-icon>
+            </ion-item>
         
         <div>
-          <!-- <ion-button expand="full" class="boton" type="submit" *ngIf="modo !== 'ver' ">Guardar</ion-button>
-          <ion-button expand="full" color="danger" (click)="eliminarUsuario()" *ngIf="modo !== 'crear'">Eliminar</ion-button>
-          <ion-button expand="full" class="boton" (click)="guardarUsuario()" *ngIf="modo !== 'editar' ">Editar</ion-button> -->
-
+        
           <!-- Botón Guardar solo en modo crear o editar -->
-          <ion-button expand="full" class="boton" type="submit" *ngIf="modo === 'crear' || modo === 'editar'">Guardar</ion-button>
+          <ion-button expand="block" class="guardar" type="submit" *ngIf="modo === 'crear'  || modo === 'editar'">Guardar
+            <ion-icon slot="start" name="save-outline"></ion-icon>
+          </ion-button>
 
-          <!-- Botón Eliminar solo en modo editar o ver -->
-          <ion-button expand="full" color="danger" (click)="eliminarUsuario()" *ngIf="modo !== 'crear'">Eliminar</ion-button>
+           <!-- Botón Cancelar Edición en modo editar -->
+           <ion-button expand="block" class="cancelar"  (click)="cancelarEdicion()" *ngIf="modo === 'editar'">Cancelar
+            <ion-icon slot="start" name="close-circle-outline"></ion-icon>
+           </ion-button>
+
+            <!-- Botón Cancelar Edición en modo crear  -->
+            <ion-button expand="block" color="danger" (click)="cancelar()" *ngIf="modo === 'crear'">Cancelar
+            </ion-button>
+
+           
+          <!-- Botón Eliminar solo en modo ver -->
+          <ion-button expand="block" color="danger"  (click)="eliminarUsuario()" *ngIf="modo == 'editar' && usuario.id_usuario !== idUsuarioActual">Eliminar
+            <ion-icon slot="start" name="trash"></ion-icon>
+          </ion-button> 
+           
 
           <!-- Botón Editar solo en modo ver -->
-          <ion-button expand="full" class="boton" (click)="modo = 'editar'" *ngIf="modo === 'ver'">Editar</ion-button>
+          <ion-button expand="block"  (click)="modo = 'editar'" *ngIf="modo === 'ver' ">Editar
+            <ion-icon slot="start" name="pencil"></ion-icon>
+          </ion-button>
         </div>
-
-       
+      
       </form>
 
       </ion-card-content>
     </ion-card>
+     
   </div>
 
 </ion-content>
 
-</div>
+

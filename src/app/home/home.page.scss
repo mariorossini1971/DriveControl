@@ -24,6 +24,7 @@
   margin-top: 0; 
   padding-top: 0; 
 } 
+
   /* Contenedor del vehículo */ 
   .vehiculo-container { 
   display: flex; 
@@ -34,12 +35,14 @@
   margin-bottom: 20px; 
   /* Espaciado en pantallas grandes */ 
   } 
+
   /* Input de vehículo alineado */ 
   .vehiculo-input { 
   width: 100%; 
   max-width: 350px; 
   margin-top: 10px; 
   } 
+
   /* Cronómetro centrado */ 
   .cronometro-container { 
   display: flex; 
@@ -48,7 +51,8 @@
   width: 100%; 
   max-width: 400px; 
   margin-bottom: 30px; 
-  } 
+  }
+
   .cronometro { 
   font-size: 3.5rem; 
   font-weight: bold; 
@@ -59,6 +63,7 @@
   text-align: center; 
   min-width: 220px; 
   } 
+
   /* Texto del cronómetro */ 
   .cronometro h1 { 
   font-size: 2rem; 
@@ -66,6 +71,7 @@
   text-align: center; 
   color: #005BBB; 
   } 
+
   ion-row{ 
   display: flex; 
   justify-content: center; // Centra horizontal 
@@ -73,32 +79,34 @@
   width: 100%; // Ocupa todo el ancho 
   height: auto; //ajuste dinámico 
   } 
+
   ion-col{ 
-  display: flex; 
-  //flex-direction: row; //organiza contenido en columnas 
-  align-items: center; //centra vertical 
-  //justify-content: center; // centra horizontal no sirve xq pone el fab en medio 
-  border-radius: 50px; 
-  width: 100%; 
-  max-width: 300px; 
-  position: relative;//para contener los iconos dentro 
-  /* Texto centrado */ 
-  .texto-swiper { 
-  font-size: medium; 
-  margin-left: 8px; 
-  flex-grow: 1;//ocupa espacio restante 
-  text-align: left; // Asegura el centrado del texto 
-  } 
-  /* div{ position: absolute; /* width: 100%; */ /* width: -webkit-fill-available; } */ 
-  /* ion-fab-button{ //position: absolute; // display: flex; // align-items: center; // Centra vertical // justify-content: center; // Centra horizontal // margin-top: 1rem; // Ajusta la separación superior si es necesario left: 10px; z-index: 0; } */ /* ion-fab-button ion-icon { //margin-right: 8px; //position: static; // Quita la posición absoluta } */ 
-  ion-icon{ 
-  position: absolute; } 
-  .left{ left: 0; 
-  transform: translateX(3px); 
-  } 
-  .right{ right: 0; 
-  transform: translateX(-3px); 
-  } 
+    display: flex; 
+    //flex-direction: row; //organiza contenido en columnas 
+    align-items: center; //centra vertical 
+    //justify-content: center; // centra horizontal no sirve xq pone el fab en medio 
+    border-radius: 50px; 
+    width: 100%; 
+    max-width: 300px; 
+    position: relative;//para contener los iconos dentro 
+
+    /* Texto centrado */ 
+    .texto-swiper { 
+    font-size: medium; 
+    margin-left: 8px; 
+    flex-grow: 1;//ocupa espacio restante 
+    text-align: left; // Asegura el centrado del texto 
+    } 
+    /* div{ position: absolute; /* width: 100%; */ /* width: -webkit-fill-available; } */ 
+    /* ion-fab-button{ //position: absolute; // display: flex; // align-items: center; // Centra vertical // justify-content: center; // Centra horizontal // margin-top: 1rem; // Ajusta la separación superior si es necesario left: 10px; z-index: 0; } */ /* ion-fab-button ion-icon { //margin-right: 8px; //position: static; // Quita la posición absoluta } */ 
+    ion-icon{ 
+    position: absolute; } 
+    .left{ left: 0; 
+    transform: translateX(3px); 
+    } 
+    .right{ right: 0; 
+    transform: translateX(-3px); 
+    } 
   } 
   ion-button { 
   width: 100%; /* Que ocupe todo el ancho */ 
@@ -142,31 +150,31 @@
 
     /* Ajustar en móviles (subimos un poco el botón Selecciona Vehículo) */ 
     @media (max-width: 768px) { 
-    .container { 
-    justify-content: center; /* Contenido centrado */ 
-    } 
-    .cronometro-container { 
-    margin-bottom: 20px; /* Más separación con los botones */ 
-    } 
+      .container { 
+      justify-content: center; /* Contenido centrado */ 
+      } 
+      .cronometro-container { 
+      margin-bottom: 20px; /* Más separación con los botones */ 
+      } 
     }
     /*Ajustar en móviles/tablets en horizontal*/ 
     @media (max-width: 800px) and (orientation: landscape) { 
 
-    .vehiculo-container { 
-    margin-top: 0px; 
-    } 
-    .cronometro-container { 
-    margin-top: 0px; /* separación con los botones */ 
-    margin-bottom: 0px; /* separación con los botones */ 
-    } 
-    ion-content { 
-    --overflow: auto; /*para evitar que haga un scroll si no es realmente necesario*/ 
-    overflow-y: auto;
-    } 
-    .container{
-      justify-content: flex-start;
-      padding-top: var(--ion-safe-area-top, 56px);
-    }
+      .vehiculo-container { 
+      margin-top: 0px; 
+      } 
+      .cronometro-container { 
+      margin-top: 0px; /* separación con los botones */ 
+      margin-bottom: 0px; /* separación con los botones */ 
+      } 
+      ion-content { 
+      --overflow: auto; /*para evitar que haga un scroll si no es realmente necesario*/ 
+      overflow-y: auto;
+      } 
+      .container{
+        justify-content: flex-start;
+        padding-top: var(--ion-safe-area-top, 56px);
+      }
     }
   
   

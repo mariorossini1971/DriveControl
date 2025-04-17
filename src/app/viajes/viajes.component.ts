@@ -12,6 +12,7 @@ import { registerLocaleData } from '@angular/common';
   templateUrl: './viajes.component.html',
   styleUrls: ['./viajes.component.scss'],
 })
+
 export class ViajesComponent implements OnInit {
   viajes: any[] = [];
   control: number = 0;
@@ -24,7 +25,6 @@ export class ViajesComponent implements OnInit {
     console.log('            entro en viajes');
     this.controlRol();
     this.apiService.loading(this.mensajeLoading);
-
     this.loadViajes();
    // console.log('control: ',this.control);
   }
@@ -66,32 +66,31 @@ export class ViajesComponent implements OnInit {
       this.apiService.LoadingController.dismiss();
     }
   }
-  
-/*
-  loadViajes() {
-    if (this.control !== 0) {
-      console.log("Datos ya cargados, no se vuelve a llamar a la API.");
-      this.apiService.LoadingController.dismiss();
-      return; // Si ya está cargado, no hacemos nada
-    }
-  
-    this.apiService.loading(this.mensajeLoading);
-    console.log("Cargando viajes...");
-  
-    this.apiService.getViajes().subscribe({
-      next: (data: any[]) => {
-        this.viajes = data.sort((a, b) => a.id_viaje - b.id_viaje); // Ordenar por id_viaje
-        this.control = 1; // Marcar como cargado
-      },
-      error: (error) => {
-        console.error("Error al cargar los viajes:", error);
-      },
-      complete: () => {
-        this.apiService.LoadingController.dismiss();
+
+/*   eliminarViaje(id_viaje: number) {
+    if (this.rol === 'admin') {
+      if (confirm('¿Estás seguro de eliminar este viaje?')) {
+
+        this.apiService.deleteViaje(id_viaje).subscribe(
+          () => {
+            this.loadViajes(); // Actualizamos la lista de viajes después de eliminar
+            alert('Viaje eliminado');
+          },
+          (error: any) => {
+            console.error('Error al eliminar el viaje:', error);
+          }
+        );
       }
-    });
+    } else {
+      alert('No tienes permiso para eliminar este viaje');
+    }
   }
-  */
+
+  verDetalles(viaje: any) {
+    this.router.navigate(['/viaje-detalle'], { state: { viaje } });
+  } */
+
+  
 
 }
 
