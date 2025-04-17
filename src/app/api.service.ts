@@ -115,6 +115,13 @@ export class ApiService {
   getVehiculos(): Observable<any> {
     return this.http.get(`${apiUrl}/vehiculos`);
   }
+  updateVehiculo(id: number, vehiculo: any): Observable<any>{
+    return this.http.put(`${apiUrl}/vehiculos/${id}`, vehiculo);
+  }
+
+  deleteVehiculo(id:number): Observable<any> {
+    return this.http.delete(`${apiUrl}/vehiculos/${id}`);
+  }
   /////////////////////////////// USUARIO OBSERVABLE /////////////////////////////
   get usuario$() {
     return this.usuarioSubject.asObservable();

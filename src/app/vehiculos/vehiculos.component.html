@@ -15,7 +15,7 @@
 <ion-content [fullscreen]="true" class="ion-padding">
 <ion-title>Seleccionar un vehículo</ion-title>
      <ion-list>
-      <ion-card class="custom-card" *ngFor="let vehiculo of vehiculos">
+      <ion-card class="custom-card" *ngFor="let vehiculo of vehiculos" (click)="verVehiculo(vehiculo)">
         <ion-card-header>
        <!--  <ion-label> -->
         <ion-card-title>

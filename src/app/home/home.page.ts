@@ -5,6 +5,7 @@ import { ApiService } from '../api.service';
 import { BehaviorSubject, Subscription } from 'rxjs';
 import { GestureController,ToastController} from '@ionic/angular';
 import { Usuario } from '../models/usuario.model';
+import { MenuController } from '@ionic/angular';
 
 @Component({
   selector: 'app-home',
@@ -79,12 +80,14 @@ export class HomePage implements OnInit, OnDestroy {
     private cdr: ChangeDetectorRef,
     public activateRoute: ActivatedRoute,
     private apiService: ApiService,
-    public router: Router
+    public router: Router,
+    private menuCtrl: MenuController,
   ) {}
 
   ngOnInit() {
 
     this.controlRol();
+    this.activarMenu();
     this.funcionPrincipal();
     
   }
@@ -94,7 +97,7 @@ export class HomePage implements OnInit, OnDestroy {
     try {
       this.rol = localStorage.getItem('rol');
       if (this.rol) {
-        console.log('************ rol en usuario: ', this.rol);
+        console.log('************ rol en home: ', this.rol);
       } else {
         console.warn('No se ha encontrado rol en localStorage.');
         this.rol = 'visitante'; //
@@ -258,6 +261,16 @@ export class HomePage implements OnInit, OnDestroy {
     this.apagoFinal = false;
     this.reiniciarEstado();
     this.router.navigate(['/guardar']);
+  }
+
+  activarMenu(){
+    if (this.rol === 'admin') {
+      this.menuCtrl.enable(true, 'menuAdmin'); // Activa el menú de administrador
+      this.menuCtrl.enable(false, 'menu'); // Desactiva el menú de conductor
+    } else if (this.rol === 'conductor') {
+      this.menuCtrl.enable(true, 'menu'); // Activa el menú de conductor
+      this.menuCtrl.enable(false, 'menuAdmin'); // Desactiva el menú de administrador
+    }
   }
   
   ngOnDestroy() {
