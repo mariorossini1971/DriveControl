@@ -1,93 +1,93 @@
-  <ion-header>
-    <ion-toolbar>
-      <ion-buttons slot="start" >
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start" >
 
-    <!-- Botón para el rol de administrador -->
-      <ion-menu-button
-        color="primary"
-        *ngIf="rol === 'admin'"
-        menu="menuAdmin"
-        [disabled]="bloqueoPagina"
-        >
-      </ion-menu-button>
+  <!-- Botón para el rol de administrador -->
+    <ion-menu-button
+      color="primary"
+      *ngIf="rol === 'admin'"
+      menu="menuAdmin"
+      [disabled]="bloqueoPagina"
+      >
+    </ion-menu-button>
 
-      <!-- Botón para el rol de conductor -->
-      <ion-menu-button
-        color="primary"
-        *ngIf="rol === 'conductor'"
-        menu="menu"
-        [disabled]="bloqueoPagina"
-        >
-      </ion-menu-button>
+    <!-- Botón para el rol de conductor -->
+    <ion-menu-button
+      color="primary"
+      *ngIf="rol === 'conductor'"
+      menu="menu"
+      [disabled]="bloqueoPagina"
+      >
+    </ion-menu-button>
 
-      </ion-buttons>
-      <ion-title>Menu</ion-title>
-      <ion-buttons slot="end">
-        <ion-back-button defaultHref="/informe" icon="return-down-back-outline" [disabled]="bloqueoPagina"></ion-back-button>
-      </ion-buttons>
-    </ion-toolbar>
-  </ion-header>
+    </ion-buttons>
+    <ion-title>Menu</ion-title>
+    <ion-buttons slot="end">
+      <ion-back-button defaultHref="/informe" icon="return-down-back-outline" [disabled]="bloqueoPagina"></ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
 
-  <ion-content scroll-y="true" class="ion-padding">
-    
-  <div class="container">
+<ion-content scroll-y="true" class="ion-padding">
+  
+<div class="container">
 
-    <!-- Selección de Vehículo -->
-    <div class="seccion seccion1"> 
+  <!-- Selección de Vehículo -->
+  <div class="seccion seccion1"> 
 
-    <div class="vehiculo-container">
-      <ion-button expand="full" shape="round" class="boton" [disabled]="bloqueoPagina" (click)="cambiaPagina()"> 
-        Selecciona Vehículo 
-      </ion-button> 
+  <div class="vehiculo-container">
+    <ion-button expand="block" shape="round" class="boton" [disabled]="bloqueoPagina" (click)="cambiaPagina()"> 
+      Selecciona Vehículo 
+    </ion-button> 
 <!--
-      <ion-item class="vehiculo-input">
-        <ion-input [value]="modeloSeleccionado" readonly></ion-input> 
-      </ion-item>
+    <ion-item class="vehiculo-input">
+      <ion-input [value]="modeloSeleccionado" readonly></ion-input> 
+    </ion-item>
 -->
- 
 
-    <ion-card class="vehiculo-card">
-      <ion-card-header style="text-align: center;">
-        <ion-card-content>
-          <strong>VEHÍCULO SELECCIONADO</strong>
-        </ion-card-content>
-        <ion-card-title>{{cocheSelBehaviorSubject$.getValue().marca}} {{cocheSelBehaviorSubject$.getValue().modelo}}</ion-card-title>
-       <ion-card-title>Matricula: {{cocheSelBehaviorSubject$.getValue().matricula}}</ion-card-title> 
-      </ion-card-header>
-    </ion-card>
 
-  </div> 
+  <ion-card class="vehiculo-card">
+    <ion-card-header style="text-align: center;">
+      <ion-card-content>
+        <strong>VEHÍCULO SELECCIONADO</strong>
+      </ion-card-content>
+      <ion-card-title>{{cocheSelBehaviorSubject$.getValue().marca}} {{cocheSelBehaviorSubject$.getValue().modelo}}</ion-card-title>
+     <ion-card-title>Matricula: {{cocheSelBehaviorSubject$.getValue().matricula}}</ion-card-title> 
+    </ion-card-header>
+  </ion-card>
+
+</div> 
+</div>
+
+  <!-- Cronómetro -->
+  <div class="seccion seccion2"> 
+  <div class="cronometro-container">
+    <h1 class="cronometro">
+      {{ hora | number:'2.0' }}:{{ minuto | number:'2.0' }}:{{ segundo | number:'2.0' }}
+    </h1>
   </div>
-
-    <!-- Cronómetro -->
-    <div class="seccion seccion2"> 
-    <div class="cronometro-container">
-      <h1 class="cronometro">
-        {{ hora | number:'2.0' }}:{{ minuto | number:'2.0' }}:{{ segundo | number:'2.0' }}
-      </h1>
-    </div>
-  </div>
+</div>
 
 
 <!-- Swipe Iniciar Finalizar --> 
 <ion-row class="ion-margin">
-  <ion-col [style.background-color]="'var(--ion-color-' + color + ')'"> 
-  <!-- FAB a la izquierda --> 
-  <ion-fab-button #swipeButton color="light" [disabled]="apagoFinal"> 
-  <ion-icon class="left" name="chevron-forward-outline"></ion-icon> 
-  <ion-icon name="chevron-forward-outline"></ion-icon>
-  <ion-icon class="right" name="chevron-forward-outline"></ion-icon>
-  </ion-fab-button> 
-  <!-- Texto a la derecha -->
-  <ion-text color="light" class="texto-swiper"> {{ esInicio ? 'DESLIZAR PARA INICIAR' : 'DESLIZAR PARA FINALIZAR' }} </ion-text> 
-  </ion-col> 
-  </ion-row>
+<ion-col [style.background-color]="'var(--ion-color-' + color + ')'"> 
+<!-- FAB a la izquierda --> 
+<ion-fab-button #swipeButton color="light" [disabled]="apagoFinal"> 
+<ion-icon class="left" name="chevron-forward-outline"></ion-icon> 
+<ion-icon name="chevron-forward-outline"></ion-icon>
+<ion-icon class="right" name="chevron-forward-outline"></ion-icon>
+</ion-fab-button> 
+<!-- Texto a la derecha -->
+<ion-text color="light" class="texto-swiper"> {{ esInicio ? 'DESLIZAR PARA INICIAR' : 'DESLIZAR PARA FINALIZAR' }} </ion-text> 
+</ion-col> 
+</ion-row>
 
- <!-- Guardar Datos --> 
+<!-- Guardar Datos --> 
 <!--  <div class="seccion seccion4"> 
-  <ion-button *ngIf="mostrarGuardar" expand="full" shape="round" class="boton" (click)="guardarStore()"> Guardar Datos </ion-button> -->
+<ion-button *ngIf="mostrarGuardar" expand="full" shape="round" class="boton" (click)="guardarStore()"> Guardar Datos </ion-button> -->
 
- <!--  <p *ngIf="mensaje" class="mensaje" >{{ mensaje }} </p>    -->    
-   <!--  </div> -->
-    </div>
+<!--  <p *ngIf="mensaje" class="mensaje" >{{ mensaje }} </p>    -->    
+ <!--  </div> -->
+  </div>
 </ion-content>

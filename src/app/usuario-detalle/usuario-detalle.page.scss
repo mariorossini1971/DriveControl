@@ -1,90 +1,67 @@
 html, body {
-    height: 100%;
-    margin: 0;
-    padding: 0;
-   /*  overflow: hidden; */
-    box-sizing: border-box;
-  }
-  
-  ion-toolbar {
-    --background: #005BBB;
-     color: #FFFFFF;
-   }
-  
-   ion-title {
-    text-align: center;
-    color: #fff;
-  }
+  height: 100%;
+  margin: 0;
+  padding: 0;
+ /*  overflow: hidden; */
+  box-sizing: border-box;
+}
 
-  // Estilos parte central /
+// Estilos parte central /
 
 ion-content {
-    --background:#FFFFFF;
-     font-family: 'Open Sans', sans-serif;
-     /* display: flex; */
-     display: block;
-     flex-direction: column;
-     justify-content: center;
-     align-items: center;
-     overflow-y: hidden; //para evitar el scroll vertical
-     /* height: 100vh; */  //que no crezca más allá de la altura de la ventana
-     height: 100%;
-     padding: 0;
-     box-sizing: border-box;
-  
-   }
-  
-  .card-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 1rem;
-    height: auto;
+  --background:#FFFFFF;
+   font-family: 'Open Sans', sans-serif;
+   /* display: flex; */
+   display: block;
+   flex-direction: column;
+   justify-content: center;
+   align-items: center;
+   overflow-y: hidden; //para evitar el scroll vertical
+   /* height: 100vh; */  //que no crezca más allá de la altura de la ventana
+   height: 100%;
+   padding: 0;
+   box-sizing: border-box;
+
+ }
+
+.card-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem;
+  height: auto;
+  width: 100%;
+  box-sizing: border-box;
+
+  ion-card {
+    max-width: 600px;
     width: 100%;
-    box-sizing: border-box;
-  
-    ion-card {
-      max-width: 600px;
-      width: 100%;
-     }
    }
+ }
+
  
-   
-   // Items de formulario //
+ // Items de formulario //
 
 ion-item {
-    --padding-start: 0;
-    --padding-end: 0;
-    color: grey;
-    border-bottom: 1px solid #BDC3C7; 
-  }
-  
-  ion-label {
-    color: grey;
-  }
-  
-  ion-input {
-    color: grey;
-  }
-  
-  //Botones /
-  
-  ion-button.ion-color-primary {
-      --background: #005BBB;
-      color: #FFFFFF;
-      --border-radius: 8px;
-    }
+  --padding-start: 0;
+  --padding-end: 0;
+  color: grey;
+  border-bottom: 1px solid #BDC3C7; 
+}
 
-    /* Estilos botones */ 
-  .boton {
-    width: 100%; 
-    max-width: 350px; /* Controla el ancho en pantallas grandes */ 
-    background-color: #005BBB; /* Azul corporativo */ 
-    color: white; font-weight: bold; 
-    text-align: center; 
-    height: 50px; /* Tamaño uniforme */ 
-    border-radius: 38px; 
-    display: flex; 
-    align-items: center; 
-    justify-content: center; 
-    } 
+ion-label {
+  color: grey;
+}
+
+ion-input {
+  color: grey;
+}
+
+.guardar{
+ --background: green;
+}
+
+.cancelar{
+--color: white;
+--background: orange;
+}

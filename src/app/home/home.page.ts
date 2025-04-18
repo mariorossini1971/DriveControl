@@ -48,7 +48,7 @@ export class HomePage implements OnInit, OnDestroy {
   idCocheSeleccionado$: Subscription = new Subscription();
   viaje$: Subscription = new Subscription();
 
-  public usuario: Usuario = new Usuario(0,'', '','','');
+  public usuario: Usuario = new Usuario(0,'', '','','',0);
 
   
 

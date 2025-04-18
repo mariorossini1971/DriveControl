@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { ApiService } from '../api.service';
-import { delay, Subscribable, Subscription } from 'rxjs';
-import {  Router } from '@angular/router';
+import { delay, filter,Subscribable, Subscription } from 'rxjs';
+import {  NavigationEnd,Router } from '@angular/router';
 import { Usuario } from '../models/usuario.model';
 import { MenuController } from '@ionic/angular';
 import { Observable } from 'rxjs';
@@ -23,11 +23,14 @@ export class UsuariosComponent implements OnDestroy {
   nombre : string | null = '';
   id : number = 0 ;
 
-  public usuario: Usuario = new Usuario(0,'', '','','');
-  public usuarioRecuperado: Usuario = new Usuario(0,'','','','');
+  filtroTexto: string = '';
+  ordenDireccion: 'asc' | 'desc' = 'asc';  // A-Z o Z-A
+
+  public usuario: Usuario = new Usuario(0,'', '','','',0);
+  public usuarioRecuperado: Usuario = new Usuario(0,'','','','',0);
 
   private subscription: Subscription = new Subscription;
-
+  private routerSubscription!: Subscription;
   
   constructor(
     private apiService: ApiService,
@@ -38,14 +41,20 @@ export class UsuariosComponent implements OnDestroy {
 
   ngOnInit() {
 
-
-
     this.cdr.detectChanges();      // Detectar cambios para actualizar la vista
     console.log('entro en Usuario.ts');
     this.controlRol()
     this.activarMenu();
     this.funcionPrincipal();
     this.recuperaUsuario(this.id);
+
+     // Suscribirse a los eventos de navegación
+     this.routerSubscription = this.router.events
+     .pipe(filter(event => event instanceof NavigationEnd))
+     .subscribe(() => {
+       // Cuando vuelve a esta vista, actualiza usuarios
+       this.funcionPrincipal();
+     });
   
   }
 
@@ -57,7 +66,7 @@ export class UsuariosComponent implements OnDestroy {
         this.usuario = JSON.parse(User);
         this.rol = this.usuario.rol;
         this.id = this.usuario.id_usuario;
-        console.log('*user2 *********** rol en usuario: ', this.rol);
+        console.log('*user *********** rol en usuario: ', this.rol);
         this.cdr.detectChanges();
       }
     } catch (error) {
@@ -79,14 +88,13 @@ export class UsuariosComponent implements OnDestroy {
   
   recuperaUsuario(id: number) {
     this.apiService.getUsuarioById(id).subscribe({
-      next: (data) => {  
-        this.usuarioRecuperado = new Usuario(
-          data.id_usuario,
-          data.nombre,
-          data.correo,
-          data.contrasena,
-          data.rol
-        );
+      next: (data) => { 
+        this.usuarioRecuperado.id_usuario = data.id_usuario;
+        this.usuarioRecuperado.nombre = data.nombre;
+        this.usuarioRecuperado.correo = data.correo;
+        this.usuarioRecuperado.contrasena = data.contrasena;
+        this.usuarioRecuperado.rol= data.rol;
+        this.usuarioRecuperado.telefono = data.telefono;
       },
       error: (error) => {
         console.error('Error al recuperar el usuario:', error);
@@ -97,8 +105,32 @@ export class UsuariosComponent implements OnDestroy {
     });
   }
 
+  get usuariosFiltradosYOrdenados() {
+    return this.usuarios
+      .filter(usuario => {
+        const texto = this.filtroTexto.toLowerCase();
+        return (
+          usuario.nombre.toLowerCase().includes(texto) ||
+          usuario.correo.toLowerCase().includes(texto)
+        );
+      })
+      .sort((a, b) => {
+        const valA = a.nombre.toLowerCase();
+        const valB = b.nombre.toLowerCase();
+        
+        if (this.ordenDireccion === 'asc') {
+          return valA.localeCompare(valB); // Orden ascendente
+        } else {
+          return valB.localeCompare(valA); // Orden descendente
+        }
+      });
+  }
+
+
 verUsuario(usuario: any){
-  this.router.navigate(['/usuario-detalle'],{ state: {usuario, modo: 'ver' } });
+this.recuperaUsuario(this.id);
+ // this.router.navigate(['/usuario-detalle'],{ state: {usuario, modo: 'ver' } });
+ this.router.navigate(['/usuario-detalle'],{ state: {usuario, modo: 'ver' } });
 }
 nuevoUsuario(){
   this.router.navigate(['/usuario-detalle'], { state: { modo: 'crear' } });
@@ -114,6 +146,9 @@ activarMenu(){
 
 }
 ngOnDestroy() {
+  if (this.routerSubscription) {
+    this.routerSubscription.unsubscribe();
+  }
   }
 }
 
