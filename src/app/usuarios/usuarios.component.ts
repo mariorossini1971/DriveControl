@@ -145,6 +145,8 @@ activarMenu(){
   }
 
 }
+
+
 ngOnDestroy() {
   if (this.routerSubscription) {
     this.routerSubscription.unsubscribe();

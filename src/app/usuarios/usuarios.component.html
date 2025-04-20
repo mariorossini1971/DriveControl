@@ -23,7 +23,7 @@
         <ion-button *ngIf="rol === 'admin'" (click)="nuevoUsuario()">
           <ion-icon slot="icon-only" name="person-add-outline" color="primary"></ion-icon>
         </ion-button>
-        <ion-back-button defaultHref="/home" icon="return-down-back-outline"></ion-back-button>
+        <ion-back-button [defaultHref]= "rol === 'admin' ? '/principal' : '/home'" icon="return-down-back-outline"></ion-back-button>
       </ion-buttons>
     </ion-toolbar>
   </ion-header>  

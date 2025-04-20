@@ -14,7 +14,7 @@ export class VehiculoDetallePage implements OnInit {
     modelo:'', 
     marca:'',
     matricula:'',
-    ano:0,
+    ano:'',
     disponible: true,
   };
   modo: 'crear' | 'ver' | 'editar' = 'ver';
@@ -51,9 +51,9 @@ export class VehiculoDetallePage implements OnInit {
     }
   }
   
-  guardarUsuario(){
+  guardarVehiculo(){
 
-    console.log("Usuario a guardar:", this.vehiculo); // Verifica qué datos estás enviando
+    console.log("Vehiculo a guardar:", this.vehiculo); // Verifica qué datos estás enviando
 
     if (!this.vehiculo.modelo || !this.vehiculo.matricula) {
       this.presentAlert('Campos requeridos', 'Debes completar los campos');
@@ -63,16 +63,16 @@ export class VehiculoDetallePage implements OnInit {
  
     if (this.modo === 'crear'){
         // Eliminar id_usuario para evitar enviarlo al servidor al crear un nuevo usuario
-      const { id, ...usuarioSinId } = this.vehiculo;
+      const { id, ...vehiculoSinId } = this.vehiculo;
 
-      this.apiService.createUsuario(usuarioSinId).subscribe({
+      this.apiService.createVehiculo(vehiculoSinId).subscribe({
         next: () => {
-          this.presentAlert('Éxito', 'Usuario creado correctamente');
+          this.presentAlert('Éxito', 'vehiculo creado correctamente');
           this.navCtrl.navigateBack(['/vehiculos']);
         },
         error:() => {
-          console.error("Error al crear usuario", Error); // Log de error
-          this.presentAlert('Error', 'No se pudo crear el usuario');
+          console.error("Error al crear el vehiculo", Error); // Log de error
+          this.presentAlert('Error', 'No se pudo crear el vehiculo');
         }
       });
     } 
@@ -106,6 +106,11 @@ export class VehiculoDetallePage implements OnInit {
 
   cancelar(){
     this.navCtrl.navigateBack(['/vehiculos']);
+  }
+
+  cancelarEdicion() {
+    this.modo = 'ver'; // Cambiar de vuelta al modo de vista (no edición)
+    // Otras acciones de cancelación, si es necesario, como restablecer campos
   }
 
 async presentAlert (titulo:string, mensaje:string){

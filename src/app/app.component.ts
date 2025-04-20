@@ -23,5 +23,21 @@ export class AppComponent{
     console.log('Token guardado despues del cierre:', token);   /// borrar
     this.router.navigate(['/login']);
   }
+  controlRol() {
+    console.log('             con localStorage ');
+    try {
+      this.rol = localStorage.getItem('rol');
+      if (this.rol) {
+        console.log('************ rol en home: ', this.rol);
+      } else {
+        console.warn('No se ha encontrado rol en localStorage.');
+        this.rol = 'visitante'; //
+      }
+    } catch (error) {
+      console.error('Error al leer el rol desde localStorage:', error);
+      this.rol = 'visitante'; 
+    }
+  }
+
   
 }

@@ -40,13 +40,23 @@ const routes: Routes = [
     path: 'usuario-detalle',
     loadChildren: () => import('./usuario-detalle/usuario-detalle.module').then( m => m.UsuarioDetallePageModule),
     canActivate: [AuthGuard] // Protegemos la ruta 'home' con el guard
-  },  {
+  },
+  {
     path: 'usuario-detalle',
     loadChildren: () => import('./usuario-detalle/usuario-detalle.module').then( m => m.UsuarioDetallePageModule)
   },
   {
     path: 'vehiculo-detalle',
     loadChildren: () => import('./vehiculo-detalle/vehiculo-detalle.module').then( m => m.VehiculoDetallePageModule)
+  
+  },
+  {
+    path: 'principal',
+    loadChildren: () => import('./principal/principal.module').then( m => m.PrincipalPageModule),
+    canActivate: [AuthGuard] 
+  },  {
+    path: 'viaje-detalle',
+    loadChildren: () => import('./viaje-detalle/viaje-detalle.module').then( m => m.ViajeDetallePageModule)
   }
 
 

@@ -38,6 +38,8 @@ export class HomePage implements OnInit, OnDestroy {
   segundo: number = 0;
   hora: number = 0;
 
+  idUsuario: number = 0;
+
  // mensaje: string = '';
 
   vehiculos: any[] = [];
@@ -110,6 +112,16 @@ export class HomePage implements OnInit, OnDestroy {
   
 
   funcionPrincipal(){
+     // Recupero el Id del Usuario
+     const usuario = localStorage.getItem('usuario');
+     if (usuario) {
+       const usuarioId = JSON.parse(usuario); // Convertir JSON a objeto
+       this.idUsuario = usuarioId.id_usuario;
+     } else {
+       console.log('No se encontró información de usuario en localStorage');
+     }
+
+
     this.apiService.getCocheSeleccionado().subscribe({
       next: (coche) => {
         this.cocheSelBehaviorSubject$.next(coche);
@@ -209,7 +221,7 @@ export class HomePage implements OnInit, OnDestroy {
   async guardarStore() {
     this.mostrarGuardar = !this.mostrarGuardar;
     let viaje = {
-      id_usuario: 3,
+      id_usuario: this.idUsuario,
       id_vehiculo: this.cocheSelBehaviorSubject$.getValue().id_vehiculo,
       fecha_inicio: this.fechaHoraInicio || 'No definido',
       fecha_fin: this.fechaHoraFinal || 'No definido',

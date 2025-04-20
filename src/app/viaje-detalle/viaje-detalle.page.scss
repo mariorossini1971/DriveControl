@@ -27,7 +27,11 @@ html, body {
   .card-container {
     display: flex;
     justify-content: center;
-    align-items: center;
+   // align-items: center;
+
+    flex-direction: column;
+    align-items: flex-start; /* Alinea el contenido a la izquierda */
+
     padding: 1rem;
     height: auto;
     width: 100%;
@@ -47,6 +51,7 @@ html, body {
     --padding-end: 0;
     color: grey;
     border-bottom: 1px solid #BDC3C7; 
+    
   }
   
   ion-label {
@@ -65,3 +70,9 @@ html, body {
   --color: white;
   --background: orange;
   }
+  .item-content {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  

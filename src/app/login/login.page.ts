@@ -102,7 +102,7 @@ ngOnInit() {
         if(active){
           active.blur();
         }
-        this.router.navigate(['/home']); // Navegar a la página principal
+        this.router.navigate(['/principal']); // Navegar a la página principal
       },
       error: async (err) => {
         this.apiService.LoadingController.dismiss();       /// quito efecto loading

@@ -111,7 +111,11 @@ export class ApiService {
   deleteUsuario(id: number): Observable<any> {
     return this.http.delete(`${apiUrl}/usuarios/${id}`);
   }
+//////////////////////////////////////  VEHICULOS //////////////////////////////
 
+  createVehiculo(vehiculo: any): Observable<any> {
+    return this.http.post(`${apiUrl}/vehiculos`, vehiculo);
+  }
   getVehiculos(): Observable<any> {
     return this.http.get(`${apiUrl}/vehiculos`);
   }
@@ -156,10 +160,16 @@ export class ApiService {
     return this.http.get<any>(`${apiUrl}/viajes`);
   }
 
+  getViajesById(id: number): Observable<any> {
+    return this.http.get(`${apiUrl}/viajes/usuario/detallado/${id}`);
+  }
+
   createViaje(viaje: any): Observable<any> {
     return this.http.post<any>(`${apiUrl}/viajes`, viaje);
   }
-
+  deleteViaje(id:number): Observable<any> {
+    return this.http.delete(`${apiUrl}/viajes/${id}`);
+  }
 
   /////////////////////////////   vehiculo  observable ////////////////////////////////////
   
@@ -198,6 +208,7 @@ export class ApiService {
   }
 
 
+
   setCocheSelec(id_Vehiculo: number, coche: any): Observable<any>{
     return this.http.put(`${apiUrl}/vehiculos/${id_Vehiculo}`, coche);
   }
@@ -210,6 +221,9 @@ export class ApiService {
   setCocheSeleccionado(coche: any) {
     this.cocheSelBehaviorSubject.next(coche);
   }
+
+
+
 
 ////////////////////////////////////////////////////////////////////////////////
 actualizarUsuario(usuario: Usuario): void {
@@ -239,6 +253,7 @@ cerrarSesion(){
   sessionStorage.clear();
   console.log('Sesión cerrada');
 }
+
   
 }
 
