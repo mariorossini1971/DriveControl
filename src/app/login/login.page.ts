@@ -23,7 +23,7 @@ export class LoginPage implements OnInit {
   public correo = '';
   public contrasena = '';
   public mensajeLoading = 'Iniciando sesión..';
-  public usuario: Usuario = new Usuario(0,'', '','','');
+  public usuario: Usuario = new Usuario(0,'', '','','',0);
   private rol$: Subscription = new Subscription();
   public rol2: string = '';
 
@@ -70,9 +70,12 @@ ngOnInit() {
         this.usuario.rol = response.usuario.rol;          // capturo el rol 
         this.usuario.id_usuario = response.usuario.id_usuario;
         this.usuario.nombre = response.usuario.nombre;
+  
         
         
         console.log('*************************************rol usuario: ', this.usuario.rol);
+
+        console.log('*************************************telefono usuario: ', this.usuario.correo);
 
         this.apiService.setRol(this.usuario.rol);       ////       oooooooojjjjjjoooooo mirar cual uso al final
        
@@ -99,7 +102,7 @@ ngOnInit() {
         if(active){
           active.blur();
         }
-        this.router.navigate(['/home']); // Navegar a la página principal
+        this.router.navigate(['/principal']); // Navegar a la página principal
       },
       error: async (err) => {
         this.apiService.LoadingController.dismiss();       /// quito efecto loading

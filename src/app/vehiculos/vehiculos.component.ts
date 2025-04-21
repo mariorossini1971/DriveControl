@@ -96,6 +96,17 @@ export class VehiculosComponent implements OnDestroy {
       cambiaPagina(){
         this.router.navigate(['/home']);
       }
+      
+      verVehiculo(vehiculo: any){
+        this.router.navigate(['/vehiculo-detalle'],{ state: {vehiculo, modo: 'ver' } });
+      }
+
+      nuevoVehiculo(){
+        this.router.navigate(['/vehiculo-detalle'], { state: { modo: 'crear' } });
+      }
+
+  
+
       ngOnDestroy(): void {
           
       }

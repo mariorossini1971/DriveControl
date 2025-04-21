@@ -5,6 +5,7 @@ import { ApiService } from '../api.service';
 import { BehaviorSubject, Subscription } from 'rxjs';
 import { GestureController,ToastController} from '@ionic/angular';
 import { Usuario } from '../models/usuario.model';
+import { MenuController } from '@ionic/angular';
 
 @Component({
   selector: 'app-home',
@@ -37,6 +38,8 @@ export class HomePage implements OnInit, OnDestroy {
   segundo: number = 0;
   hora: number = 0;
 
+  idUsuario: number = 0;
+
  // mensaje: string = '';
 
   vehiculos: any[] = [];
@@ -47,7 +50,7 @@ export class HomePage implements OnInit, OnDestroy {
   idCocheSeleccionado$: Subscription = new Subscription();
   viaje$: Subscription = new Subscription();
 
-  public usuario: Usuario = new Usuario(0,'', '','','');
+  public usuario: Usuario = new Usuario(0,'', '','','',0);
 
   
 
@@ -79,12 +82,14 @@ export class HomePage implements OnInit, OnDestroy {
     private cdr: ChangeDetectorRef,
     public activateRoute: ActivatedRoute,
     private apiService: ApiService,
-    public router: Router
+    public router: Router,
+    private menuCtrl: MenuController,
   ) {}
 
   ngOnInit() {
 
     this.controlRol();
+    this.activarMenu();
     this.funcionPrincipal();
     
   }
@@ -94,7 +99,7 @@ export class HomePage implements OnInit, OnDestroy {
     try {
       this.rol = localStorage.getItem('rol');
       if (this.rol) {
-        console.log('************ rol en usuario: ', this.rol);
+        console.log('************ rol en home: ', this.rol);
       } else {
         console.warn('No se ha encontrado rol en localStorage.');
         this.rol = 'visitante'; //
@@ -107,6 +112,16 @@ export class HomePage implements OnInit, OnDestroy {
   
 
   funcionPrincipal(){
+     // Recupero el Id del Usuario
+     const usuario = localStorage.getItem('usuario');
+     if (usuario) {
+       const usuarioId = JSON.parse(usuario); // Convertir JSON a objeto
+       this.idUsuario = usuarioId.id_usuario;
+     } else {
+       console.log('No se encontró información de usuario en localStorage');
+     }
+
+
     this.apiService.getCocheSeleccionado().subscribe({
       next: (coche) => {
         this.cocheSelBehaviorSubject$.next(coche);
@@ -206,7 +221,7 @@ export class HomePage implements OnInit, OnDestroy {
   async guardarStore() {
     this.mostrarGuardar = !this.mostrarGuardar;
     let viaje = {
-      id_usuario: 3,
+      id_usuario: this.idUsuario,
       id_vehiculo: this.cocheSelBehaviorSubject$.getValue().id_vehiculo,
       fecha_inicio: this.fechaHoraInicio || 'No definido',
       fecha_fin: this.fechaHoraFinal || 'No definido',
@@ -258,6 +273,16 @@ export class HomePage implements OnInit, OnDestroy {
     this.apagoFinal = false;
     this.reiniciarEstado();
     this.router.navigate(['/guardar']);
+  }
+
+  activarMenu(){
+    if (this.rol === 'admin') {
+      this.menuCtrl.enable(true, 'menuAdmin'); // Activa el menú de administrador
+      this.menuCtrl.enable(false, 'menu'); // Desactiva el menú de conductor
+    } else if (this.rol === 'conductor') {
+      this.menuCtrl.enable(true, 'menu'); // Activa el menú de conductor
+      this.menuCtrl.enable(false, 'menuAdmin'); // Desactiva el menú de administrador
+    }
   }
   
   ngOnDestroy() {

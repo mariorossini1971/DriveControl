@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { ApiService } from '../api.service';
 import { Router, NavigationEnd } from '@angular/router';
-
 import { LOCALE_ID } from '@angular/core';
 import localeEs from '@angular/common/locales/es';
 import { registerLocaleData } from '@angular/common';
+import { Usuario } from '../models/usuario.model';
 
 
 @Component({
@@ -14,10 +14,17 @@ import { registerLocaleData } from '@angular/common';
 })
 
 export class ViajesComponent implements OnInit {
+
   viajes: any[] = [];
   control: number = 0;
   mensajeLoading: string = 'cargando datos..';
   rol : string | null = '';
+  idUsuario: number = 0;
+
+  filtroTexto: string = '';
+  ordenDireccion: 'asc' | 'desc' = 'asc';  // A-Z o Z-A
+
+
 
   constructor(private apiService: ApiService, private router: Router) { }
 
@@ -48,8 +55,17 @@ export class ViajesComponent implements OnInit {
 
   loadViajes() {
   // this.apiService.loading(this.mensajeLoading);
-    console.log("control =", this.control);
-    if (this.control === 0) {
+  //  console.log("control =", this.control);
+    // Recupero el Id del Usuario
+    const usuario = localStorage.getItem('usuario');
+    if (usuario) {
+      const usuarioId = JSON.parse(usuario); // Convertir JSON a objeto
+      this.idUsuario = usuarioId.id_usuario;
+    } else {
+      console.log('No se encontró información de usuario en localStorage');
+    }
+
+    if (this.rol === 'admin') {
       this.apiService.getViajes().subscribe({
         next: (data: any[]) => {
           this.viajes = data.sort((a, b) => a.id_viaje - b.id_viaje); // Ordenar por id_viaje
@@ -61,37 +77,53 @@ export class ViajesComponent implements OnInit {
         complete: () => {
           this.apiService.LoadingController.dismiss(); // Dismiss cuando el observable completa
         }
+        
       });
-    } else {
-      this.apiService.LoadingController.dismiss();
+     
+
+    } else if(this.rol === 'conductor'){
+
+      this.apiService.getViajesById(this.idUsuario).subscribe({
+        next: (data) => {
+          this.viajes = data; // Asignamos los viajes obtenidos
+          console.log('Viajes recuperados:', this.viajes);
+        },
+        error: (error) => {
+          console.error('Error al recuperar viajes:', error);
+        },
+        complete: () => {
+          console.log('Consulta de viajes completada');
+          this.apiService.LoadingController.dismiss();
+
+        }
+      });
+     }     
     }
-  }
 
-/*   eliminarViaje(id_viaje: number) {
-    if (this.rol === 'admin') {
-      if (confirm('¿Estás seguro de eliminar este viaje?')) {
+    verViaje(viaje: any){
+      this.router.navigate(['/viaje-detalle'],{ state: {viaje, modo: 'ver' } });
+    }
 
-        this.apiService.deleteViaje(id_viaje).subscribe(
-          () => {
-            this.loadViajes(); // Actualizamos la lista de viajes después de eliminar
-            alert('Viaje eliminado');
-          },
-          (error: any) => {
-            console.error('Error al eliminar el viaje:', error);
+    get viajesFiltradosYOrdenados() {
+      return this.viajes
+        .filter(viajes => {
+          const texto = this.filtroTexto.toLowerCase();
+          return (
+           // viajes.id_viaje.toString().includes(texto) ||
+            viajes.nombre_conductor.toLowerCase().includes(texto)
+          );
+        })
+        .sort((a, b) => {
+          const valA = a.nombre_conductor.toLowerCase();
+          const valB = b.nombre_conductor.toLowerCase();
+          
+          if (this.ordenDireccion === 'asc') {
+            return valA.localeCompare(valB); // Orden ascendente
+          } else {
+            return valB.localeCompare(valA); // Orden descendente
           }
-        );
-      }
-    } else {
-      alert('No tienes permiso para eliminar este viaje');
+        });
     }
+
   }
-
-  verDetalles(viaje: any) {
-    this.router.navigate(['/viaje-detalle'], { state: { viaje } });
-  } */
-
   
-
-}
-
-

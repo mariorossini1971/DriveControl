@@ -1,0 +1,25 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start" >
+    </ion-buttons>
+    <ion-title>DRIVE CONTROL</ion-title>
+    <ion-buttons slot="end">
+      <ion-back-button defaultHref="/informe" icon="return-down-back-outline" [disabled]="bloqueoPagina"></ion-back-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <div class="button-container">
+    <ion-button *ngIf="rol === 'conductor'" expand="full" fill="solid" size="large" (click)="iniciarViaje()">INICIAR VIAJE</ion-button>
+
+    <ion-button *ngIf="rol === 'conductor'" expand="full" fill="solid" size="large" (click)="verUsuario()">VER MIS DATOS</ion-button>
+    <ion-button *ngIf="rol === 'admin'" expand="full" fill="solid" size="large" (click)="verUsuario()">EDITAR USUARIOS</ion-button>
+
+    <ion-button expand="full" fill="solid" size="large" (click)="verVehiculos()">VER VEHICULOS</ion-button>
+
+    <ion-button *ngIf="rol === 'conductor'" expand="full" fill="solid" size="large" (click)="verViajes()">MIS VIAJES</ion-button>
+    <ion-button *ngIf="rol === 'admin'" expand="full" fill="solid" size="large" (click)="verViajes()">EDITAR VIAJES</ion-button>
+
+  </div>
+</ion-content>

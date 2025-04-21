@@ -5,16 +5,20 @@
     </ion-buttons>
     <ion-title>Vehículos</ion-title>
     <ion-buttons slot="end">
+      <ion-button *ngIf="rol === 'admin'" (click)="nuevoVehiculo()">
+        <ion-icon slot="end" name="add-outline" color="primary"></ion-icon>
+      </ion-button>
       <ion-back-button defaultHref="/home" icon="return-down-back-outline"></ion-back-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
-
+<!-- ************************     PARA CONDUCTOR ********************* -->
  
 <ion-content [fullscreen]="true" class="ion-padding">
 <ion-title>Seleccionar un vehículo</ion-title>
      <ion-list>
+      <ng-container *ngIf="rol === 'conductor'">
       <ion-card class="custom-card" *ngFor="let vehiculo of vehiculos">
         <ion-card-header>
        <!--  <ion-label> -->
@@ -32,15 +36,36 @@
             (ionChange)="seleccionarVehiculo(vehiculo)" 
             slot="end">
             </ion-checkbox>
-
           </ion-item> 
-        </ion-card-content>
-          
-      
-        
-    
+        </ion-card-content>    
       </ion-card>
+      <ion-button expand="full" (click)="guardarModelo()">Guardar</ion-button>
+      </ng-container>
+<!-- ************************     PARA ADMINISTRADOR ********************* -->
+
+      <ng-container *ngIf="rol === 'admin'">
+        <ion-card class="custom-card" *ngFor="let vehiculo of vehiculos" (click)="verVehiculo(vehiculo)">
+          <ion-card-header>
+         <!--  <ion-label> -->
+          <ion-card-title>
+            <ion-icon name="car-outline" class="icon-card"></ion-icon>
+            {{ vehiculo.marca }} - {{ vehiculo.modelo }}
+          </ion-card-title>
+          <ion-card-subtitle>Id: {{vehiculo.id_vehiculo}} </ion-card-subtitle>
+        </ion-card-header>
+          <ion-card-content>
+            <ion-item lines="none">
+            <p class="car-matricula"><strong>Matrícula: </strong> {{ vehiculo.matricula }}</p> 
+             <ion-checkbox 
+              [checked]="vehiculo === vehiculoSeleccionado" 
+              (ionChange)="seleccionarVehiculo(vehiculo)" 
+              slot="end">
+              </ion-checkbox>
+  
+            </ion-item> 
+          </ion-card-content>    
+        </ion-card>
+        </ng-container>
     </ion-list>
-    <ion-button expand="full" (click)="guardarModelo()">Guardar</ion-button>
   </ion-content>
 

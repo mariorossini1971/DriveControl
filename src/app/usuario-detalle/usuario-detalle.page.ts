@@ -37,6 +37,7 @@ export class UsuarioDetallePage implements OnInit {
      this.rolLogueado = usuarioLogueado.rol || '';
      console.log('ID del usuario logueado:', this.idUsuarioActual);
      console.log('Rol del usuario logueado:', this.rolLogueado); 
+     console.log('correo: ',usuarioLogueado.correo);
 
     const navigation = this.router.getCurrentNavigation();
     const state = navigation?.extras.state;
