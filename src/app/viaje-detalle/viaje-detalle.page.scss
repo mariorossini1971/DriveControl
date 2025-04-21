@@ -5,6 +5,10 @@ html, body {
    /*  overflow: hidden; */
     box-sizing: border-box;
   }
+
+  ion-back-button{
+    color: #005BBB;
+  }
   
   // Estilos parte central /
   
@@ -21,9 +25,8 @@ html, body {
      height: 100%;
      padding: 0;
      box-sizing: border-box;
-  
    }
-  
+
   .card-container {
     display: flex;
     justify-content: center;
@@ -51,18 +54,17 @@ html, body {
     --padding-end: 0;
     color: grey;
     border-bottom: 1px solid #BDC3C7; 
+    ion-icon{
+      color: #005BBB;
+    }
     
   }
   
-  ion-label {
-    color: grey;
-  }
+   ion-label {
+    font-weight: bold;
+    }
   
-  ion-input {
-    color: grey;
-  }
-  
-  .guardar{
+    .guardar{
    --background: green;
   }
   
@@ -70,9 +72,54 @@ html, body {
   --color: white;
   --background: orange;
   }
-  .item-content {
+ /*  .item-content {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
+  } */
+
+  ion-text{
+    font-size: 14px;
   }
+
+  .footer-content {
+    display: flex; /* Alinear elementos horizontalmente */
+    justify-content: space-between; /* Separar elementos a los extremos */
+    align-items: center; /* Centrar elementos verticalmente */
+    width: 100%; /* Usar todo el ancho disponible */
+    color: #005BBB;
+  }
+  
+  .left-content {
+    display: flex;
+    align-items: center;
+  
+    ion-icon {
+      font-size: 24px;
+      margin-right: 8px; /* Espacio entre ícono y texto */
+      color: #005BBB;
+    }
+  }
+  
+  .right-content {
+    display: flex;
+    align-items: center;
+  
+    ion-icon {
+      font-size: 24px;
+      margin-right: 8px; /* Espacio entre ícono y texto */
+      color: #005BBB;
+    }
+  
+    .nombre-empresa {
+      font-size: 16px; /* Ajustar tamaño del texto */
+      font-weight: bold; /* Opcional: negrita */
+    }
+  }
+  
+  ion-toolbar {
+    --padding-start: 16px; /* Ajustar separación lateral */
+    --padding-end: 16px; /* Ajustar separación lateral */
+  }
+
   

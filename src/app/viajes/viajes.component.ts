@@ -24,6 +24,8 @@ export class ViajesComponent implements OnInit {
   filtroTexto: string = '';
   ordenDireccion: 'asc' | 'desc' = 'asc';  // A-Z o Z-A
 
+  usuario: any;
+
 
 
   constructor(private apiService: ApiService, private router: Router) { }
@@ -31,9 +33,12 @@ export class ViajesComponent implements OnInit {
   ngOnInit() {
     console.log('            entro en viajes');
     this.controlRol();
+    this.usuarioGuardado();
+    console.log('usuarioGuardado en principal: ', this.usuario.nombre);
     this.apiService.loading(this.mensajeLoading);
     this.loadViajes();
    // console.log('control: ',this.control);
+   
   }
 
   controlRol() {
@@ -52,6 +57,14 @@ export class ViajesComponent implements OnInit {
     }
   }
 
+  usuarioGuardado(){
+    const usuarioGuardado = localStorage.getItem('usuario');
+  if (usuarioGuardado) {
+    this.usuario = JSON.parse(usuarioGuardado); // Recupera los datos del usuario
+  } else {
+    console.warn('Usuario no encontrado.');
+  }
+  }
 
   loadViajes() {
   // this.apiService.loading(this.mensajeLoading);

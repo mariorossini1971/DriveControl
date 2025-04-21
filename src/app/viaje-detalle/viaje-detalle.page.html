@@ -30,7 +30,7 @@
               <ion-label>Vehículo marca</ion-label>
               <ion-text>{{ viaje.marca }}</ion-text>
             </div>
-            <ion-icon slot="end" name="car-outline" color="primary"></ion-icon>
+            <ion-icon slot="end" name="car-outline" ></ion-icon>
           </ion-item>
         
           <ion-item>
@@ -38,7 +38,7 @@
               <ion-label>Vehículo modelo</ion-label>
               <ion-text>{{ viaje.modelo }}</ion-text>
             </div>
-            <ion-icon slot="end" name="car-outline" color="primary"></ion-icon>
+            <ion-icon slot="end" name="car-outline" ></ion-icon>
           </ion-item>
         
           <ion-item>
@@ -46,27 +46,27 @@
               <ion-label>Matrícula</ion-label>
               <ion-text>{{ viaje.matricula }}</ion-text>
             </div>
-            <ion-icon slot="end" name="code-working-outline" color="primary"></ion-icon>
+            <ion-icon slot="end" name="code-working-outline" ></ion-icon>
           </ion-item>
         
           <ion-item>
             <div class="item-content">
             <ion-label>Inicio</ion-label>
             <ion-text *ngIf="viaje.fecha_inicio && viaje.fecha_inicio !== '0000-00-00 00:00:00'">
-              Inicio: {{ viaje.fecha_inicio | date: 'd \'de\' MMMM \'del\' y - HH:mm' }}
+              {{ viaje.fecha_inicio | date: 'd \'de\' MMMM \'del\' y - HH:mm' }}
             </ion-text>
             </div>
-            <ion-icon name="calendar-outline"></ion-icon>
+            <ion-icon slot="end" name="calendar-outline" ></ion-icon>
           </ion-item>
         
           <ion-item>
-            <ion-label>Fin</ion-label>
-            <div class="item-content">
-              <ion-text *ngIf="viaje.fecha_fin && viaje.fecha_fin !== '0000-00-00 00:00:00'">
-                Fin: {{ viaje.fecha_fin | date: 'd \'de\' MMMM \'del\' y - HH:mm' }}
-              </ion-text>
-            </div>
-            <ion-icon name="calendar-outline"></ion-icon>
+           <div class="item-content"> 
+            <ion-label>Fin</ion-label>     
+               <ion-text *ngIf="viaje.fecha_fin && viaje.fecha_fin !== '0000-00-00 00:00:00'">
+                {{ viaje.fecha_fin | date: 'd \'de\' MMMM \'del\' y - HH:mm' }}
+             </ion-text> 
+            </div> 
+            <ion-icon slot="end" name="calendar-outline" ></ion-icon>
 
           </ion-item>
         
@@ -81,7 +81,7 @@
               <ion-icon slot="start" name="trash"></ion-icon>
             </ion-button>
         
-            <ion-button expand="full" class="boton" (click)="modo = 'editar'" *ngIf="modo === 'ver'">Editar
+            <ion-button expand="full" class="boton"  (click)="modo = 'editar'" *ngIf="modo === 'ver'">Editar para eliminar
               <ion-icon slot="start" name="pencil"></ion-icon>
             </ion-button>
           </div>
@@ -93,5 +93,22 @@
   </div>
 
 </ion-content>
+
+<ion-footer>
+  <ion-toolbar>
+    <div class="footer-content">
+      <div class="left-content">
+            <ion-icon slot="start" name="person-circle-outline"></ion-icon>
+            {{usuario?.nombre}} 
+          </div>
+
+          <!-- Nombre de la empresa y el ícono a la derecha -->
+          <div class="right-content">                
+            <ion-icon slot="end" name="car-outline"></ion-icon>
+      <span class="nombre-empresa">DriveControl</span>
+    </div>
+  </div>
+  </ion-toolbar>
+</ion-footer>
 
 </div>

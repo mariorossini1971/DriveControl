@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { ApiService } from '../api.service';
 
 
 @Component({
@@ -11,14 +12,19 @@ export class PrincipalPage implements OnInit {
 
   rol: string | null = 'conductor';
   bloqueoPagina: boolean = false;
+  usuario: any;
+  
 
   constructor(
-    public router: Router,
+     private apiService: ApiService,
+    public router: Router,    
   ) { }
 
   ngOnInit() {
     this.controlRol();
     console.log('rol en principal: ', this.rol);
+    this.usuarioGuardado();
+    console.log('usuarioGuardado en principal: ', this.usuario.nombre);
   }
 
   iniciarViaje(){
@@ -50,4 +56,23 @@ export class PrincipalPage implements OnInit {
       this.rol = 'visitante'; 
     }
   }
+
+  usuarioGuardado(){
+    const usuarioGuardado = localStorage.getItem('usuario');
+  if (usuarioGuardado) {
+    this.usuario = JSON.parse(usuarioGuardado); // Recupera los datos del usuario
+  } else {
+    console.warn('Usuario no encontrado.');
+  }
+  }
+
+  cerrarSesion(){
+    let token = String(localStorage.getItem('token'));
+    console.log('Token guardado:', token);             /// ojo borrar
+    this.apiService.cerrarSesion();
+    token = String(localStorage.getItem('token'));     ///  ojo borrar solo como control
+    console.log('Token guardado despues del cierre:', token);   /// borrar
+    this.router.navigate(['/login']);
+  }
+  
 }

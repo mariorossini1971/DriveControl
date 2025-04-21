@@ -5,6 +5,10 @@ html, body {
    /*  overflow: hidden; */
     box-sizing: border-box;
   }
+
+  ion-back-button{
+    color: #005BBB;
+  }
   
   // Estilos parte central /
   
@@ -50,11 +54,7 @@ html, body {
   }
   
   ion-label {
-    color: grey;
-  }
-  
-  ion-input {
-    color: grey;
+    font-weight: bold;
   }
   
   .guardar{
@@ -64,4 +64,45 @@ html, body {
   .cancelar{
   --color: white;
   --background: orange;
+  }
+
+  .footer-content {
+    display: flex; /* Alinear elementos horizontalmente */
+    justify-content: space-between; /* Separar elementos a los extremos */
+    align-items: center; /* Centrar elementos verticalmente */
+    width: 100%; /* Usar todo el ancho disponible */
+  }
+  
+  .left-content {
+    display: flex;
+    align-items: center;
+  
+    ion-icon {
+      font-size: 24px;
+      margin-right: 8px; /* Espacio entre ícono y texto */
+      color: #005BBB;
+      
+    }
+  }
+  
+  .right-content {
+    display: flex;
+    align-items: center;
+  
+    ion-icon {
+      font-size: 24px;
+      margin-right: 8px; /* Espacio entre ícono y texto */
+      color: #005BBB;
+      
+    }
+  
+    .nombre-empresa {
+      font-size: 16px; /* Ajustar tamaño del texto */
+      font-weight: bold; /* Opcional: negrita */
+    }
+  }
+  
+  ion-toolbar {
+    --padding-start: 16px; /* Ajustar separación lateral */
+    --padding-end: 16px; /* Ajustar separación lateral */
   }

@@ -28,14 +28,13 @@ export class UsuariosComponent implements OnDestroy {
   /* criterioOrden: 'nombre' = 'nombre';  // Solo por nombre */
   ordenDireccion: 'asc' | 'desc' = 'asc';  // A-Z o Z-A
 
-  filtroTexto: string = '';
-  ordenDireccion: 'asc' | 'desc' = 'asc';  // A-Z o Z-A
 
   public usuario: Usuario = new Usuario(0,'', '','','',0);
   public usuarioRecuperado: Usuario = new Usuario(0,'','','','',0);
 
   private subscription: Subscription = new Subscription;
   private routerSubscription!: Subscription;
+ 
   
   constructor(
     private apiService: ApiService,
@@ -60,14 +59,7 @@ export class UsuariosComponent implements OnDestroy {
        // Cuando vuelve a esta vista, actualiza usuarios
        this.funcionPrincipal();
      });
-
-    // Suscribirse a los eventos de navegación
-    this.routerSubscription = this.router.events
-      .pipe(filter(event => event instanceof NavigationEnd))
-      .subscribe(() => {
-        // Cuando vuelve a esta vista, actualiza usuarios
-        this.funcionPrincipal();
-      });
+  
     }
 
    ngOnDestroy() {
@@ -127,46 +119,7 @@ export class UsuariosComponent implements OnDestroy {
     });
   }
   
-  recuperaUsuario(id: number) {
-    this.apiService.getUsuarioById(id).subscribe({
-      next: (data) => { 
-        this.usuarioRecuperado.id_usuario = data.id_usuario;
-        this.usuarioRecuperado.nombre = data.nombre;
-        this.usuarioRecuperado.correo = data.correo;
-        this.usuarioRecuperado.contrasena = data.contrasena;
-        this.usuarioRecuperado.rol= data.rol;
-        this.usuarioRecuperado.telefono = data.telefono;
-      },
-      error: (error) => {
-        console.error('Error al recuperar el usuario:', error);
-      },
-      complete: () => {
-        console.log('Proceso de recuperación completado');
-      }
-    });
-  }
-
-  get usuariosFiltradosYOrdenados() {
-    return this.usuarios
-      .filter(usuario => {
-        const texto = this.filtroTexto.toLowerCase();
-        return (
-          usuario.nombre.toLowerCase().includes(texto) ||
-          usuario.correo.toLowerCase().includes(texto)
-        );
-      })
-      .sort((a, b) => {
-        const valA = a.nombre.toLowerCase();
-        const valB = b.nombre.toLowerCase();
-        
-        if (this.ordenDireccion === 'asc') {
-          return valA.localeCompare(valB); // Orden ascendente
-        } else {
-          return valB.localeCompare(valA); // Orden descendente
-        }
-      });
-  }
-
+  
 
 verUsuario(usuario: any){
 this.recuperaUsuario(this.id);
@@ -177,6 +130,7 @@ this.recuperaUsuario(this.id);
 nuevoUsuario(){
   this.router.navigate(['/usuario-detalle'], { state: { modo: 'crear' } });
 }
+
 activarMenu(){
   if (this.rol === 'admin') {
     this.menuCtrl.enable(true, 'menuAdmin'); // Activa el menú de administrador
@@ -185,14 +139,28 @@ activarMenu(){
     this.menuCtrl.enable(true, 'menu'); // Activa el menú de conductor
     this.menuCtrl.enable(false, 'menuAdmin'); // Desactiva el menú de administrador
   }
+}
 
+recuperaUsuario(id: number) {
+  this.apiService.getUsuarioById(id).subscribe({
+    next: (data) => { 
+      this.usuarioRecuperado.id_usuario = data.id_usuario;
+      this.usuarioRecuperado.nombre = data.nombre;
+      this.usuarioRecuperado.correo = data.correo;
+      this.usuarioRecuperado.contrasena = data.contrasena;
+      this.usuarioRecuperado.rol= data.rol;
+      this.usuarioRecuperado.telefono = data.telefono;
+    },
+    error: (error) => {
+      console.error('Error al recuperar el usuario:', error);
+    },
+    complete: () => {
+      console.log('Proceso de recuperación completado');
+    }
+  });
 }
 
 
-ngOnDestroy() {
-  if (this.routerSubscription) {
-    this.routerSubscription.unsubscribe();
-  }
-  }
+
 }
 

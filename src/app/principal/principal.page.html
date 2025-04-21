@@ -1,25 +1,46 @@
 <ion-header>
   <ion-toolbar>
     <ion-buttons slot="start" >
-    </ion-buttons>
-    <ion-title>DRIVE CONTROL</ion-title>
-    <ion-buttons slot="end">
+      <ion-menu-button color="primary" name="menu"></ion-menu-button>
+     </ion-buttons>
+    <ion-title>Dashboard</ion-title>
+    <!-- <ion-buttons slot="end">
       <ion-back-button defaultHref="/informe" icon="return-down-back-outline" [disabled]="bloqueoPagina"></ion-back-button>
-    </ion-buttons>
+    </ion-buttons> -->
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
   <div class="button-container">
-    <ion-button *ngIf="rol === 'conductor'" expand="full" fill="solid" size="large" (click)="iniciarViaje()">INICIAR VIAJE</ion-button>
+    <ion-button *ngIf="rol === 'conductor'" expand="full" fill="solid" size="large"  [ngStyle]="{'--background': '#8E44AD ' }" (click)="iniciarViaje()">INICIAR VIAJE</ion-button>
 
-    <ion-button *ngIf="rol === 'conductor'" expand="full" fill="solid" size="large" (click)="verUsuario()">VER MIS DATOS</ion-button>
-    <ion-button *ngIf="rol === 'admin'" expand="full" fill="solid" size="large" (click)="verUsuario()">EDITAR USUARIOS</ion-button>
+    <ion-button *ngIf="rol === 'conductor'" expand="full" fill="solid" size="large" [ngStyle]="{'--background': '#cb4335' }" (click)="verUsuario()">MI PERFIL</ion-button>
+    <ion-button *ngIf="rol === 'admin'" expand="full" fill="solid" size="large" [ngStyle]="{'--background': '#cb4335' }" (click)="verUsuario()">USUARIOS</ion-button>
 
-    <ion-button expand="full" fill="solid" size="large" (click)="verVehiculos()">VER VEHICULOS</ion-button>
+    <ion-button expand="full" fill="solid" size="large" [ngStyle]="{'--background': '#1e8449' }" (click)="verVehiculos()">VEHÍCULOS</ion-button>
 
-    <ion-button *ngIf="rol === 'conductor'" expand="full" fill="solid" size="large" (click)="verViajes()">MIS VIAJES</ion-button>
-    <ion-button *ngIf="rol === 'admin'" expand="full" fill="solid" size="large" (click)="verViajes()">EDITAR VIAJES</ion-button>
+    <ion-button *ngIf="rol === 'conductor'" expand="full" fill="solid" size="large" [ngStyle]="{'--background': '#005BBB '}" (click)="verViajes()">MIS VIAJES</ion-button>
+    <ion-button *ngIf="rol === 'admin'" expand="full" fill="solid" size="large" [ngStyle]="{'--background': '#005BBB'}" (click)="verViajes()">VIAJES</ion-button>
+    <ion-button expand="full" fill="solid" size="large" [ngStyle]="{'--background': '#34495E ' }" (click)="cerrarSesion()">CERRAR SESIÓN</ion-button>
+
+
 
   </div>
 </ion-content>
+
+<ion-footer>
+  <ion-toolbar>
+    <div class="footer-content">
+      <div class="left-content">
+            <ion-icon slot="start" name="person-circle-outline"></ion-icon>
+            {{usuario?.nombre}} 
+          </div>
+
+          <!-- Nombre de la empresa y el ícono a la derecha -->
+          <div class="right-content">                
+            <ion-icon slot="end" name="car-outline"></ion-icon>
+      <span class="nombre-empresa">DriveControl</span>
+    </div>
+  </div>
+  </ion-toolbar>
+</ion-footer>

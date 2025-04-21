@@ -4,6 +4,7 @@ import { ApiService } from '../api.service';
 import { ActivatedRoute, Route, Router } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
 import { ChangeDetectorRef } from '@angular/core';
+import { Usuario } from '../models/usuario.model';
 
 @Component({
   selector: 'app-guardar',
@@ -24,6 +25,9 @@ export class GuardarPage implements OnDestroy{
 
   rol: string = "";
 
+   public usuario: Usuario = new Usuario(0,'', '','','',0);
+   public usuarioRecuperado: Usuario = new Usuario(0,'','','','',0);
+
 
   mensaje: string = '';
   datosGuardados: boolean = true;
@@ -36,6 +40,8 @@ export class GuardarPage implements OnDestroy{
   ) { }
 
   ngOnInit() {
+    this.usuarioGuardado();
+    console.log('usuarioGuardado en principal: ', this.usuario.nombre);
 
     this.apiService.getNewItem().subscribe({
       next: (viaje) => {
@@ -65,6 +71,15 @@ export class GuardarPage implements OnDestroy{
   }
 
   ngOnDestroy() {}
+
+  usuarioGuardado(){
+    const usuarioGuardado = localStorage.getItem('usuario');
+  if (usuarioGuardado) {
+    this.usuario = JSON.parse(usuarioGuardado); // Recupera los datos del usuario
+  } else {
+    console.warn('Usuario no encontrado.');
+  }
+  }
   
 
 async guardarStore() {

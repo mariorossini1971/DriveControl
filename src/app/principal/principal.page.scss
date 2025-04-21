@@ -29,3 +29,51 @@
     --padding-bottom: 10px;
 
   }
+
+ /*  ion-title{
+    color: #005BBB;
+  } */
+
+  .footer-content {
+    display: flex; /* Alinear elementos horizontalmente */
+    justify-content: space-between; /* Separar elementos a los extremos */
+    align-items: center; /* Centrar elementos verticalmente */
+    width: 100%; /* Usar todo el ancho disponible */
+    color: #005BBB;
+    
+  }
+  
+  .left-content {
+    display: flex;
+    align-items: center;
+    color: #005BBB;
+    
+  
+    ion-icon {
+      font-size: 24px;
+      color: #005BBB; /* Azul personalizado */
+      margin-right: 8px; /* Espacio entre ícono y texto */
+    }
+  }
+  
+  .right-content {
+    display: flex;
+    align-items: center;
+    color: #005BBB;
+  
+    ion-icon {
+      font-size: 24px;
+      margin-right: 8px; /* Espacio entre ícono y texto */
+      color: #005BBB;
+    }
+  
+    .nombre-empresa {
+      font-size: 16px; /* Ajustar tamaño del texto */
+      font-weight: bold; /* Opcional: negrita */
+    }
+  }
+  
+  ion-toolbar {
+    --padding-start: 16px; /* Ajustar separación lateral */
+    --padding-end: 16px; /* Ajustar separación lateral */
+  }

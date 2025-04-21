@@ -1,6 +1,7 @@
 import { Component, OnInit, OnChanges, SimpleChanges, OnDestroy } from '@angular/core';
 import { ApiService } from '../api.service';
 import { Route, Router } from '@angular/router';
+import { Usuario } from '../models/usuario.model';
 import { BehaviorSubject, Subscription } from 'rxjs';
 
 
@@ -23,6 +24,9 @@ export class VehiculosComponent implements OnDestroy {
   cocheDisponible: boolean = true;
   cocheReservado: boolean = true;
 
+   public usuario: Usuario = new Usuario(0,'', '','','',0);
+   public usuarioRecuperado: Usuario = new Usuario(0,'','','','',0);
+
 
   constructor(
     private apiService: ApiService,  
@@ -32,6 +36,8 @@ export class VehiculosComponent implements OnDestroy {
     
     this.controlRol();
     this.cargarDatosVehiculos();
+    this.usuarioGuardado();
+    console.log('usuarioGuardado en principal: ', this.usuario.nombre);
   }
 
   controlRol() {
@@ -103,6 +109,15 @@ export class VehiculosComponent implements OnDestroy {
 
       nuevoVehiculo(){
         this.router.navigate(['/vehiculo-detalle'], { state: { modo: 'crear' } });
+      }
+
+      usuarioGuardado(){
+        const usuarioGuardado = localStorage.getItem('usuario');
+      if (usuarioGuardado) {
+        this.usuario = JSON.parse(usuarioGuardado); // Recupera los datos del usuario
+      } else {
+        console.warn('Usuario no encontrado.');
+      }
       }
 
   

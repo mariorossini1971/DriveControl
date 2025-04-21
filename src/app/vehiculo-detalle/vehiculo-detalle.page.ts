@@ -18,6 +18,7 @@ export class VehiculoDetallePage implements OnInit {
     disponible: true,
   };
   modo: 'crear' | 'ver' | 'editar' = 'ver';
+  usuario: any;
  
   constructor(
     private router: Router,
@@ -29,6 +30,9 @@ export class VehiculoDetallePage implements OnInit {
   ngOnInit() {
     const navigation = this.router.getCurrentNavigation();
     const state = navigation?.extras.state;
+
+    this.usuarioGuardado();
+    console.log('usuarioGuardado en principal: ', this.usuario.nombre);
 
     console.log('State recibido: ', state); // Verifica el contenido del estado
 
@@ -111,6 +115,15 @@ export class VehiculoDetallePage implements OnInit {
   cancelarEdicion() {
     this.modo = 'ver'; // Cambiar de vuelta al modo de vista (no edición)
     // Otras acciones de cancelación, si es necesario, como restablecer campos
+  }
+
+  usuarioGuardado(){
+    const usuarioGuardado = localStorage.getItem('usuario');
+  if (usuarioGuardado) {
+    this.usuario = JSON.parse(usuarioGuardado); // Recupera los datos del usuario
+  } else {
+    console.warn('Usuario no encontrado.');
+  }
   }
 
 async presentAlert (titulo:string, mensaje:string){

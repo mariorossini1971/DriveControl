@@ -1,3 +1,7 @@
+ion-back-button{
+  color: #005BBB;
+}
+
 .custom-card {
     margin-bottom: 16px;
     border-radius: 12px;
@@ -20,7 +24,7 @@
   
   .icon-card {
     font-size: 30px;
-    color: #3880ff;
+    color: #005BBB;
     margin-right: 8px;
     vertical-align: middle
   }
@@ -65,10 +69,50 @@
 
   .icon-card{
     font-size: 30px; 
-    color: #3880ff; 
+    color: #005BBB; 
   }
 
   .boton-detalles {
     text-align: center;
     margin-top: 8px;
+  }
+
+  .footer-content {
+    display: flex; /* Alinear elementos horizontalmente */
+    justify-content: space-between; /* Separar elementos a los extremos */
+    align-items: center; /* Centrar elementos verticalmente */
+    width: 100%; /* Usar todo el ancho disponible */
+    color: #005BBB;
+  }
+  
+  .left-content {
+    display: flex;
+    align-items: center;
+  
+    ion-icon {
+      font-size: 24px;
+      margin-right: 8px; /* Espacio entre ícono y texto */
+      color: #005BBB;
+    }
+  }
+  
+  .right-content {
+    display: flex;
+    align-items: center;
+  
+    ion-icon {
+      font-size: 24px;
+      margin-right: 8px; /* Espacio entre ícono y texto */
+      color: #005BBB;
+    }
+  
+    .nombre-empresa {
+      font-size: 16px; /* Ajustar tamaño del texto */
+      font-weight: bold; /* Opcional: negrita */
+    }
+  }
+  
+  ion-toolbar {
+    --padding-start: 16px; /* Ajustar separación lateral */
+    --padding-end: 16px; /* Ajustar separación lateral */
   }

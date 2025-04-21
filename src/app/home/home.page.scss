@@ -1,3 +1,7 @@
+ion-back-button{
+  color: #005BBB; 
+}
+
 /* Contenedor principal: Ajuste automático por debajo del header*/ 
 .container { 
   display: flex; 
@@ -99,6 +103,7 @@
     } 
     /* div{ position: absolute; /* width: 100%; */ /* width: -webkit-fill-available; } */ 
     /* ion-fab-button{ //position: absolute; // display: flex; // align-items: center; // Centra vertical // justify-content: center; // Centra horizontal // margin-top: 1rem; // Ajusta la separación superior si es necesario left: 10px; z-index: 0; } */ /* ion-fab-button ion-icon { //margin-right: 8px; //position: static; // Quita la posición absoluta } */ 
+    
     ion-icon{ 
     position: absolute; } 
     .left{ left: 0; 
@@ -175,5 +180,51 @@
         justify-content: flex-start;
         padding-top: var(--ion-safe-area-top, 56px);
       }
+    }
+
+   /*  ion-title{
+      color: #005BBB;
+    } */
+
+    .footer-content {
+      display: flex; /* Alinear elementos horizontalmente */
+      justify-content: space-between; /* Separar elementos a los extremos */
+      align-items: center; /* Centrar elementos verticalmente */
+      width: 100%; /* Usar todo el ancho disponible */
+      color: #005BBB;
+
+    }
+    
+    .left-content {
+      display: flex;
+      align-items: center;
+      color: #005BBB;
+    
+      ion-icon {
+        font-size: 24px;
+        margin-right: 8px; /* Espacio entre ícono y texto */
+        color: #005BBB;
+      }
+    }
+    
+    .right-content {
+      display: flex;
+      align-items: center;
+    
+      ion-icon {
+        font-size: 24px;
+        margin-right: 8px; /* Espacio entre ícono y texto */
+        color: #005BBB;
+      }
+    
+      .nombre-empresa {
+        font-size: 16px; /* Ajustar tamaño del texto */
+        font-weight: bold; /* Opcional: negrita */
+      }
+    }
+    
+    ion-toolbar {
+      --padding-start: 16px; /* Ajustar separación lateral */
+      --padding-end: 16px; /* Ajustar separación lateral */
     }
   

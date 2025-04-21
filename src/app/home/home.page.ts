@@ -39,6 +39,7 @@ export class HomePage implements OnInit, OnDestroy {
   hora: number = 0;
 
   idUsuario: number = 0;
+  
 
  // mensaje: string = '';
 
@@ -91,6 +92,8 @@ export class HomePage implements OnInit, OnDestroy {
     this.controlRol();
     this.activarMenu();
     this.funcionPrincipal();
+    this.usuarioGuardado();
+    console.log('usuarioGuardado en principal: ', this.usuario.nombre);
     
   }
 
@@ -108,6 +111,15 @@ export class HomePage implements OnInit, OnDestroy {
       console.error('Error al leer el rol desde localStorage:', error);
       this.rol = 'visitante'; 
     }
+  }
+
+  usuarioGuardado(){
+    const usuarioGuardado = localStorage.getItem('usuario');
+  if (usuarioGuardado) {
+    this.usuario = JSON.parse(usuarioGuardado); // Recupera los datos del usuario
+  } else {
+    console.warn('Usuario no encontrado.');
+  }
   }
   
 

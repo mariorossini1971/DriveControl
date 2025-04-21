@@ -31,6 +31,9 @@ export class ViajeDetallePage implements OnInit {
   matricula: 0,
   ano: 0,
   }
+
+  usuario: any;
+
   constructor(
         private router: Router,
         private apiService: ApiService,
@@ -40,6 +43,8 @@ export class ViajeDetallePage implements OnInit {
 
   ngOnInit() {
     this.funcionPrincipal();
+    this.usuarioGuardado();
+    console.log('usuarioGuardado en principal: ', this.usuario.nombre);
   }
 
   funcionPrincipal(){
@@ -88,6 +93,16 @@ export class ViajeDetallePage implements OnInit {
       }
     });
   }
+
+  usuarioGuardado(){
+    const usuarioGuardado = localStorage.getItem('usuario');
+  if (usuarioGuardado) {
+    this.usuario = JSON.parse(usuarioGuardado); // Recupera los datos del usuario
+  } else {
+    console.warn('Usuario no encontrado.');
+  }
+  }
+  
   async presentAlert (titulo:string, mensaje:string){
     const alert = await this.alertController.create({
       header:titulo,
