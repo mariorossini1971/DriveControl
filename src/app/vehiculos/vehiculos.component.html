@@ -8,7 +8,7 @@
       <ion-button *ngIf="rol === 'admin'" (click)="nuevoVehiculo()">
         <ion-icon slot="end" name="add-outline" color="primary"></ion-icon>
       </ion-button>
-      <ion-back-button defaultHref="/home" icon="return-down-back-outline"></ion-back-button>
+      <ion-back-button defaultHref="/principal" icon="return-down-back-outline"></ion-back-button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
@@ -18,7 +18,9 @@
 <ion-content [fullscreen]="true" class="ion-padding">
 <ion-title>Seleccionar un vehículo</ion-title>
      <ion-list>
-      <ng-container *ngIf="rol === 'conductor'">
+     <!-- <ng-container *ngIf="rol === 'conductor'"> -->
+        <ng-container *ngIf="mostrar">
+
       <ion-card class="custom-card" *ngFor="let vehiculo of vehiculos">
         <ion-card-header>
        <!--  <ion-label> -->
@@ -31,19 +33,24 @@
         <ion-card-content>
           <ion-item lines="none">
           <p class="car-matricula"><strong>Matrícula: </strong> {{ vehiculo.matricula }}</p> 
-           <ion-checkbox 
-            [checked]="vehiculo === vehiculoSeleccionado" 
-            (ionChange)="seleccionarVehiculo(vehiculo)" 
-            slot="end">
+           <ion-checkbox *ngIf="mostrar"
+              [checked]="vehiculo === vehiculoSeleccionado" 
+              (ionChange)="seleccionarVehiculo(vehiculo)" 
+              slot="end">
             </ion-checkbox>
+            <ion-button *ngIf="!mostrar" size="large" slot="end" fill="clear">
+              <ion-icon name="eye-outline"></ion-icon>
+            </ion-button>
           </ion-item> 
         </ion-card-content>    
       </ion-card>
-      <ion-button expand="full" (click)="guardarModelo()">Guardar</ion-button>
+      <ion-button *ngIf="mostrar" expand="full" (click)="guardarModelo()">Guardar</ion-button>
       </ng-container>
 <!-- ************************     PARA ADMINISTRADOR ********************* -->
 
-      <ng-container *ngIf="rol === 'admin'">
+       <!-- <ng-container *ngIf="rol === 'admin'"> -->
+       <ng-container *ngIf="!mostrar">
+
         <ion-card class="custom-card" *ngFor="let vehiculo of vehiculos" (click)="verVehiculo(vehiculo)">
           <ion-card-header>
          <!--  <ion-label> -->
@@ -55,13 +62,7 @@
         </ion-card-header>
           <ion-card-content>
             <ion-item lines="none">
-            <p class="car-matricula"><strong>Matrícula: </strong> {{ vehiculo.matricula }}</p> 
-             <ion-checkbox 
-              [checked]="vehiculo === vehiculoSeleccionado" 
-              (ionChange)="seleccionarVehiculo(vehiculo)" 
-              slot="end">
-              </ion-checkbox>
-  
+            <p class="car-matricula"><strong>Matrícula: </strong> {{ vehiculo.matricula }}</p>   
             </ion-item> 
           </ion-card-content>    
         </ion-card>
@@ -74,7 +75,7 @@
       <div class="footer-content">
         <div class="left-content">
               <ion-icon slot="start" name="person-circle-outline"></ion-icon>
-              {{usuario?.nombre}} 
+              {{usuario.nombre}} 
             </div>
   
             <!-- Nombre de la empresa y el ícono a la derecha -->

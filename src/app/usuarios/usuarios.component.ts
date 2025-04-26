@@ -5,6 +5,7 @@ import {  NavigationEnd,Router } from '@angular/router';
 import { Usuario } from '../models/usuario.model';
 import { MenuController } from '@ionic/angular';
 import { Observable } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 
 
 @Component({
@@ -21,6 +22,7 @@ export class UsuariosComponent implements OnDestroy {
 
   //rol : string | null = '';
   rol : string = "";
+  public rol$ = new BehaviorSubject<string>('');
   nombre : string | null = '';
   id : number = 0 ;
 
@@ -44,21 +46,24 @@ export class UsuariosComponent implements OnDestroy {
     ) { }
 
   ngOnInit() {
-
-    this.cdr.detectChanges();      // Detectar cambios para actualizar la vista
     console.log('entro en Usuario.ts');
     this.controlRol()
-    this.activarMenu();
-    this.funcionPrincipal();
-    this.recuperaUsuario(this.id);
+    this.activarMenu();  
+    }
+    
+    ionViewWillEnter(){
+      console.log('entro cada vez que entro');
+      this.controlRol()
+      this.activarMenu();  
 
-     // Suscribirse a los eventos de navegación
-     this.routerSubscription = this.router.events
-     .pipe(filter(event => event instanceof NavigationEnd))
-     .subscribe(() => {
-       // Cuando vuelve a esta vista, actualiza usuarios
-       this.funcionPrincipal();
-     });
+
+      if(this.rol === 'admin'){
+        this.funcionPrincipal()
+      };
+      if(this.rol === 'conductor'){
+        this.recuperaUsuario(this.id)
+      };
+
   
     }
 
@@ -71,11 +76,19 @@ export class UsuariosComponent implements OnDestroy {
 
   controlRol() {
     console.log('             con localStorage ');
+
+    this.apiService.cargarRol();
+    this.apiService.rol$.subscribe((rol) => {
+      this.rol = rol; // Actualiza el valor local
+      console.log('Rol actualizado en HomePage:', this.rol);
+    });
+
     try {
       const User = localStorage.getItem('usuario');
       if (User) {
-        this.usuario = JSON.parse(User);
-        this.rol = this.usuario.rol;
+        this.usuario = JSON.parse(User); 
+      //  this.rol$.next(this.usuario.rol)       ya lo estoy haciendo en cargarRol
+     //   this.rol = this.usuario.rol;
         this.id = this.usuario.id_usuario;
         console.log('*user *********** rol en usuario: ', this.rol);
         this.cdr.detectChanges();
@@ -84,7 +97,6 @@ export class UsuariosComponent implements OnDestroy {
       console.error('Error al leer el usuario desde localStorage:', error);
     }
   }
-  
   get usuariosFiltradosYOrdenados() {
     return this.usuarios
       .filter(usuario => {
@@ -117,6 +129,7 @@ export class UsuariosComponent implements OnDestroy {
         console.error('Error al obtener los usuarios:', error);
       }
     });
+    this.cdr.detectChanges();
   }
   
   
@@ -158,6 +171,7 @@ recuperaUsuario(id: number) {
       console.log('Proceso de recuperación completado');
     }
   });
+  this.cdr.detectChanges();
 }
 
 

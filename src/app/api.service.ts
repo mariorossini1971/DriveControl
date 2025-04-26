@@ -20,7 +20,7 @@ export class ApiService {
   miIdCocheBehaviorSubject = new BehaviorSubject<number>(0);
   cocheDispoBehaviorSubject = new BehaviorSubject<boolean>(true);
   rolBehaviorSubject = new BehaviorSubject<string>("");
-  
+  rol$ = this.rolBehaviorSubject.asObservable();     // para subscribirme desde todas las ts
 
   newItemSubject = new BehaviorSubject<any>({
     id_usuario: 3,
@@ -49,16 +49,9 @@ export class ApiService {
 
 
 
- // private usuarioSubject = new BehaviorSubject<any>(null); // Inicializa vacío o con datos desde localStorage
-//  public usuario$ = this.usuarioSubject.asObservable();
-
 
   private usuarioSubject = new BehaviorSubject<any>(this.getUsuarioLocalStorage());
-//  private usuarioSubject: BehaviorSubject<Usuario> = new BehaviorSubject<Usuario>(
-//    new Usuario(0, 'otro', '', '', '')
-//  );
 
-//  public usuario$: Observable<Usuario> = this.usuarioSubject.asObservable();
 
   /*****    TODO lo mismo con el id del coche, me será útil **********/
 
@@ -119,12 +112,19 @@ export class ApiService {
   getVehiculos(): Observable<any> {
     return this.http.get(`${apiUrl}/vehiculos`);
   }
+  getVehiculoById(id: number): Observable<any> {
+    return this.http.get(`${apiUrl}/vehiculos/${id}`);
+  }
   updateVehiculo(id: number, vehiculo: any): Observable<any>{
     return this.http.put(`${apiUrl}/vehiculos/${id}`, vehiculo);
   }
 
   deleteVehiculo(id:number): Observable<any> {
     return this.http.delete(`${apiUrl}/vehiculos/${id}`);
+  }
+
+  getHistorialViaje(id: number): Observable<any>{
+    return this.http.get(`${apiUrl}/viajes/vehiculo/${id}`);
   }
   /////////////////////////////// USUARIO OBSERVABLE /////////////////////////////
   get usuario$() {
@@ -163,6 +163,9 @@ export class ApiService {
   getViajesById(id: number): Observable<any> {
     return this.http.get(`${apiUrl}/viajes/usuario/detallado/${id}`);
   }
+  getViajesByIdDetallado(id: number): Observable<any> {
+    return this.http.get(`${apiUrl}/viajes/detallado/${id}`);
+  }
 
   createViaje(viaje: any): Observable<any> {
     return this.http.post<any>(`${apiUrl}/viajes`, viaje);
@@ -171,8 +174,32 @@ export class ApiService {
     return this.http.delete(`${apiUrl}/viajes/${id}`);
   }
 
-  /////////////////////////////   vehiculo  observable ////////////////////////////////////
   
+  ///////////////////////////// ROL /////////////////////////////////////
+  cargarRol(): void {
+    try {
+      const rolLocalStorage = localStorage.getItem('rol');
+      if (rolLocalStorage) {
+        this.rolBehaviorSubject.next(rolLocalStorage); // Actualiza el BehaviorSubject
+        console.log('Rol cargado desde localStorage:', rolLocalStorage);
+      } else {
+        console.warn('No se encontró un rol en localStorage. Usando rol "visitante".');
+        this.rolBehaviorSubject.next('visitante'); // Valor por defecto
+      }
+    } catch (error) {
+      console.error('Error al cargar el rol:', error);
+      this.rolBehaviorSubject.next('visitante'); // En caso de error
+    }
+  }
+
+  // Método para actualizar el rol manualmente
+  actualizarRol(nuevoRol: string): void {
+    this.rolBehaviorSubject.next(nuevoRol); // Cambia el rol globalmente
+    localStorage.setItem('rol', nuevoRol); // Actualiza en localStorage
+    console.log('Rol actualizado a:', nuevoRol);
+  }
+
+
   setRol(rol: string){
     this.rolBehaviorSubject.next(rol);
     console.log('he grabado el rol: ', this.rolBehaviorSubject.value);
@@ -180,6 +207,8 @@ export class ApiService {
   getRol(){
     return this.rolBehaviorSubject.asObservable();
   }
+
+/////////////////////////////   vehiculo  observable ////////////////////////////////////
 
   setModeloSeleccionado(modelo: string) {
     // this.objetoModeloSeleccionado.next(modelo);

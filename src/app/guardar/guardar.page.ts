@@ -124,7 +124,7 @@ async guardarStore() {
     // Redirigir después de un tiempo
     setTimeout(() => {
       this.mensaje = ''; 
-      this.router.navigate(['/home']);
+      this.router.navigate(['/principal']);
     }, 3000);
   }
 

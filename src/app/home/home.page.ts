@@ -6,6 +6,7 @@ import { BehaviorSubject, Subscription } from 'rxjs';
 import { GestureController,ToastController} from '@ionic/angular';
 import { Usuario } from '../models/usuario.model';
 import { MenuController } from '@ionic/angular';
+import { formatDate } from '@angular/common';
 
 @Component({
   selector: 'app-home',
@@ -76,6 +77,8 @@ export class HomePage implements OnInit, OnDestroy {
     conductor: 'mario',
   };
   rol : string | null = '';
+  public rol$ = new BehaviorSubject<string>('');
+
 
   constructor(
     private gestureCtrl: GestureController,
@@ -89,38 +92,76 @@ export class HomePage implements OnInit, OnDestroy {
 
   ngOnInit() {
 
-    this.controlRol();
+  //  this.controlRol();
     this.activarMenu();
     this.funcionPrincipal();
     this.usuarioGuardado();
     console.log('usuarioGuardado en principal: ', this.usuario.nombre);
+    this.control2Rol();
     
   }
 
+  // controlRol() {
+  //   console.log('             con localStorage ');
+  //   try {
+  //     this.rol = localStorage.getItem('rol');
+  //     if (this.rol) {
+  //       console.log('************ rol en home: ', this.rol);
+  //     } else {
+  //       console.warn('No se ha encontrado rol en localStorage.');
+  //       this.rol = 'visitante'; //
+  //     }
+  //   } catch (error) {
+  //     console.error('Error al leer el rol desde localStorage:', error);
+  //     this.rol = 'visitante'; 
+  //   }
+  // }
+
+  control2Rol(){
+    this.apiService.cargarRol();
+    this.apiService.rol$.subscribe((rol) => {
+      this.rol = rol; // Actualiza el valor local
+      console.log('Rol actualizado en HomePage:', this.rol);
+    });
+  }
   controlRol() {
-    console.log('             con localStorage ');
+
     try {
-      this.rol = localStorage.getItem('rol');
-      if (this.rol) {
+      const rolLocalStorage = localStorage.getItem('rol'); 
+  
+      if (rolLocalStorage) {
+        this.rol = rolLocalStorage;
+        this.rol$.next(this.rol); // Actualiza el BehaviorSubject
         console.log('************ rol en home: ', this.rol);
+        this.cdr.detectChanges();
+
       } else {
-        console.warn('No se ha encontrado rol en localStorage.');
-        this.rol = 'visitante'; //
+        console.log('No se ha encontrado rol en localStorage.');
+        this.rol = 'visitante'; // Asigna rol por defecto
+        this.rol$.next(this.rol); // Asegura que el BehaviorSubject reciba el valor
       }
     } catch (error) {
       console.error('Error al leer el rol desde localStorage:', error);
       this.rol = 'visitante'; 
+      this.rol$.next(this.rol);
     }
+
   }
 
-  usuarioGuardado(){
-    const usuarioGuardado = localStorage.getItem('usuario');
-  if (usuarioGuardado) {
-    this.usuario = JSON.parse(usuarioGuardado); // Recupera los datos del usuario
-  } else {
-    console.warn('Usuario no encontrado.');
+  async usuarioGuardado(): Promise<void> {
+    try {
+      const usuarioGuardado = await Promise.resolve(localStorage.getItem('usuario')); // Simula una operación asíncrona
+      if (usuarioGuardado) {
+        this.usuario = JSON.parse(usuarioGuardado); // Recupera los datos del usuario
+        console.log('Usuario recuperado:', this.usuario);
+      } else {
+        console.warn('Usuario no encontrado.');
+      }
+    } catch (error) {
+      console.error('Error al recuperar el usuario desde localStorage:', error);
+    }
   }
-  }
+  
   
 
   funcionPrincipal(){
@@ -208,7 +249,8 @@ export class HomePage implements OnInit, OnDestroy {
   capturarFechaHora() {
 
     const fecha = new Date();
-    const tiempo = new Date(fecha.getTime() - fecha.getTimezoneOffset() * 60000).toISOString().split('.')[0] + 'Z';  // mismo formato que la BBDD
+    const tiempo = fecha.toISOString().split('.')[0] + 'Z'; //   // mismo formato que la BBDD
+
     this.bloqueoPagina = true;
   
     if (this.esInicio) {
@@ -218,11 +260,8 @@ export class HomePage implements OnInit, OnDestroy {
       this.iniciarTemporizador(); // Iniciar el temporizador
       this.cdr.detectChanges(); //Forzar actualización de la vista 
     } else {
-      //this.bloqueoPagina = false;
-      // Si es "FINAL", captura la fecha de final
-      this.fechaHoraFinal = tiempo;
+       this.fechaHoraFinal = tiempo;
       this.detenerTemporizador(); // Detener el temporizador
-      // this.mostrarGuardar = true;
       this.guardarStore();
       this.cambioGuardar();
     }
@@ -277,7 +316,9 @@ export class HomePage implements OnInit, OnDestroy {
   }
 
   cambiaPagina() {
-    this.router.navigate(['/vehiculos']);
+      this.router.navigate(['/vehiculos']);
+  //  this.router.navigate(['/vehiculos'], { state: { origen: 'otro' } });
+
   }
   cambioGuardar(){
     console.log("dentro");

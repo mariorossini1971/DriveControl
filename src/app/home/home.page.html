@@ -14,7 +14,7 @@
     <!-- Botón para el rol de conductor -->
     <ion-menu-button
       color="primary"
-      *ngIf="rol === 'conductor'"
+      *ngIf=" rol === 'conductor'"
       menu="menu"
       [disabled]="bloqueoPagina"
       >
@@ -39,11 +39,7 @@
     <ion-button expand="block" shape="round" class="boton" [disabled]="bloqueoPagina" (click)="cambiaPagina()"> 
       Selecciona Vehículo 
     </ion-button> 
-<!--
-    <ion-item class="vehiculo-input">
-      <ion-input [value]="modeloSeleccionado" readonly></ion-input> 
-    </ion-item>
--->
+
 
 
   <ion-card class="vehiculo-card">
@@ -82,13 +78,6 @@
 <ion-text color="light" class="texto-swiper"> {{ esInicio ? 'DESLIZAR PARA INICIAR' : 'DESLIZAR PARA FINALIZAR' }} </ion-text> 
 </ion-col> 
 </ion-row>
-
-<!-- Guardar Datos --> 
-<!--  <div class="seccion seccion4"> 
-<ion-button *ngIf="mostrarGuardar" expand="full" shape="round" class="boton" (click)="guardarStore()"> Guardar Datos </ion-button> -->
-
-<!--  <p *ngIf="mensaje" class="mensaje" >{{ mensaje }} </p>    -->    
- <!--  </div> -->
   </div>
 </ion-content>
 
@@ -97,14 +86,14 @@
     <div class="footer-content">
       <div class="left-content">
             <ion-icon slot="start" name="person-circle-outline"></ion-icon>
-            {{usuario?.nombre}} 
-          </div>
+            {{usuario.nombre}} 
+          </div> 
 
           <!-- Nombre de la empresa y el ícono a la derecha -->
-          <div class="right-content">                
+           <div class="right-content">                
             <ion-icon slot="end" name="car-outline"></ion-icon>
       <span class="nombre-empresa">DriveControl</span>
     </div>
   </div>
   </ion-toolbar>
-</ion-footer>
+</ion-footer> 

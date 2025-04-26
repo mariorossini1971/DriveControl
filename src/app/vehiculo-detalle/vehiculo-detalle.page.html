@@ -6,7 +6,7 @@
       </ion-buttons>
       <ion-title>{{ modo === 'crear' ? 'Nuevo Vehiculo' : modo === 'editar' ? 'Editar Vehiculo' : 'Detalle del Vehiculo'}}</ion-title>
       <ion-buttons slot="end">
-        <ion-back-button defaultHref="/home" icon="return-down-back-outline"></ion-back-button>
+        <ion-back-button defaultHref="/principal" icon="return-down-back-outline"></ion-back-button>
       </ion-buttons>
     </ion-toolbar>
   </ion-header>  
@@ -69,25 +69,32 @@
           </ion-button>
 
           <!-- Botón Cancelar Edición en modo editar -->
-          <ion-button expand="block" class="cancelar"  (click)="cancelarEdicion()" *ngIf="modo === 'editar'">Cancelar
+          <ion-button expand="block" class="cancelar"  (click)="cancelarEdicion()" *ngIf="modo === 'editar'"> Cancelar
             <ion-icon slot="start" name="close-circle-outline"></ion-icon>
           </ion-button>
 
             <!-- Botón Cancelar Edición en modo crear  -->
-            <ion-button expand="block" color="danger" (click)="cancelar()" *ngIf="modo ==='crear'">Cancelar
+            <ion-button expand="block" color="danger" (click)="cancelar()" *ngIf="modo ==='crear'"> Cancelar
             </ion-button> 
 
           <!-- Botón Eliminar solo en modo editar o ver -->
-          <ion-button expand="full" color="danger" (click)="eliminarVehiculo()" *ngIf="modo === 'editar'">Eliminar
+          <ion-button expand="full" color="danger" (click)="eliminarVehiculo()" *ngIf="modo === 'editar'"> Eliminar
             <ion-icon slot="start" name="trash"></ion-icon>
 
           </ion-button>
 
-          <!-- Botón Editar solo en modo ver -->
-          <ion-button expand="full" class="boton" (click)="modo = 'editar'" *ngIf="modo === 'ver'">Editar
+          <!-- Botón Editar solo en modo editar -->
+          <ion-button expand="full" class="boton" (click)="modo = 'editar'" *ngIf="modo === 'verEditor'"> Editar
           <ion-icon slot="start" name="pencil"></ion-icon>
-
           </ion-button>
+
+          <ion-button expand="block" color="medium" (click)="cancelar()" *ngIf="modo ==='ver'"> Volver a Vehiculos
+            <ion-icon slot="start" name="return-down-back-outline"></ion-icon>
+          </ion-button> 
+
+          <ion-button expand="block" color="success" (click)="verHistorial()"  *ngIf="modo ==='verEditor'"> Historial del Vehiculo
+            <ion-icon slot="start" name="archive-outline"></ion-icon>
+          </ion-button> 
           </div>
 
 
@@ -105,7 +112,7 @@
     <div class="footer-content">
       <div class="left-content">
             <ion-icon slot="start" name="person-circle-outline"></ion-icon>
-            {{usuario?.nombre}} 
+            {{usuario.nombre}} 
           </div>
 
           <!-- Nombre de la empresa y el ícono a la derecha -->

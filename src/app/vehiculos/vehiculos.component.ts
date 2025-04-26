@@ -1,6 +1,6 @@
-import { Component, OnInit, OnChanges, SimpleChanges, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnChanges, SimpleChanges, OnDestroy, ChangeDetectorRef  } from '@angular/core';
 import { ApiService } from '../api.service';
-import { Route, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { Usuario } from '../models/usuario.model';
 import { BehaviorSubject, Subscription } from 'rxjs';
 
@@ -24,38 +24,68 @@ export class VehiculosComponent implements OnDestroy {
   cocheDisponible: boolean = true;
   cocheReservado: boolean = true;
 
-   public usuario: Usuario = new Usuario(0,'', '','','',0);
-   public usuarioRecuperado: Usuario = new Usuario(0,'','','','',0);
+  public usuario: Usuario = new Usuario(0,'', '','','',0);
+  public usuarioRecuperado: Usuario = new Usuario(0,'','','','',0);
+  public rol$ = new BehaviorSubject<string>('');
 
+  mostrar: boolean = true;
+  origen: string = '';
 
   constructor(
     private apiService: ApiService,  
-    public router: Router) { }
+    public router: Router,
+    private cdr: ChangeDetectorRef) { }
 
    ngOnInit() {
-    
+    console.log(" ******************************************entro en vehiculos");
     this.controlRol();
+    this.controlPagina();
     this.cargarDatosVehiculos();
     this.usuarioGuardado();
     console.log('usuarioGuardado en principal: ', this.usuario.nombre);
   }
 
-  controlRol() {
-    console.log('             con localStorage ');
-    try {
-      this.rol = localStorage.getItem('rol');
-      if (this.rol) {
-        console.log('************ rol en home: ', this.rol);
-      } else {
-        console.warn('No se ha encontrado rol en localStorage.');
-        this.rol = 'visitante'; //
-      }
-    } catch (error) {
-      console.error('Error al leer el rol desde localStorage:', error);
-      this.rol = 'visitante'; 
-    }
+  ngAfterViewInit() {
+  console.log(" ******************************************entro en vehiculos otra vez");
+  this.controlPagina();
   }
 
+  controlRol(){
+    this.apiService.cargarRol();
+    this.apiService.rol$.subscribe((rol) => {
+      this.rol = rol; // Actualiza el valor local
+      console.log('Rol actualizado en Vehiculos:', this.rol);
+    });
+  }
+
+  controlPagina() {
+    try {
+      const navigation = this.router.getCurrentNavigation();
+      const state = navigation?.extras?.state;
+  
+      console.log("antes de entrar en state");
+      if (state && state['origen']) {
+        this.origen = state['origen'];
+        console.log("Origen recibido:", this.origen);
+        if(this.origen === 'dashboard'){
+          this.mostrar = false; 
+          this.cdr.detectChanges(); // Forzar la actualización
+        } else { 
+          this.mostrar = true;
+          this.cdr.detectChanges(); // Forzar la actualización
+          };
+      } else {
+        console.log("No se recibió el estado esperado.");
+        this.mostrar = true;
+        this.cdr.detectChanges(); // Forzar la actualización
+
+      }
+    } catch (error) {
+      console.error("Error en controlPagina:", error);
+    }
+    console.log("-------------------Muestro :", this.mostrar);
+  }
+   
   cargarDatosVehiculos(){
     this.apiService.loading(this.mensajeLoading);
     this.apiService.getVehiculos().subscribe((data: any[]) => {
@@ -104,7 +134,12 @@ export class VehiculosComponent implements OnDestroy {
       }
       
       verVehiculo(vehiculo: any){
-        this.router.navigate(['/vehiculo-detalle'],{ state: {vehiculo, modo: 'ver' } });
+        if(this.rol === 'conductor'){
+          this.router.navigate(['/vehiculo-detalle'],{ state: {vehiculo, modo: 'ver' } }); 
+        } else{
+            this.router.navigate(['/vehiculo-detalle'],{ state: {vehiculo, modo: 'verEditor' } });
+          }
+        
       }
 
       nuevoVehiculo(){

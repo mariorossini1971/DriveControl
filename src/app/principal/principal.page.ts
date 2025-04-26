@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit,ChangeDetectorRef, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ApiService } from '../api.service';
+import { BehaviorSubject } from 'rxjs';
 
 
 @Component({
@@ -11,20 +12,27 @@ import { ApiService } from '../api.service';
 export class PrincipalPage implements OnInit {
 
   rol: string | null = 'conductor';
+  public rol$ = new BehaviorSubject<string>('');
   bloqueoPagina: boolean = false;
   usuario: any;
   
 
   constructor(
      private apiService: ApiService,
-    public router: Router,    
+     public router: Router,   
+     private cdr: ChangeDetectorRef, 
   ) { }
 
   ngOnInit() {
-    this.controlRol();
+   // this.controlRol();
+   this.control2Rol();
     console.log('rol en principal: ', this.rol);
     this.usuarioGuardado();
     console.log('usuarioGuardado en principal: ', this.usuario.nombre);
+  }
+  ionViewWillEnter(){
+   // this.controlRol();
+   this.control2Rol();
   }
 
   iniciarViaje(){
@@ -33,28 +41,46 @@ export class PrincipalPage implements OnInit {
   verUsuario(){
     this.router.navigate(['/usuarios']);
   }
+
   verVehiculos(){
-    this.router.navigate(['/vehiculos']);
+    this.router.navigate(['/vehiculos'], { state: { origen: 'dashboard' } });
+   // this.router.navigate(['/vehiculos']);
   }
   verViajes(){
     this.router.navigate(['/viajes']);
-
   }
 
+  control2Rol(){
+    this.apiService.cargarRol();
+    this.apiService.rol$.subscribe((rol) => {
+      this.rol = rol; // Actualiza el valor local
+      console.log('Rol actualizado en HomePage:', this.rol);
+    });
+  }
+
+
   controlRol() {
-    console.log('             con localStorage ');
+
     try {
-      this.rol = localStorage.getItem('rol');
-      if (this.rol) {
+      const rolLocalStorage = localStorage.getItem('rol'); 
+  
+      if (rolLocalStorage) {
+        this.rol = rolLocalStorage;
+        this.rol$.next(this.rol); // Actualiza el BehaviorSubject
         console.log('************ rol en home: ', this.rol);
+        this.cdr.detectChanges();
+
       } else {
-        console.warn('No se ha encontrado rol en localStorage.');
-        this.rol = 'visitante'; //
+        console.log('No se ha encontrado rol en localStorage.');
+        this.rol = 'visitante'; // Asigna rol por defecto
+        this.rol$.next(this.rol); // Asegura que el BehaviorSubject reciba el valor
       }
     } catch (error) {
       console.error('Error al leer el rol desde localStorage:', error);
       this.rol = 'visitante'; 
+      this.rol$.next(this.rol);
     }
+
   }
 
   usuarioGuardado(){
@@ -76,3 +102,6 @@ export class PrincipalPage implements OnInit {
   }
   
 }
+
+
+//(rol$ | async)

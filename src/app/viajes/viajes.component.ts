@@ -122,7 +122,7 @@ export class ViajesComponent implements OnInit {
         .filter(viajes => {
           const texto = this.filtroTexto.toLowerCase();
           return (
-           // viajes.id_viaje.toString().includes(texto) ||
+             viajes.marca.toLowerCase().includes(texto) ||
             viajes.nombre_conductor.toLowerCase().includes(texto)
           );
         })

@@ -57,6 +57,10 @@ const routes: Routes = [
   },  {
     path: 'viaje-detalle',
     loadChildren: () => import('./viaje-detalle/viaje-detalle.module').then( m => m.ViajeDetallePageModule)
+  },
+  {
+    path: 'historial-viajes',
+    loadChildren: () => import('./historial-viajes/historial-viajes.module').then( m => m.HistorialViajesPageModule)
   }
 
 

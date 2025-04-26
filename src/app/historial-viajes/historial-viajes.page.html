@@ -1,0 +1,59 @@
+<div class="ion-page" id="menu">
+  <ion-header>
+    <ion-toolbar>
+      <ion-buttons slot="start">
+        <ion-menu-button color="primary" name="menu"></ion-menu-button>
+      </ion-buttons>
+      <ion-title>Historial viajes </ion-title>
+      <ion-buttons slot="end">
+        <ion-back-button defaultHref="/principal" icon="return-down-back-outline"></ion-back-button>
+      </ion-buttons>
+    </ion-toolbar>
+  </ion-header>
+
+  <ion-content [fullscreen]="true">
+
+<ion-list>
+  <ion-card *ngFor="let viaje of historialViajes">
+    <ion-card-header class="user-header">
+    <ion-card-title>  
+      ID VIAJE: {{ viaje.id_viaje }} 
+    </ion-card-title>
+    </ion-card-header>
+  <ion-card-content>
+      <p *ngIf="viaje.fecha_inicio && viaje.fecha_inicio !== '0000-00-00 00:00:00'">
+        <ion-icon name="calendar-outline" class="icon-card-calendar"></ion-icon>
+        Inicio: {{ viaje.fecha_inicio | date: 'd \'de\' MMMM \'del\' y - HH:mm' }}
+      </p>
+      <p *ngIf="viaje.fecha_fin && viaje.fecha_fin !== '0000-00-00 00:00:00'"> 
+        <ion-icon name="calendar-outline" class="icon-card-calendar"></ion-icon>
+      Fin:{{ viaje.fecha_fin | date: 'd \'de\' MMMM \'del\' y - HH:mm' }}
+      </p>
+    </ion-card-content>
+    <div class="boton-detalles">
+      <ion-button fill="outline" color="primary" shape="round" size="small" (click)="verViaje(viaje.id_viaje)">
+        Ver detalles
+      </ion-button>
+    </div>
+  </ion-card>
+</ion-list>
+</ion-content>
+
+<ion-footer>
+  <ion-toolbar>
+    <div class="footer-content">
+      <div class="left-content">
+            <ion-icon slot="start" name="person-circle-outline"></ion-icon>
+             {{usuario.nombre}} 
+          </div>
+
+          <!-- Nombre de la empresa y el ícono a la derecha -->
+          <div class="right-content">                
+            <ion-icon slot="end" name="car-outline"></ion-icon>
+      <span class="nombre-empresa">DriveControl</span>
+    </div>
+  </div>
+  </ion-toolbar>
+</ion-footer>
+
+</div>

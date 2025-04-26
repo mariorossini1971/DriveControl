@@ -17,8 +17,9 @@ export class VehiculoDetallePage implements OnInit {
     ano:'',
     disponible: true,
   };
-  modo: 'crear' | 'ver' | 'editar' = 'ver';
+  modo: 'crear' | 'ver' | 'verEditor' | 'editar' = 'ver';
   usuario: any;
+  historialViajes: any[] = [];
  
   constructor(
     private router: Router,
@@ -41,7 +42,7 @@ export class VehiculoDetallePage implements OnInit {
       if (state['vehiculo']){
         this.vehiculo = { ...state['vehiculo']};
 
-        console.log('Usuario cargado: ', this.vehiculo); // Verifica que el usuario tiene un id
+        console.log('Vehiculo cargado: ', this.vehiculo); // Veifica que el usuario tiene un idr
 
       } else if ( this.modo === 'editar' || this.modo === 'ver'){
         this.presentAlert('Error', 'No se proporcionó el usuario a editar/ver');
@@ -109,12 +110,28 @@ export class VehiculoDetallePage implements OnInit {
   }
 
   cancelar(){
-    this.navCtrl.navigateBack(['/vehiculos']);
+    console.log("modo en detalle vehiculo : ",this.modo);
+    if(this.modo === 'ver'){
+     // this.navCtrl.navigateBack(['/vehiculos']);
+      this.router.navigate(['/vehiculos'], { state: { origen: 'dashboard' } });
+    } else if(this.modo === 'editar'){
+     this.router.navigate(['/vehiculos'], { state: { origen: 'otro' } });
+    // this.navCtrl.navigateBack(['/vehiculos']);
+    }
+    
   }
 
   cancelarEdicion() {
-    this.modo = 'ver'; // Cambiar de vuelta al modo de vista (no edición)
+  //  this.modo = 'ver'; // Cambiar de vuelta al modo de vista (no edición)
     // Otras acciones de cancelación, si es necesario, como restablecer campos
+    console.log("modo en detalle vehiculo : ",this.modo);
+    if(this.modo === 'ver'){
+     // this.navCtrl.navigateBack(['/vehiculos']);
+      this.router.navigate(['/vehiculos'], { state: { origen: 'dashboard' } });
+    } else if(this.modo === 'editar'){
+     this.router.navigate(['/vehiculos'], { state: { origen: 'otro' } });
+    // this.navCtrl.navigateBack(['/vehiculos']);
+    }
   }
 
   usuarioGuardado(){
@@ -134,4 +151,29 @@ async presentAlert (titulo:string, mensaje:string){
   });
   await alert.present();
 }
+
+verHistorial() {
+  const id = this.vehiculo.id_vehiculo; // Cambia a id_vehiculo si esa es la propiedad correcta
+  console.log('ID del vehículo:', id);
+
+  if (id) {
+    this.router.navigate(['/historial-viajes'], { state: { idVehiculo: id } });
+  } else {
+    console.error('ID del vehículo no válido.');
+  }
 }
+
+
+}
+
+
+ //   this.apiService.getHistorialViaje(this.vehiculo.id_vehiculo).subscribe(
+  //     (data) => {
+  //      this.historialViajes = data; // Asignamos los datos al array
+  //       console.log('Historial de viajes:', this.historialViajes);
+  //     },
+  //     (error) => {
+  //       console.error('Error al cargar el historial:', error);
+  //     }
+  //   );
+  //   this.router.navigate(['/historial-viajes'], { state: { historial: this.historialViajes } });

@@ -14,31 +14,27 @@ import { AngularFirestoreModule} from '@angular/fire/compat/firestore';
 import { environment} from 'src/environments/environment';
 import { AngularFireAuthModule } from '@angular/fire/compat/auth';
 import { FormsModule } from '@angular/forms';
-//import { firebaseConfig } from 'src/environments/environment';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthInterceptor } from './interceptor.interceptor';
 
 
-const firebaseConfig = {
-  apiKey: "AIzaSyCFqrOUi_tEEAsvp4P4xCBKMcMVZHIm7pc",
-  authDomain: "ionicproject-d9cce.firebaseapp.com",
-  projectId: "ionicproject-d9cce",
-  storageBucket: "ionicproject-d9cce.appspot.com",
-  messagingSenderId: "243766640179",
-  appId: "1:243766640179:web:2ba71f12900c245863ad46",
-  measurementId: "G-ZVTKH33DS2"
-};
+import { LOCALE_ID } from '@angular/core';
+import localeEs from '@angular/common/locales/es';
+import { registerLocaleData } from '@angular/common';
+
+registerLocaleData(localeEs);
+
 
 @NgModule({
   declarations: [AppComponent],
   imports: [
-  HttpClientModule,BrowserModule, IonicModule.forRoot(), AppRoutingModule,FormsModule,
-  AngularFireModule.initializeApp(firebaseConfig), AngularFirestoreModule,
+  HttpClientModule,BrowserModule, IonicModule.forRoot(), AppRoutingModule,FormsModule, AngularFirestoreModule,
   AngularFireAuthModule
 ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }, 
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }, 
+    { provide: LOCALE_ID, useValue: 'es-ES' },     // Establece español como idioma predeterminado
   ],
   bootstrap: [AppComponent],
 })
