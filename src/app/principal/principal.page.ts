@@ -49,6 +49,15 @@ export class PrincipalPage implements OnInit {
   verViajes(){
     this.router.navigate(['/viajes']);
   }
+  verHelpConductor(){
+    this.router.navigate(['/help-conductor']);
+  }
+  verHelpAdministrador(){
+    this.router.navigate(['/help-administrador']);
+  }
+  verHelpGestor(){
+    this.router.navigate(['/help-gestor']);
+  }
 
   control2Rol(){
     this.apiService.cargarRol();

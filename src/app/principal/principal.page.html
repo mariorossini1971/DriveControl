@@ -21,7 +21,12 @@
 
     <ion-button *ngIf="rol === 'conductor'" expand="full" fill="solid" size="large" [ngStyle]="{'--background': '#005BBB '}" (click)="verViajes()">MIS VIAJES</ion-button>
     <ion-button *ngIf="rol === 'admin'" expand="full" fill="solid" size="large" [ngStyle]="{'--background': '#005BBB'}" (click)="verViajes()">VIAJES</ion-button>
-    <ion-button expand="full" fill="solid" size="large" [ngStyle]="{'--background': '#34495E ' }" (click)="cerrarSesion()">CERRAR SESIÓN</ion-button>
+
+    <ion-button *ngIf="rol === 'conductor'" expand="full" fill="solid" size="large" [ngStyle]="{'--background': '#B2AE3A'}" (click)="verHelpConductor()">HELP</ion-button>
+    <ion-button *ngIf="rol === 'admin'" expand="full" fill="solid" size="large" [ngStyle]="{'--background': '#B2AE3A'}" (click)="verHelpAdministrador()">HELP</ion-button>
+    <ion-button *ngIf="rol === 'gestor'" expand="full" fill="solid" size="large" [ngStyle]="{'--background': '#B2AE3A'}" (click)="verHelpGestor()">HELP</ion-button>
+
+    <ion-button expand="full" fill="solid" size="large" [ngStyle]="{'--background': '#34495E'}" (click)="cerrarSesion()">CERRAR SESIÓN</ion-button>
 
 
 

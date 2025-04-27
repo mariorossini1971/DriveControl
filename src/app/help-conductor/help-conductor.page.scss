@@ -1,0 +1,117 @@
+ion-back-button{
+    color: #005BBB;
+  }
+  ion-icon{
+    color: #005BBB;
+  }
+  
+  ion-card-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  
+   .user-header {
+    display: flex;
+    align-items: flex-start; /* Icono arriba alineado al nombre */
+    gap: 10px;
+  }  
+  
+  .icon-card{
+    font-size: 30px; 
+    color: #005BBB; 
+    margin-right: 8px;
+    vertical-align: middle
+  }
+  
+  .user-info {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .user-email {
+    margin: 0 0 0 28px;
+    font-size: 14px;
+    color: #555;
+  } 
+  
+    .custom-card {
+      margin-bottom: 16px;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); 
+      
+    .card-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 0.5rem;
+      padding: 0 1rem 0.5rem;
+    }
+  
+    ion-button {
+      font-size: 0.9rem;
+      color: var(--ion-color-primary);
+      ion-icon {
+        margin-right: 4px;
+      }
+    }
+  }
+  
+   .card-admin {
+    border: 2px solid #005BBB;; /* azul */
+  }
+  
+  .card-gestor {
+    border: 2px solid #10dc60; /* verde */
+  }
+  
+  .card-conductor {
+    border: 2px solid #ffce00; /* amarillo */
+  }
+  
+  /*  ion-card {
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }  */
+  
+  
+  .footer-content {
+    display: flex; /* Alinear elementos horizontalmente */
+    justify-content: space-between; /* Separar elementos a los extremos */
+    align-items: center; /* Centrar elementos verticalmente */
+    width: 100%; /* Usar todo el ancho disponible */
+    color: #005BBB;
+  }
+  
+  .left-content {
+    display: flex;
+    align-items: center;
+  
+    ion-icon {
+      font-size: 24px;
+      margin-right: 8px; /* Espacio entre ícono y texto */
+      color: #005BBB;
+    }
+  }
+  
+  .right-content {
+    display: flex;
+    align-items: center;
+  
+    ion-icon {
+      font-size: 24px;
+      margin-right: 8px; /* Espacio entre ícono y texto */
+      color: #005BBB;
+    }
+  
+    .nombre-empresa {
+      font-size: 16px; /* Ajustar tamaño del texto */
+      font-weight: bold; /* Opcional: negrita */
+    }
+  }
+  
+  ion-toolbar {
+    --padding-start: 16px; /* Ajustar separación lateral */
+    --padding-end: 16px; /* Ajustar separación lateral */
+  }
+  

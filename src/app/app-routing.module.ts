@@ -48,19 +48,31 @@ const routes: Routes = [
   {
     path: 'vehiculo-detalle',
     loadChildren: () => import('./vehiculo-detalle/vehiculo-detalle.module').then( m => m.VehiculoDetallePageModule)
-  
   },
   {
     path: 'principal',
     loadChildren: () => import('./principal/principal.module').then( m => m.PrincipalPageModule),
     canActivate: [AuthGuard] 
-  },  {
+  },
+  {
     path: 'viaje-detalle',
     loadChildren: () => import('./viaje-detalle/viaje-detalle.module').then( m => m.ViajeDetallePageModule)
   },
   {
     path: 'historial-viajes',
     loadChildren: () => import('./historial-viajes/historial-viajes.module').then( m => m.HistorialViajesPageModule)
+  },
+  {
+    path: 'help-administrador',
+    loadChildren: () => import('./help-administrador/help-administrador.module').then( m => m.HelpAdministradorPageModule)
+  },
+  {
+    path: 'help-conductor',
+    loadChildren: () => import('./help-conductor/help-conductor.module').then( m => m.HelpConductorPageModule)
+  },
+  {
+    path: 'help-gestor',
+    loadChildren: () => import('./help-gestor/help-gestor.module').then( m => m.HelpGestorPageModule)
   }
 
 

@@ -5,15 +5,16 @@ html, body {
  /*  overflow: hidden; */
   box-sizing: border-box;
 }
+ion-header{
+  ion-toolbar {
+    --background: #005BBB;
+    color: #FFFFFF;
+  }
 
-ion-toolbar {
-  --background: #005BBB;
-   color: #FFFFFF;
- }
-
- ion-title {
-  text-align: center;
-  color: #fff;
+  ion-title {
+    text-align: center;
+    color: #fff;
+  }
 }
 
 // Estilos parte central /
@@ -31,7 +32,6 @@ ion-content {
    height: 100%;
    padding: 0;
    box-sizing: border-box;
-
  }
 
 .card-container {
@@ -81,6 +81,7 @@ ion-content {
     overflow-y:auto; // hace scroll si es necesario
     height: auto;  //crece si el contenido lo necesita
   }
+
   .card-container ion-card ion-row {
     display: flex;
     flex-direction: row;
@@ -91,7 +92,6 @@ ion-content {
   .img-col{
      max-width: 200px;
     
-
     img.responsive-img{
       max-height: 150px;
       width: auto;
@@ -101,14 +101,12 @@ ion-content {
     font-size: large;
   }
 }
-
  .welcome { 
         display: flex;
         justify-content: center;
         color: #005BBB;
         font-size: x-large;
         margin-bottom: 16px;
-
       } 
      
 // Items de formulario //
@@ -142,4 +140,47 @@ ion-button.ion-color-primary {
     --border-radius: 8px;
   } */
 
+  .footer-content {
+    display: flex; /* Alinear elementos horizontalmente */
+    justify-content: space-between; /* Separar elementos a los extremos */
+    align-items: center; /* Centrar elementos verticalmente */
+    width: 100%; /* Usar todo el ancho disponible */
+    color: #005BBB;
+   }
+
+   ion-toolbar {
+      --padding-start: 16px; /* Ajustar separación lateral */
+      --padding-end: 16px; /* Ajustar separación lateral */
+    } 
+  
+   .left-content {
+    display: flex;
+    align-items: center;
+    color: #005BBB;
+    
+  
+    ion-icon {
+      font-size: 24px;
+      color: #005BBB; /* Azul personalizado */
+      margin-right: 8px; /* Espacio entre ícono y texto */
+    }
+  } 
+  
+  .right-content {
+    display: flex;
+    align-items: center;
+    color: #005BBB;
+  
+     ion-icon {
+      font-size: 24px;
+      margin-right: 8px; /* Espacio entre ícono y texto */
+      color: #005BBB;
+    } 
+  
+    .nombre-empresa {
+      font-size: 16px; /* Ajustar tamaño del texto */
+      font-weight: bold; /* Opcional: negrita */
+    }
+  }
+ 
 

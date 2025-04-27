@@ -15,6 +15,10 @@ export class AppComponent{
     private apiService: ApiService,
     private router: Router ) {}
 
+    ngOnInit() {
+      this.controlRol();  // <<--- AGREGAR ESTO
+    }
+
   cerrarSesion(){
     let token = String(localStorage.getItem('token'));
     console.log('Token guardado:', token);             /// ojo borrar

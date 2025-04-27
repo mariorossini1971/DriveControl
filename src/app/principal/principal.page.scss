@@ -4,19 +4,24 @@
     gap: 20px;
     align-items: center;
     justify-content: flex-start; /* Coloca los botones cerca de la parte superior */
-    height: 80vh; /* Reduce la altura para evitar mucho espacio vacío */
+    /* height: 80vh; */ /* Reduce la altura para evitar mucho espacio vacío */
+    height:auto;
     padding-top: 60px; /* Ajusta la distancia desde la parte superior */
+    padding-bottom: 60px; /* Ajusta la distancia desde la parte inferior para landscape */
   }
-  ion-button {
+
+   ion-button {
     width: 80%; /* Ajusta el ancho de los botones */
-    --background: #adb1ee;
+
+    
+   /* --background: #adb1ee;
     --background-hover: #9ce0be;
     --background-activated: #88f4be;
     --background-focused: #88f4be;
   
     --color: rgb(245, 245, 250);
   
-    --border-radius: 0;
+    --border-radius: 30;
     --border-color: #000;
     --border-style: solid;
     --border-width: 1px;
@@ -27,8 +32,8 @@
   
     --padding-top: 10px;
     --padding-bottom: 10px;
-
-  }
+*/
+  } 
 
  /*  ion-title{
     color: #005BBB;
