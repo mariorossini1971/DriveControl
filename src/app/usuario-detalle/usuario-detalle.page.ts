@@ -19,13 +19,9 @@ export class UsuarioDetallePage implements OnInit {
     rol:'',
     contrasena:''
   };
-  
-  usuarioLogueado: any = {}; //usuario loguedado separado
   modo: 'crear' | 'ver' | 'editar' = 'ver';
   idUsuarioActual: string = ''; // id usuario logueado
   rolLogueado: string =''; 
-
-
  
   constructor(
     private router: Router,
@@ -36,22 +32,18 @@ export class UsuarioDetallePage implements OnInit {
 
   ngOnInit() {
     // Cargar el ID del usuario actual desde localStorage
-    const usuarioLogueadoLocal = JSON.parse(localStorage.getItem('usuario') || '{}');
-    this.usuarioLogueado = usuarioLogueadoLocal; //guardar usuario logueado
-    this.idUsuarioActual = usuarioLogueadoLocal.id_usuario || '';
-     this.rolLogueado = usuarioLogueadoLocal.rol || '';
+    const usuarioLogueado = JSON.parse(localStorage.getItem('usuario') || '{}');
+    this.idUsuarioActual = usuarioLogueado.id_usuario || '';
+     this.rolLogueado = usuarioLogueado.rol || '';
      console.log('ID del usuario logueado:', this.idUsuarioActual);
      console.log('Rol del usuario logueado:', this.rolLogueado); 
-     console.log('correo: ',usuarioLogueadoLocal.correo);
+     console.log('correo: ',usuarioLogueado.correo);
 
     const navigation = this.router.getCurrentNavigation();
     const state = navigation?.extras.state;
     
 
     console.log('State recibido: ', state); // Verifica el contenido del estado
-
-    this.usuarioGuardado();
-    console.log('usuarioGuardado en principal ud: ', this.usuario.nombre);
 
     if(state) {
       this.modo = state ['modo'] || 'ver';
@@ -97,34 +89,25 @@ export class UsuarioDetallePage implements OnInit {
         }
       });
     }
-     
-      
+       
     if (this.modo === 'editar' && this.usuario.id_usuario){
       this.apiService.updateUsuario(this.usuario.id_usuario, this.usuario).subscribe({
-        next:() => {
+        next: (response) => {
+          console.log('Respuesta del servidor:', response);
           this.presentAlert('Éxito', 'Usuario actualizado correctamente');
           this.navCtrl.navigateBack(['/usuarios']);
-          
         },
-        error:() => {
+        error: (err) => {
+          console.error('Error al actualizar:', err);
           this.presentAlert('Error', 'No se pudo actualizar el usuario');
         }
       });
+      
     } 
-  }
-
-  usuarioGuardado(){
-    const usuarioGuardado = localStorage.getItem('usuario');
-  if (usuarioGuardado) {
-    this.usuario = JSON.parse(usuarioGuardado); // Recupera los datos del usuario
-  } else {
-    console.warn('Usuario no encontrado.');
-  }
   }
 
   cancelarEdicion() {
     this.modo = 'ver'; // Cambiar de vuelta al modo de vista (no edición)
-    // Otras acciones de cancelación, si es necesario, como restablecer campos
   }
 
   async eliminarUsuario(){

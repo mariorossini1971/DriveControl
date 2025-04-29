@@ -1,12 +1,13 @@
 import { Component, ElementRef, OnInit, OnDestroy, SimpleChange, ViewChild,ChangeDetectorRef,HostListener} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { ApiService } from '../api.service';
 import { BehaviorSubject, Subscription } from 'rxjs';
 import { GestureController,ToastController} from '@ionic/angular';
 import { Usuario } from '../models/usuario.model';
 import { MenuController } from '@ionic/angular';
 import { formatDate } from '@angular/common';
+import { HttpClient } from '@angular/common/http';
+
 
 @Component({
   selector: 'app-home',
@@ -79,6 +80,12 @@ export class HomePage implements OnInit, OnDestroy {
   rol : string | null = '';
   public rol$ = new BehaviorSubject<string>('');
 
+  direccion: string = '';
+  latInicio: number = 0;
+  longInicio: number = 0;
+  latFunal: number = 0;
+  longFinal: number = 0;
+
 
   constructor(
     private gestureCtrl: GestureController,
@@ -88,6 +95,7 @@ export class HomePage implements OnInit, OnDestroy {
     private apiService: ApiService,
     public router: Router,
     private menuCtrl: MenuController,
+    private http: HttpClient,
   ) {}
 
   ngOnInit() {
@@ -97,57 +105,18 @@ export class HomePage implements OnInit, OnDestroy {
     this.funcionPrincipal();
     this.usuarioGuardado();
     console.log('usuarioGuardado en principal: ', this.usuario.nombre);
-    this.control2Rol();
+    this.controlRol();
     
   }
 
-  // controlRol() {
-  //   console.log('             con localStorage ');
-  //   try {
-  //     this.rol = localStorage.getItem('rol');
-  //     if (this.rol) {
-  //       console.log('************ rol en home: ', this.rol);
-  //     } else {
-  //       console.warn('No se ha encontrado rol en localStorage.');
-  //       this.rol = 'visitante'; //
-  //     }
-  //   } catch (error) {
-  //     console.error('Error al leer el rol desde localStorage:', error);
-  //     this.rol = 'visitante'; 
-  //   }
-  // }
-
-  control2Rol(){
+  controlRol(){
     this.apiService.cargarRol();
     this.apiService.rol$.subscribe((rol) => {
       this.rol = rol; // Actualiza el valor local
       console.log('Rol actualizado en HomePage:', this.rol);
     });
   }
-  controlRol() {
-
-    try {
-      const rolLocalStorage = localStorage.getItem('rol'); 
   
-      if (rolLocalStorage) {
-        this.rol = rolLocalStorage;
-        this.rol$.next(this.rol); // Actualiza el BehaviorSubject
-        console.log('************ rol en home: ', this.rol);
-        this.cdr.detectChanges();
-
-      } else {
-        console.log('No se ha encontrado rol en localStorage.');
-        this.rol = 'visitante'; // Asigna rol por defecto
-        this.rol$.next(this.rol); // Asegura que el BehaviorSubject reciba el valor
-      }
-    } catch (error) {
-      console.error('Error al leer el rol desde localStorage:', error);
-      this.rol = 'visitante'; 
-      this.rol$.next(this.rol);
-    }
-
-  }
-
   async usuarioGuardado(): Promise<void> {
     try {
       const usuarioGuardado = await Promise.resolve(localStorage.getItem('usuario')); // Simula una operación asíncrona
@@ -162,7 +131,6 @@ export class HomePage implements OnInit, OnDestroy {
     }
   }
   
-  
 
   funcionPrincipal(){
      // Recupero el Id del Usuario
@@ -173,21 +141,19 @@ export class HomePage implements OnInit, OnDestroy {
      } else {
        console.log('No se encontró información de usuario en localStorage');
      }
-
-
-    this.apiService.getCocheSeleccionado().subscribe({
-      next: (coche) => {
-        this.cocheSelBehaviorSubject$.next(coche);
-        console.log('matricula', this.cocheSelBehaviorSubject$.getValue().matricula);
-        this.apagoFinal = this.cocheSelBehaviorSubject$.getValue().matricula === "";
-            },
-      error: (err) => {
-        console.error('Error al recuperar modelo seleccionado:', err);
-      },
-      complete: () => {
-        console.log('Suscripción completada.');
-      },
-    });
+      this.apiService.getCocheSeleccionado().subscribe({
+        next: (coche) => {
+          this.cocheSelBehaviorSubject$.next(coche);
+          console.log('matricula', this.cocheSelBehaviorSubject$.getValue().matricula);
+          this.apagoFinal = this.cocheSelBehaviorSubject$.getValue().matricula === "";
+              },
+        error: (err) => {
+          console.error('Error al recuperar modelo seleccionado:', err);
+        },
+        complete: () => {
+          console.log('Suscripción completada.');
+        },
+      });
 
   }
 
@@ -257,10 +223,12 @@ export class HomePage implements OnInit, OnDestroy {
       // Si es "INICIO", captura la fecha de inicio
       console.log('es inicio')
       this.fechaHoraInicio = tiempo;
+      this.capturoDirección();
       this.iniciarTemporizador(); // Iniciar el temporizador
       this.cdr.detectChanges(); //Forzar actualización de la vista 
     } else {
-       this.fechaHoraFinal = tiempo;
+      this.fechaHoraFinal = tiempo;
+      this. capturoDirección();
       this.detenerTemporizador(); // Detener el temporizador
       this.guardarStore();
       this.cambioGuardar();
@@ -338,9 +306,41 @@ export class HomePage implements OnInit, OnDestroy {
     }
   }
   
-  ngOnDestroy() {
-    this.modeloSeleccionado$.unsubscribe();
-    this.viaje$.unsubscribe();
+ async capturoDirección(){
+      console.log('Intentando obtener ubicación...');
+  
+      try {
+      //  const position = await Geolocation.getCurrentPosition();
+        // if(this.esInicio){
+        //   this.latInicio = position.coords.latitude;
+        //   this.longFinal = position.coords.longitude;
+
+        // };
+      //  const lat = position.coords.latitude;
+       // const lng = position.coords.longitude;
+       const lat = 41.43315;
+       const lng = 2.15060;
+  
+        const url = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`;
+  
+        this.http.get(url).subscribe((data: any) => {
+          if (data && data.address) {
+            this.direccion = `${data.address.road}, ${data.address.city}`;
+            console.log('*****  localizado  *****', this.direccion);
+          } else {
+            this.direccion = 'No se encontró la dirección.';
+          }
+        });
+      } catch (error) {
+        console.error('Error obteniendo ubicación', error);
+        this.direccion = 'Error obteniendo ubicación.';
+      }
+    }
+
+    ngOnDestroy() {
+      this.modeloSeleccionado$.unsubscribe();
+      this.viaje$.unsubscribe();
+    }
   }
 
-}
+

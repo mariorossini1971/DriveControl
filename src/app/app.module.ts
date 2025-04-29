@@ -9,10 +9,7 @@ import { provideHttpClient } from '@angular/common/http';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 
-import { AngularFireModule} from '@angular/fire/compat';
-import { AngularFirestoreModule} from '@angular/fire/compat/firestore';
 import { environment} from 'src/environments/environment';
-import { AngularFireAuthModule } from '@angular/fire/compat/auth';
 import { FormsModule } from '@angular/forms';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthInterceptor } from './interceptor.interceptor';
@@ -28,8 +25,8 @@ registerLocaleData(localeEs);
 @NgModule({
   declarations: [AppComponent],
   imports: [
-  HttpClientModule,BrowserModule, IonicModule.forRoot(), AppRoutingModule,FormsModule, AngularFirestoreModule,
-  AngularFireAuthModule
+  HttpClientModule,BrowserModule, IonicModule.forRoot(), AppRoutingModule,FormsModule,
+  
 ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }, 
