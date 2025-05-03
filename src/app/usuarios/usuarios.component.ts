@@ -9,9 +9,10 @@ import { BehaviorSubject } from 'rxjs';
 
 
 @Component({
-  selector: 'app-usuarios',
-  templateUrl: './usuarios.component.html',
-  styleUrls: ['./usuarios.component.scss']
+    selector: 'app-usuarios',
+    templateUrl: './usuarios.component.html',
+    styleUrls: ['./usuarios.component.scss'],
+    standalone: false
 })
 
 export class UsuariosComponent implements OnDestroy {
@@ -56,7 +57,6 @@ export class UsuariosComponent implements OnDestroy {
       this.controlRol()
       this.activarMenu();  
 
-
       if(this.rol === 'admin'){
         this.funcionPrincipal()
       };
@@ -76,7 +76,6 @@ export class UsuariosComponent implements OnDestroy {
 
   controlRol() {
     console.log('             con localStorage ');
-
     this.apiService.cargarRol();
     this.apiService.rol$.subscribe((rol) => {
       this.rol = rol; // Actualiza el valor local
@@ -103,7 +102,8 @@ export class UsuariosComponent implements OnDestroy {
         const texto = this.filtroTexto.toLowerCase();
         return (
           usuario.nombre.toLowerCase().includes(texto) ||
-          usuario.correo.toLowerCase().includes(texto)
+          usuario.correo.toLowerCase().includes(texto) ||
+          usuario.rol.toLowerCase().includes(texto)
         );
       })
       .sort((a, b) => {

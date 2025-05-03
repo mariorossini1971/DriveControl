@@ -40,8 +40,8 @@
           <ion-label position="floating">Correo Electrónico</ion-label>
           <ion-input 
             [(ngModel)]="usuario.correo" name="correo" type="email"
-            [readonly]="modo === 'ver'"
-            required>
+            [readonly]="modo === 'ver'" required
+            pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$">
             </ion-input>
             <ion-icon class="ion-align-self-center" slot="end" name="mail-outline" color="primary"></ion-icon>
           </ion-item>
@@ -96,7 +96,7 @@
 
          
         <!-- Botón Eliminar solo en modo ver -->
-        <ion-button expand="block" color="danger"  (click)="eliminarUsuario()" *ngIf="modo == 'editar' && usuario.id_usuario !== idUsuarioActual">Eliminar
+        <ion-button expand="block" color="danger"  (click)="eliminarUsuario()" *ngIf="modo === 'editar' && usuario.id_usuario !== idUsuarioActual">Eliminar
           <ion-icon slot="start" name="trash"></ion-icon>
         </ion-button> 
          
@@ -121,7 +121,7 @@
     <div class="footer-content">
       <div class="left-content">
             <ion-icon slot="start" name="person-circle-outline"></ion-icon>
-            {{usuario.nombre}} 
+            {{nombre}} 
           </div>
 
           <!-- Nombre de la empresa y el ícono a la derecha -->

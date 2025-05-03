@@ -1,16 +1,20 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { ApiService } from '../api.service';
 import { NavController, AlertController } from '@ionic/angular';  
+import { HttpClient } from '@angular/common/http';
+import { Geolocation } from '@capacitor/geolocation';
+import { MenuController } from '@ionic/angular';
 
 
 @Component({
-  selector: 'app-viaje-detalle',
-  templateUrl: './viaje-detalle.page.html',
-  styleUrls: ['./viaje-detalle.page.scss'],
+    selector: 'app-viaje-detalle',
+    templateUrl: './viaje-detalle.page.html',
+    styleUrls: ['./viaje-detalle.page.scss'],
+    standalone: false
 })
 export class ViajeDetallePage implements OnInit {
-  modo: string = 'deitar';
+  modo: string = 'editar';
 
   vehiculo: any = {
     id_vehiculo:0, 
@@ -32,19 +36,43 @@ export class ViajeDetallePage implements OnInit {
   ano: 0,
   }
 
-  usuario: any;
+  usuario: any; 
+  rol: string = '';
+
+   coordenadas: any = {
+    latInicial: 0, 
+    lngInicial: 0, 
+    latFinal: 0, 
+    lngFinal: 0
+};
+
+
+  direccionInicio: string | null = null;
+  direccionFinal: string | null = null;
+
 
   constructor(
         private router: Router,
         private apiService: ApiService,
         private navCtrl: NavController,
         private alertController: AlertController,
+        private http: HttpClient,
+        private menuCtrl: MenuController,
+        private cdr: ChangeDetectorRef,
+
+
   ) { }
 
   ngOnInit() {
+    this.controlRol();
+    this.activarMenu();
     this.funcionPrincipal();
     this.usuarioGuardado();
     console.log('usuarioGuardado en principal: ', this.usuario.nombre);
+  }
+  ionViewWillEnter(){
+    this.controlRol();
+    this.usuarioGuardado();
   }
 
   funcionPrincipal(){
@@ -57,7 +85,8 @@ export class ViajeDetallePage implements OnInit {
       if (state['viaje']){
         this.viaje = { ...state['viaje']};
 
-        console.log('Usuario cargado: ', this.viaje); // Verifica que el usuario tiene un id
+        console.log('viaje cargado: ', this.viaje);
+        this.obtenerUbicacion(this.viaje.id_viaje);
 
       } else if ( this.modo === 'editar' || this.modo === 'ver'){
         this.presentAlert('Error', 'No se proporcionó el viaje a editar/ver');
@@ -71,13 +100,14 @@ export class ViajeDetallePage implements OnInit {
     }
 
   }
-  guardarVehiculo(){}
+
   cancelarEdicion() {
     this.modo = 'ver'; // Cambiar de vuelta al modo de vista (no edición)
-    // Otras acciones de cancelación, si es necesario, como restablecer campos
+    this.navCtrl.navigateBack(['/viajes']);
+
   }
   cancelar(){
-    this.navCtrl.navigateBack(['/vehiculos']);
+    this.navCtrl.navigateBack(['/viajes']);
   }
 
   eliminarViaje(){
@@ -111,4 +141,84 @@ export class ViajeDetallePage implements OnInit {
     });
     await alert.present();
   }
+
+  async obtenerUbicacion(id_viaje: number) {
+    let id: number = id_viaje;
+    this.apiService.getCoordenadasById(id).subscribe({
+      next: (response) => {
+        console.log("Coordenadas obtenidas:", response);
+        this.coordenadas.lngInicial = response[0].lngInicial;
+        this.coordenadas.latInicial = response[0].latInicial;
+        this.coordenadas.lngFinal = response[0].lngFinal;
+        this.coordenadas.latFinal = response[0].latFinal;
+
+        this.calculadireccion(this.coordenadas.latInicial, this.coordenadas.lngInicial).then(direccion => {
+          this.direccionInicio = direccion;
+          console.log("Dirección Inicial:", this.direccionInicio);
+        }).catch(error => {
+          console.error("Error al calcular dirección inicial:", error);
+          this.direccionInicio = "Error al obtener dirección";
+        });
+    
+        this.calculadireccion(this.coordenadas.latFinal, this.coordenadas.lngFinal).then(direccion => {
+          this.direccionFinal = direccion;
+          console.log("Dirección Final:", this.direccionFinal);
+        }).catch(error => {
+          console.error("Error al calcular dirección Final:", error);
+          this.direccionInicio = "Error al obtener dirección";
+        });
+      },
+      error: (error) => {
+        console.error("Error al obtener coordenadas:", error);
+      }
+    });
+  }
+
+  calculadireccion(lat: number, lng: number): Promise<string> {
+    return new Promise((resolve, reject) => {
+      const url = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`;
+      
+      this.http.get(url).subscribe({
+        next: (data: any) => {
+          if (data && data.address) {
+            const numero = data.address.house_number || "Sin número";
+            const calle = data.address.road || 'Calle desconocida';
+            const ciudad = data.address.city || 'Ciudad desconocida';
+  
+            const direccion = `${calle}, ${numero} ${ciudad}`;
+            resolve(direccion); // Envía la dirección una vez obtenida
+          } else {
+            console.warn('No se encontraron datos de dirección en la respuesta.');
+            resolve('sin nombre de calle');
+          }
+        },
+        error: (error) => {
+          console.error('Error obteniendo ubicación', error);
+          reject('Error obteniendo ubicación');
+        }
+      });
+    });
+  }
+  activarMenu(){
+    if (this.rol === 'admin') {
+      this.menuCtrl.enable(true, 'menuAdmin'); // Activa el menú de administrador
+      this.menuCtrl.enable(false, 'menu'); // Desactiva el menú de conductor
+    } else if (this.rol === 'conductor') {
+      this.menuCtrl.enable(true, 'menu'); // Activa el menú de conductor
+      this.menuCtrl.enable(false, 'menuAdmin'); // Desactiva el menú de administrador
+    }
+  }
+
+  controlRol() {
+    console.log('             con localStorage ');
+    this.apiService.cargarRol();
+    this.apiService.rol$.subscribe((rol) => {
+      this.rol = rol; // Actualiza el valor local
+      console.log('Rol actualizado en HomePage:', this.rol);
+    });
+
+    this.cdr.detectChanges();
+
+  }
+  
 }

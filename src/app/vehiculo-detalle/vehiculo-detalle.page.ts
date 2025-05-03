@@ -4,9 +4,10 @@ import { Router } from '@angular/router';
 import { NavController, AlertController } from '@ionic/angular';  
 
 @Component({
-  selector: 'app-vehiculo-detalle',
-  templateUrl: './vehiculo-detalle.page.html',
-  styleUrls: ['./vehiculo-detalle.page.scss'],
+    selector: 'app-vehiculo-detalle',
+    templateUrl: './vehiculo-detalle.page.html',
+    styleUrls: ['./vehiculo-detalle.page.scss'],
+    standalone: false
 })
 export class VehiculoDetallePage implements OnInit {
   vehiculo: any = {
@@ -29,9 +30,10 @@ export class VehiculoDetallePage implements OnInit {
   ) { }
 
   ngOnInit() {
+
+
     const navigation = this.router.getCurrentNavigation();
     const state = navigation?.extras.state;
-
     this.usuarioGuardado();
     console.log('usuarioGuardado en principal: ', this.usuario.nombre);
 
@@ -55,6 +57,7 @@ export class VehiculoDetallePage implements OnInit {
 
     }
   }
+
   
   guardarVehiculo(){
 
@@ -95,19 +98,44 @@ export class VehiculoDetallePage implements OnInit {
     } 
   }
 
-  eliminarVehiculo(){
-    if(!this.vehiculo.id_vehiculo) return;
+  // 
+  async eliminarVehiculo() {
+    console.log('ide del vehiculo:      ',this.vehiculo.id_vehiculo);
+    if (!this.vehiculo.id_vehiculo) return;
+  
+    const alert = await this.alertController.create({
+      header: 'Confirmar eliminación',
+      message: '¿Estás seguro de que quieres eliminar este vehículo?',
+      buttons: [
+        {
+          text: 'Cancelar',
+          role: 'cancel',
+          handler: () => {
+            console.log('Eliminación cancelada');
+            this.router.navigate(['/vehiculos']);
 
-    this.apiService.deleteVehiculo(this.vehiculo.id_vehiculo).subscribe({
-      next: () => {
-        this.presentAlert('Eliminado', 'Vehiculo eliminado correctamente');
-        this.navCtrl.navigateBack('/usuarios');
-      },
-      error:() => {
-        this.presentAlert('Error', 'No se pudo eliminar el vehiculo');
-      }
+          }
+        },
+        {
+          text: 'Eliminar',
+          handler: () => {
+            this.apiService.deleteVehiculo(this.vehiculo.id_vehiculo).subscribe({
+              next: () => {
+                this.presentAlert('Eliminado', 'Vehículo eliminado correctamente');
+                this.navCtrl.navigateBack(['/vehiculos'],{ state: { origen: 'dashboard' } });
+              },
+              error: () => {
+                this.presentAlert('Error', 'No se pudo eliminar el vehículo');
+              }
+            });
+          }
+        }
+      ]
     });
+  
+    await alert.present();
   }
+  
 
   cancelar(){
     console.log("modo en detalle vehiculo : ",this.modo);
@@ -162,6 +190,7 @@ verHistorial() {
     console.error('ID del vehículo no válido.');
   }
 }
+
 
 
 }

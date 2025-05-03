@@ -5,9 +5,10 @@ import { BehaviorSubject } from 'rxjs';
 
 
 @Component({
-  selector: 'app-principal',
-  templateUrl: './principal.page.html',
-  styleUrls: ['./principal.page.scss'],
+    selector: 'app-principal',
+    templateUrl: './principal.page.html',
+    styleUrls: ['./principal.page.scss'],
+    standalone: false
 })
 export class PrincipalPage implements OnInit {
 
@@ -24,72 +25,50 @@ export class PrincipalPage implements OnInit {
   ) { }
 
   ngOnInit() {
-   // this.controlRol();
-   this.control2Rol();
+   
+   this.controlRol();
     console.log('rol en principal: ', this.rol);
     this.usuarioGuardado();
     console.log('usuarioGuardado en principal: ', this.usuario.nombre);
   }
   ionViewWillEnter(){
-   // this.controlRol();
-   this.control2Rol();
+    this.controlRol();
   }
 
   iniciarViaje(){
  this.router.navigate(['/home']);
   }
+
   verUsuario(){
     this.router.navigate(['/usuarios']);
   }
 
   verVehiculos(){
     this.router.navigate(['/vehiculos'], { state: { origen: 'dashboard' } });
-   // this.router.navigate(['/vehiculos']);
   }
+
   verViajes(){
     this.router.navigate(['/viajes']);
   }
+
   verHelpConductor(){
     this.router.navigate(['/help-conductor']);
   }
+
   verHelpAdministrador(){
     this.router.navigate(['/help-administrador']);
   }
+
   verHelpGestor(){
     this.router.navigate(['/help-gestor']);
   }
 
-  control2Rol(){
+  controlRol(){
     this.apiService.cargarRol();
     this.apiService.rol$.subscribe((rol) => {
       this.rol = rol; // Actualiza el valor local
       console.log('Rol actualizado en HomePage:', this.rol);
     });
-  }
-
-
-  controlRol() {
-
-    try {
-      const rolLocalStorage = localStorage.getItem('rol'); 
-  
-      if (rolLocalStorage) {
-        this.rol = rolLocalStorage;
-        this.rol$.next(this.rol); // Actualiza el BehaviorSubject
-        console.log('************ rol en home: ', this.rol);
-        this.cdr.detectChanges();
-
-      } else {
-        console.log('No se ha encontrado rol en localStorage.');
-        this.rol = 'visitante'; // Asigna rol por defecto
-        this.rol$.next(this.rol); // Asegura que el BehaviorSubject reciba el valor
-      }
-    } catch (error) {
-      console.error('Error al leer el rol desde localStorage:', error);
-      this.rol = 'visitante'; 
-      this.rol$.next(this.rol);
-    }
-
   }
 
   usuarioGuardado(){
@@ -111,6 +90,3 @@ export class PrincipalPage implements OnInit {
   }
   
 }
-
-
-//(rol$ | async)

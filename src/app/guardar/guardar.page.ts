@@ -7,13 +7,14 @@ import { ChangeDetectorRef } from '@angular/core';
 import { Usuario } from '../models/usuario.model';
 
 @Component({
-  selector: 'app-guardar',
-  templateUrl: './guardar.page.html',
-  styleUrls: ['./guardar.page.scss'],
+    selector: 'app-guardar',
+    templateUrl: './guardar.page.html',
+    styleUrls: ['./guardar.page.scss'],
+    standalone: false
 })
 
 export class GuardarPage implements OnDestroy{
-
+ idViaje: number = 0;
   viaje$ = new BehaviorSubject<any>({
     id_viaje: 0,
     id_usuario: '',
@@ -21,6 +22,14 @@ export class GuardarPage implements OnDestroy{
     fecha_inicio: '',
     fecha_fin: '',
     comentario: '',
+  });
+
+  coordenadas$ = new BehaviorSubject<any>({
+    viaje_id: 0,
+    latInicial: 0,
+    lngInicial: 0,
+    latFinal: 0,
+    lngFinal: 0,
   });
 
   rol: string = "";
@@ -67,6 +76,18 @@ export class GuardarPage implements OnDestroy{
         console.log('Suscripción completada.');
       },
     });
+    this.apiService.getNewCoordenadas().subscribe({
+      next: (coordenadas) => {
+        console.log('coordenadas seleccionadas:', coordenadas);
+        this.coordenadas$.next(coordenadas);
+      },
+      error: (err) => {
+        console.error('Error al recuperar modelo seleccionado:', err);
+      },
+      complete: () => {
+        console.log('Suscripción completada.');
+      },
+    });
 
   }
 
@@ -83,6 +104,7 @@ export class GuardarPage implements OnDestroy{
   
 
 async guardarStore() {
+
     this.mensaje = '';
     const viaje = this.viaje$.getValue(); // Extrae el objeto viaje
     console.log('Datos preparados para guardar:', viaje);
@@ -101,17 +123,52 @@ async guardarStore() {
 
     while (!this.datosGuardados && intentos < maxIntentos) {
       try {
-        // Enviar datos a la API y esperar el resultado
-        const response = await firstValueFrom(this.apiService.createViaje(viaje));        console.log('Datos guardados:', response);
-        this.datosGuardados = true;
+        const response = await firstValueFrom(this.apiService.createViaje(viaje));    
+    
+        if (response && response.id_viaje) {
+          console.log('Viaje guardado con ID:', response.id_viaje);
+          this.datosGuardados = true;
+
+                // Guardar el ID en el BehaviorSubject
+          this.coordenadas$.next({
+            ...this.coordenadas$.getValue(), // Mantiene los valores anteriores
+            viaje_id: response.id_viaje, // Asigna el nuevo ID
+          });
+          console.log('ID del viaje:', this.coordenadas$.getValue().viaje_id);
+          
+
+        } else {
+          console.warn('No se recibió un ID de viaje en la respuesta.');
+        } 
       } catch (error) {
         intentos++;
         console.error(`Error al guardar en la API (Intento ${intentos}):`, error);
       }
+      let coord = this.coordenadas$.getValue();
+      console.log('datos de coordenadas: ',this.coordenadas$.getValue());
+      console.log('ide del vehiculo: ', viaje.id_Vehiculo);
+
+      this.apiService.guardarCoordenadas(coord).subscribe({
+        next: (response) => {
+          console.log("Coordenadas guardadas con ID:", response.id);
+        },
+        error: (error) => {
+          console.error("Error al guardar coordenadas:", error);
+        }
+      }); // guardo coordenadas en la BBDD
+
     }
+    //actualizo estado del vehiculo
+       this.apiService.updateEstadoVehiculo(viaje.id_vehiculo, 1).subscribe({
+         next: (response) => {
+           console.log("Estado actualizado correctamente:", response);
+        },
+        error: (error) => {
+          console.error("Error en la actualización:", error);
+         }
+      });
     // Usamos ChangeDetectorRef para asegurarnos de que Angular actualice la vista
     this.cdRef.detectChanges();
-
 
     if (this.datosGuardados) {
       this.mensaje = 'Datos guardados con éxito ✅';
@@ -129,5 +186,3 @@ async guardarStore() {
   }
 
 }
-
-

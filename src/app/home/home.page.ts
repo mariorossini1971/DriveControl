@@ -1,18 +1,20 @@
 import { Component, ElementRef, OnInit, OnDestroy, SimpleChange, ViewChild,ChangeDetectorRef,HostListener} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ApiService } from '../api.service';
-import { BehaviorSubject, Subscription } from 'rxjs';
+import { BehaviorSubject, catchError, Subscription } from 'rxjs';
 import { GestureController,ToastController} from '@ionic/angular';
 import { Usuario } from '../models/usuario.model';
 import { MenuController } from '@ionic/angular';
 import { formatDate } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
+import { Geolocation } from '@capacitor/geolocation';
 
 
 @Component({
-  selector: 'app-home',
-  templateUrl: 'home.page.html',
-  styleUrls: ['home.page.scss'],
+    selector: 'app-home',
+    templateUrl: 'home.page.html',
+    styleUrls: ['home.page.scss'],
+    standalone: false
 })
 
 export class HomePage implements OnInit, OnDestroy {
@@ -36,9 +38,12 @@ export class HomePage implements OnInit, OnDestroy {
   
   tiempoTranscurrido: number = 0; // Guardar el tiempo transcurrido en segundos
   interval: any; // Controla el intervalo del temporizador
+  intervalCuentaAtras: any; // // Controla el intervalo del temporizador cuenta atras
   minuto: number = 0;
   segundo: number = 0;
   hora: number = 0;
+
+  segundosCuentaAtras = 300;
 
   idUsuario: number = 0;
   
@@ -83,8 +88,16 @@ export class HomePage implements OnInit, OnDestroy {
   direccion: string = '';
   latInicio: number = 0;
   longInicio: number = 0;
-  latFunal: number = 0;
+  latFinal: number = 0;
   longFinal: number = 0;
+  position: any;
+
+  coordenadas = {
+    latInicial: 41.40735,
+    lngInicial: 2.15475,
+    latFinal: 41.39114,
+    lngFinal: 2.17378,
+  }
 
 
   constructor(
@@ -100,13 +113,13 @@ export class HomePage implements OnInit, OnDestroy {
 
   ngOnInit() {
 
-  //  this.controlRol();
+    this.controlRol();
     this.activarMenu();
     this.funcionPrincipal();
-    this.usuarioGuardado();
-    console.log('usuarioGuardado en principal: ', this.usuario.nombre);
+  }
+  ionViewWillEnter(){
     this.controlRol();
-    
+    this.controlaTiempo();
   }
 
   controlRol(){
@@ -116,31 +129,38 @@ export class HomePage implements OnInit, OnDestroy {
       console.log('Rol actualizado en HomePage:', this.rol);
     });
   }
+
+  activarMenu(){
+    if (this.rol === 'admin') {
+      this.menuCtrl.enable(true, 'menuAdmin'); // Activa el menú de administrador
+      this.menuCtrl.enable(false, 'menu'); // Desactiva el menú de conductor
+    } else if (this.rol === 'conductor') {
+      this.menuCtrl.enable(true, 'menu'); // Activa el menú de conductor
+      this.menuCtrl.enable(false, 'menuAdmin'); // Desactiva el menú de administrador
+    }
+  }
   
   async usuarioGuardado(): Promise<void> {
     try {
       const usuarioGuardado = await Promise.resolve(localStorage.getItem('usuario')); // Simula una operación asíncrona
       if (usuarioGuardado) {
         this.usuario = JSON.parse(usuarioGuardado); // Recupera los datos del usuario
+        this.idUsuario = this.usuario.id_usuario;
         console.log('Usuario recuperado:', this.usuario);
+
       } else {
         console.warn('Usuario no encontrado.');
       }
     } catch (error) {
-      console.error('Error al recuperar el usuario desde localStorage:', error);
+      console.warn('Error al recuperar el usuario desde localStorage:', error);
     }
   }
   
 
   funcionPrincipal(){
-     // Recupero el Id del Usuario
-     const usuario = localStorage.getItem('usuario');
-     if (usuario) {
-       const usuarioId = JSON.parse(usuario); // Convertir JSON a objeto
-       this.idUsuario = usuarioId.id_usuario;
-     } else {
-       console.log('No se encontró información de usuario en localStorage');
-     }
+    
+    this.controlaTiempo();
+    this.usuarioGuardado();
       this.apiService.getCocheSeleccionado().subscribe({
         next: (coche) => {
           this.cocheSelBehaviorSubject$.next(coche);
@@ -158,6 +178,7 @@ export class HomePage implements OnInit, OnDestroy {
   }
 
   ngAfterViewInit() {
+    this.controlaTiempo();
     this.actualizarAncho();//calcula el ancho inicial
     this.createSwipeGesture();
   }
@@ -223,12 +244,12 @@ export class HomePage implements OnInit, OnDestroy {
       // Si es "INICIO", captura la fecha de inicio
       console.log('es inicio')
       this.fechaHoraInicio = tiempo;
-      this.capturoDirección();
+      this.capturoDireccion();
       this.iniciarTemporizador(); // Iniciar el temporizador
       this.cdr.detectChanges(); //Forzar actualización de la vista 
     } else {
       this.fechaHoraFinal = tiempo;
-      this. capturoDirección();
+      this. capturoDireccion();
       this.detenerTemporizador(); // Detener el temporizador
       this.guardarStore();
       this.cambioGuardar();
@@ -248,6 +269,7 @@ export class HomePage implements OnInit, OnDestroy {
     };
     console.log('id: ',this.cocheSelBehaviorSubject$.getValue().id_vehiculo);
     this.apiService.setNewItem(viaje);
+    this.apiService.setNewCoordenadas(this.coordenadas)
   }
 
   iniciarTemporizador() {
@@ -284,6 +306,19 @@ export class HomePage implements OnInit, OnDestroy {
   }
 
   cambiaPagina() {
+      if(this.cocheSelBehaviorSubject$.getValue().matricula != ""){
+          let id = this.cocheSelBehaviorSubject$.getValue().id_vehiculo;
+           // vuelvo a actualizar el vehiculo para dejarlo disponible
+           this.apiService.updateEstadoVehiculo(id, 1).subscribe({
+            next: (response) => {
+              console.log("Estado actualizado correctamente:", response);
+            },
+            error: (error) => {
+              console.error("Error en la actualización:", error);
+            }
+          });
+
+      }
       this.router.navigate(['/vehiculos']);
   //  this.router.navigate(['/vehiculos'], { state: { origen: 'otro' } });
 
@@ -295,52 +330,86 @@ export class HomePage implements OnInit, OnDestroy {
     this.reiniciarEstado();
     this.router.navigate(['/guardar']);
   }
-
-  activarMenu(){
-    if (this.rol === 'admin') {
-      this.menuCtrl.enable(true, 'menuAdmin'); // Activa el menú de administrador
-      this.menuCtrl.enable(false, 'menu'); // Desactiva el menú de conductor
-    } else if (this.rol === 'conductor') {
-      this.menuCtrl.enable(true, 'menu'); // Activa el menú de conductor
-      this.menuCtrl.enable(false, 'menuAdmin'); // Desactiva el menú de administrador
-    }
-  }
-  
- async capturoDirección(){
-      console.log('Intentando obtener ubicación...');
-  
-      try {
-      //  const position = await Geolocation.getCurrentPosition();
-        // if(this.esInicio){
-        //   this.latInicio = position.coords.latitude;
-        //   this.longFinal = position.coords.longitude;
-
-        // };
-      //  const lat = position.coords.latitude;
-       // const lng = position.coords.longitude;
-       const lat = 41.43315;
-       const lng = 2.15060;
-  
-        const url = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`;
-  
-        this.http.get(url).subscribe((data: any) => {
-          if (data && data.address) {
-            this.direccion = `${data.address.road}, ${data.address.city}`;
-            console.log('*****  localizado  *****', this.direccion);
-          } else {
-            this.direccion = 'No se encontró la dirección.';
-          }
-        });
-      } catch (error) {
-        console.error('Error obteniendo ubicación', error);
-        this.direccion = 'Error obteniendo ubicación.';
+ 
+  async capturoDireccion(){
+  //   this.position = await Geolocation.getCurrentPosition();
+      if(this.esInicio){
+        //this.coordenadas.latInicio = this.position.coords.latitude;
+        //this.coordenadas.lngInicio= this.position.coords.longitude;
+        this.latInicio = this.coordenadas.latInicial;
+        this.longInicio = this.coordenadas.lngInicial; 
+        console.log('latidud: ',this.latInicio, ' longitud: ',this.longInicio);
+      }else{
+        //this.coordenadas.latFinal = this.position.coords.latitude;
+        //this.coordenadas.lngFinal = this.position.coords.longitude;
+        this.latFinal = this.coordenadas.latFinal;
+        this.longFinal = this.coordenadas.lngFinal;
+        console.log('latitud: ',this.latFinal, ' longitud: ',this.longFinal);
       }
     }
-
     ngOnDestroy() {
       this.modeloSeleccionado$.unsubscribe();
       this.viaje$.unsubscribe();
+      if (this.intervalCuentaAtras) {
+        clearInterval(this.intervalCuentaAtras); // Detener el intervalo antes de que el componente se destruya
+        console.log("Intervalo detenido en ngOnDestroy.");
+      }
+
     }
-  }
+    ionViewWillLeave() {        // asegurarme al cambiar pantalla
+      if (this.intervalCuentaAtras) {
+        clearInterval(this.intervalCuentaAtras);
+        console.log("Intervalo detenido en ionViewWillLeave.");
+      }
+      this.eliminaVista();
+    }
+    
+
+    controlaTiempo() {
+
+      console.log("apago final: ", this.apagoFinal);
+      this.segundosCuentaAtras = 10; // Reiniciar el contador de tiempo 1 minuto
+      if(this.cocheSelBehaviorSubject$.getValue().matricula === "")    // si no hay coche seleccionado no lo inicio
+        {
+          return
+        } 
+      this.intervalCuentaAtras = setInterval(() => {
+        this.segundosCuentaAtras--;
+        console.log(this.segundosCuentaAtras);
+        if (this.segundosCuentaAtras <= 0 ) {
+           clearInterval(this.intervalCuentaAtras); // Detener el intervalo cuando llegue a 0 y actualizo el vehiculo
+          let id = this.cocheSelBehaviorSubject$.getValue().id_vehiculo;
+           // vuelvo a actualizar el vehiculo para dejarlo disponible
+           this.apiService.updateEstadoVehiculo(id, 1).subscribe({
+            next: (response) => {
+              console.log("Estado actualizado correctamente:", response);
+            },
+            error: (error) => {
+              console.error("Error en la actualización:", error);
+            }
+          });
+          this.eliminaVista();    
+          return;        
+        }
+        if(this.segundo > 0){       // controlo que haya empezado a conducir ???
+          clearInterval(this.intervalCuentaAtras); // Detener el intervalo cuando llegue a 0
+          return;
+        }
+      }, 1000); // Disminuye cada segundo
+    }
+    
+    eliminaVista(){
+      let coche = {
+        id_vehiculo:0,
+        matricula : '',
+        marca : '',
+        modelo : '',
+        ano : 0,
+        disponible: 0,  
+      };
+      this.apiService.setCocheSeleccionado(coche);
+    }
+}
+  
 
 

@@ -3,12 +3,14 @@ import { ApiService } from '../api.service';
 import { Router } from '@angular/router';
 import { Usuario } from '../models/usuario.model';
 import { BehaviorSubject, Subscription } from 'rxjs';
+import { MenuController } from '@ionic/angular';
 
 
 @Component({
-  selector: 'app-vehiculos',
-  templateUrl: './vehiculos.component.html',
-  styleUrls: ['./vehiculos.component.scss']
+    selector: 'app-vehiculos',
+    templateUrl: './vehiculos.component.html',
+    styleUrls: ['./vehiculos.component.scss'],
+    standalone: false
 })
 
 export class VehiculosComponent implements OnDestroy {
@@ -34,21 +36,34 @@ export class VehiculosComponent implements OnDestroy {
   constructor(
     private apiService: ApiService,  
     public router: Router,
-    private cdr: ChangeDetectorRef) { }
+    private cdr: ChangeDetectorRef,
+    private menuCtrl: MenuController,
+  ) { }
 
    ngOnInit() {
-    console.log(" ******************************************entro en vehiculos");
     this.controlRol();
     this.controlPagina();
-    this.cargarDatosVehiculos();
+    this.activarMenu();
+   // this.cargarDatosVehiculos();
     this.usuarioGuardado();
     console.log('usuarioGuardado en principal: ', this.usuario.nombre);
   }
 
-  ngAfterViewInit() {
-  console.log(" ******************************************entro en vehiculos otra vez");
-  this.controlPagina();
-  }
+    // ngAfterViewInit() {
+    // this.controlPagina();
+    // this.activarMenu();
+    // this.controlRol();
+    // }
+    ionViewWillEnter(){
+       this.cargarDatosVehiculos();
+      // this.controlRol();
+      // this.controlPagina();
+      // this.activarMenu();
+      // this.usuarioGuardado();
+      this.cdr.detectChanges(); // Forzar la actualización
+
+
+    }
 
   controlRol(){
     this.apiService.cargarRol();
@@ -57,6 +72,17 @@ export class VehiculosComponent implements OnDestroy {
       console.log('Rol actualizado en Vehiculos:', this.rol);
     });
   }
+
+  activarMenu(){
+    if (this.rol === 'admin') {
+      this.menuCtrl.enable(true, 'menuAdmin'); // Activa el menú de administrador
+      this.menuCtrl.enable(false, 'menu'); // Desactiva el menú de conductor
+    } else if (this.rol === 'conductor') {
+      this.menuCtrl.enable(true, 'menu'); // Activa el menú de conductor
+      this.menuCtrl.enable(false, 'menuAdmin'); // Desactiva el menú de administrador
+    }
+  }
+
 
   controlPagina() {
     try {
@@ -90,10 +116,17 @@ export class VehiculosComponent implements OnDestroy {
     this.apiService.loading(this.mensajeLoading);
     this.apiService.getVehiculos().subscribe((data: any[]) => {
       this.apiService.LoadingController.dismiss();
-      this.vehiculos = data.filter(vehiculo => vehiculo.disponible == true);   //filtro solo los disponibles
+      if (this.origen !== 'dashboard'){
+        // this.vehiculos = data.filter(vehiculo => vehiculo.disponible == true);   //filtro solo los disponibles
+        data = data.filter(vehiculo => vehiculo.disponible == true);   //filtro solo los disponibles
+      }
+      this.vehiculos = data;
       console.log(data);
     });
+  //  this.apiService.LoadingController.dismiss();
+    this.cdr.detectChanges(); // Forzar la actualización
   }
+
   seleccionarVehiculo(vehiculo:any){
       if (this.vehiculoSeleccionado === vehiculo) {
         this.vehiculoSeleccionado = null; // Desmarca si ya está seleccionado
@@ -114,15 +147,24 @@ export class VehiculosComponent implements OnDestroy {
         };
         if (this.vehiculoSeleccionado) {
 
-            this.modeloSeleccionado = this.vehiculoSeleccionado.modelo;
-            this.idVehiculo = this.vehiculoSeleccionado.id_vehiculo;
-
-            this.apiService.setModeloSeleccionado(this.modeloSeleccionado);
+   //         this.modeloSeleccionado = this.vehiculoSeleccionado.modelo;
+     //       this.idVehiculo = this.vehiculoSeleccionado.id_vehiculo;
+              this.idVehiculo = coche.id_vehiculo;
+     //       this.apiService.setModeloSeleccionado(this.modeloSeleccionado);
             this.apiService.setIdCoche(this.idVehiculo);
 
-            this.apiService.setCocheSeleccionado(coche);     //////////////////////
-            
+            this.apiService.setCocheSeleccionado(coche);     //////////////////////            
             console.log("id guardado:", this.apiService.idCoche);
+            console.log("id guardado idVehiculo:", this.idVehiculo);
+            
+            this.apiService.updateEstadoVehiculo(this.idVehiculo, 0).subscribe({
+              next: (response) => {
+                console.log("Estado actualizado correctamente:", response);
+              },
+              error: (error) => {
+                console.error("Error en la actualización:", error);
+              }
+            });
             this.cambiaPagina();
 
         } else {
@@ -155,7 +197,6 @@ export class VehiculosComponent implements OnDestroy {
       }
       }
 
-  
 
       ngOnDestroy(): void {
           

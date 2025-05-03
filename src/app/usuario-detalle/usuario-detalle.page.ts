@@ -1,13 +1,14 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { ApiService } from '../api.service';
 import { Router } from '@angular/router';
-import { NavController, AlertController } from '@ionic/angular';  
-
+import { NavController, AlertController } from '@ionic/angular'; 
+import { MenuController, } from '@ionic/angular';
 
 @Component({
-  selector: 'app-usuario-detalle',
-  templateUrl: './usuario-detalle.page.html',
-  styleUrls: ['./usuario-detalle.page.scss'],
+    selector: 'app-usuario-detalle',
+    templateUrl:'./usuario-detalle.page.html',
+    styleUrls: ['./usuario-detalle.page.scss'],
+    standalone: false
 })
 
 export class UsuarioDetallePage implements OnInit {
@@ -22,53 +23,39 @@ export class UsuarioDetallePage implements OnInit {
   modo: 'crear' | 'ver' | 'editar' = 'ver';
   idUsuarioActual: string = ''; // id usuario logueado
   rolLogueado: string =''; 
+  nombre: string = '';
  
   constructor(
     private router: Router,
     private apiService: ApiService,
     private navCtrl: NavController,
     private alertController: AlertController,
+    private menuCtrl: MenuController,
+    private cdr: ChangeDetectorRef
+    
   ) { }
 
   ngOnInit() {
-    // Cargar el ID del usuario actual desde localStorage
-    const usuarioLogueado = JSON.parse(localStorage.getItem('usuario') || '{}');
-    this.idUsuarioActual = usuarioLogueado.id_usuario || '';
-     this.rolLogueado = usuarioLogueado.rol || '';
-     console.log('ID del usuario logueado:', this.idUsuarioActual);
-     console.log('Rol del usuario logueado:', this.rolLogueado); 
-     console.log('correo: ',usuarioLogueado.correo);
-
-    const navigation = this.router.getCurrentNavigation();
-    const state = navigation?.extras.state;
-    
-
-    console.log('State recibido: ', state); // Verifica el contenido del estado
-
-    if(state) {
-      this.modo = state ['modo'] || 'ver';
-      if (state['usuario']){
-        this.usuario = { ...state['usuario']};
-
-        console.log('Usuario cargado: ', this.usuario); // Verifica que el usuario tiene un id
-      
-      } else if ( this.modo === 'editar' || this.modo === 'ver'){
-        this.presentAlert('Error', 'No se proporcionó el usuario a editar/ver');
-        this.navCtrl.navigateBack('/usuarios');
-       
-      }
-    }else{
-      // Si no se pasa el estado, redirige de nuevo
-      this.presentAlert('Error', 'No se proporcionó el estado del usuario');
-      this.navCtrl.navigateBack('/usuarios');
-         }
-    console.log("Modo actual:", this.modo);
+    this.activarMenu();
+    this.controlRol();
+    this.funcionPrincipal(); 
+  }
+  ionViewWillEnter(){
+    this.activarMenu();
+    this.controlRol();
+//    this.funcionPrincipal(); 
   }
   
   guardarUsuario(){
 
-    console.log("Usuario a guardar:", this.usuario); // Verifica qué datos estás enviando
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
 
+    if (!this.usuario.correo || !emailRegex.test(this.usuario.correo)) {
+      this.presentAlert('Error', 'Por favor, introduce un correo válido.');
+      return;
+    }
+
+    console.log("Usuario a guardar:", this.usuario); // Verifica qué datos estás enviando
     if (!this.usuario.nombre || !this.usuario.correo || !this.usuario.rol) {
       this.presentAlert('Campos requeridos', 'Debes completar los campos');
       return;
@@ -107,7 +94,10 @@ export class UsuarioDetallePage implements OnInit {
   }
 
   cancelarEdicion() {
+    
     this.modo = 'ver'; // Cambiar de vuelta al modo de vista (no edición)
+    this.navCtrl.navigateBack(['/usuarios']);
+
   }
 
   async eliminarUsuario(){
@@ -167,4 +157,69 @@ async presentAlert (titulo:string, mensaje:string){
     });
     await alert.present();
   }
+
+  funcionPrincipal(){
+
+    const navigation = this.router.getCurrentNavigation();
+    const state = navigation?.extras.state;
+    
+    console.log('State recibido: ', state); // Verifica el contenido del estado
+
+    if(state) {
+      this.modo = state ['modo'] || 'ver';
+      console.log('el modo recibido es.... ', this.modo);
+
+      if (this.modo === 'crear') {
+        // En modo crear no necesitas verificar el usuario
+        console.log('Modo creación, no se requiere usuario');
+        return;
+      }else if (state['usuario']){
+        this.usuario = { ...state['usuario']};
+
+        console.log('Usuario cargado: ', this.usuario); // Verifica que el usuario tiene un id
+      
+      } else if ( this.modo === 'editar' || this.modo === 'ver'){
+        this.presentAlert('Error', 'No se proporcionó el usuario a editar/ver');
+        this.navCtrl.navigateBack('/usuarios');
+       
+      }
+    }else{
+      // Si no se pasa el estado, redirige de nuevo
+      this.presentAlert('Error', 'No se proporcionó el estado del usuario');
+      this.navCtrl.navigateBack('/usuarios');
+         }
+    console.log("Modo actual:", this.modo);
+    
+  }
+
+  
+activarMenu(){
+  if (this.rolLogueado === 'admin') {
+    this.menuCtrl.enable(true, 'menuAdmin'); // Activa el menú de administrador
+    this.menuCtrl.enable(false, 'menu'); // Desactiva el menú de conductor
+  } else if (this.rolLogueado === 'conductor') {
+    this.menuCtrl.enable(true, 'menu'); // Activa el menú de conductor
+    this.menuCtrl.enable(false, 'menuAdmin'); // Desactiva el menú de administrador
+  }
+}
+
+controlRol(){
+  this.apiService.cargarRol();
+  this.apiService.rol$.subscribe((rol) => {
+    this.rolLogueado = rol; // Actualiza el valor local
+  });
+  this.cdr.detectChanges();
+  try {
+    const usuarioLogueado = localStorage.getItem('usuario');
+    if (usuarioLogueado) {
+     const usuariolog = JSON.parse(usuarioLogueado); 
+      this.idUsuarioActual = usuariolog.id_usuario;
+      this.nombre = usuariolog.nombre;
+      this.cdr.detectChanges();
+    }
+  } catch (error) {
+    console.error('Error al leer el usuario desde localStorage:', error);
+  }
+}
+
 }

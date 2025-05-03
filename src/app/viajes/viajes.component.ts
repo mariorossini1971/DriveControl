@@ -5,12 +5,16 @@ import { LOCALE_ID } from '@angular/core';
 import localeEs from '@angular/common/locales/es';
 import { registerLocaleData } from '@angular/common';
 import { Usuario } from '../models/usuario.model';
+import { MenuController } from '@ionic/angular';
+
+
 
 
 @Component({
-  selector: 'app-viajes',
-  templateUrl: './viajes.component.html',
-  styleUrls: ['./viajes.component.scss'],
+    selector: 'app-viajes',
+    templateUrl: './viajes.component.html',
+    styleUrls: ['./viajes.component.scss'],
+    standalone: false
 })
 
 export class ViajesComponent implements OnInit {
@@ -28,19 +32,29 @@ export class ViajesComponent implements OnInit {
 
 
 
-  constructor(private apiService: ApiService, private router: Router) { }
+  constructor(
+    private apiService: ApiService,
+    private router: Router,
+    private menuCtrl: MenuController,
+    ) { }
 
   ngOnInit() {
-    console.log('            entro en viajes');
+
+    this.activarMenu();
     this.controlRol();
     this.usuarioGuardado();
     console.log('usuarioGuardado en principal: ', this.usuario.nombre);
     this.apiService.loading(this.mensajeLoading);
-    this.loadViajes();
-   // console.log('control: ',this.control);
-   
+    this.loadViajes();   
   }
 
+  ionViewWillEnter(){
+    this.activarMenu();
+    this.controlRol();
+    this.usuarioGuardado();
+    this.loadViajes();   
+
+  }
   controlRol() {
     console.log('             con localStorage ');
     try {
@@ -122,8 +136,10 @@ export class ViajesComponent implements OnInit {
         .filter(viajes => {
           const texto = this.filtroTexto.toLowerCase();
           return (
-             viajes.marca.toLowerCase().includes(texto) ||
-            viajes.nombre_conductor.toLowerCase().includes(texto)
+            viajes.marca.toLowerCase().includes(texto) ||
+            viajes.nombre_conductor.toLowerCase().includes(texto) ||
+            viajes.matricula.includes(texto) ||
+            viajes.modelo.toLowerCase().includes(texto)
           );
         })
         .sort((a, b) => {
@@ -137,6 +153,14 @@ export class ViajesComponent implements OnInit {
           }
         });
     }
-
+    activarMenu(){
+      if (this.rol === 'admin') {
+        this.menuCtrl.enable(true, 'menuAdmin'); // Activa el menú de administrador
+        this.menuCtrl.enable(false, 'menu'); // Desactiva el menú de conductor
+      } else if (this.rol === 'conductor') {
+        this.menuCtrl.enable(true, 'menu'); // Activa el menú de conductor
+        this.menuCtrl.enable(false, 'menuAdmin'); // Desactiva el menú de administrador
+      }
+    }
   }
   

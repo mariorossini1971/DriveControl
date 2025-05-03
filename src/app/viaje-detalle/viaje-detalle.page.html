@@ -53,23 +53,26 @@
             <div class="item-content">
             <ion-label>Inicio</ion-label>
             <ion-text *ngIf="viaje.fecha_inicio && viaje.fecha_inicio !== '0000-00-00 00:00:00'">
-              {{ viaje.fecha_inicio | date: 'd \'de\' MMMM \'del\' y - HH:mm' }}
+              {{ viaje.fecha_inicio | date: 'd \'de\' MMMM \'del\' y \'a las\' HH:mm' }}
             </ion-text>
+            <br>
+            <ion-text>{{ direccionInicio }}</ion-text>
             </div>
             <ion-icon slot="end" name="calendar-outline" ></ion-icon>
-          </ion-item>
-        
+          </ion-item>        
           <ion-item>
            <div class="item-content"> 
             <ion-label>Fin</ion-label>     
                <ion-text *ngIf="viaje.fecha_fin && viaje.fecha_fin !== '0000-00-00 00:00:00'">
-                {{ viaje.fecha_fin | date: 'd \'de\' MMMM \'del\' y - HH:mm' }}
+                {{ viaje.fecha_fin | date: 'd \'de\' MMMM \'del\' y \'a las\' HH:mm' }} 
              </ion-text> 
+             <br>
+             <ion-text>{{ direccionFinal }}</ion-text>
+
             </div> 
             <ion-icon slot="end" name="calendar-outline" ></ion-icon>
-
           </ion-item>
-        
+                
           <div>
             <ion-button expand="block" class="cancelar" (click)="cancelarEdicion()" *ngIf="modo === 'editar'">Cancelar
               <ion-icon slot="start" name="close-circle-outline"></ion-icon>
@@ -81,7 +84,7 @@
               <ion-icon slot="start" name="trash"></ion-icon>
             </ion-button>
         
-            <ion-button expand="full" class="boton"  (click)="modo = 'editar'" *ngIf="modo === 'ver'">Editar para eliminar
+            <ion-button  expand="full" class="boton"  (click)="modo = 'editar'" *ngIf="rol === 'admin' && modo === 'ver'">Editar para eliminar
               <ion-icon slot="start" name="pencil"></ion-icon>
             </ion-button>
           </div>

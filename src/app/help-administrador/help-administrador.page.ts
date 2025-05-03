@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'app-help-administrador',
-  templateUrl: './help-administrador.page.html',
-  styleUrls: ['./help-administrador.page.scss'],
+    selector: 'app-help-administrador',
+    templateUrl: './help-administrador.page.html',
+    styleUrls: ['./help-administrador.page.scss'],
+    standalone: false
 })
 export class HelpAdministradorPage implements OnInit {
   usuario = {

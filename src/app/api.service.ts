@@ -30,6 +30,13 @@ export class ApiService {
     comentario:'',
   });
 
+  newCoordenadasSubject = new BehaviorSubject<any>({
+    latInicial: 0,
+    lngInicial: 0,
+    latFinal: 0,
+    lngfinal: 0,
+  });
+
   cocheSelBehaviorSubject = new BehaviorSubject<any>({
     id_vehiculo: 0,
     matricula: "",
@@ -122,6 +129,10 @@ export class ApiService {
   deleteVehiculo(id:number): Observable<any> {
     return this.http.delete(`${apiUrl}/vehiculos/${id}`);
   }
+ 
+  updateEstadoVehiculo(id: number, disponible: number): Observable<any> {
+    return this.http.put<any>(`${apiUrl}/vehiculosestado/${id}`, { disponible });
+  }
 
   getHistorialViaje(id: number): Observable<any>{
     return this.http.get(`${apiUrl}/viajes/vehiculo/${id}`);
@@ -173,6 +184,18 @@ export class ApiService {
   deleteViaje(id:number): Observable<any> {
     return this.http.delete(`${apiUrl}/viajes/${id}`);
   }
+
+  getViajesConCoordenadas():Observable<any> {
+    return this.http.get<any>(`${apiUrl}/detalladoCoordenadas`);
+  }
+  getCoordenadasById(id: number): Observable<any> {
+    return this.http.get(`${apiUrl}/detalladoCoordenadas/${id}`);
+  }
+
+  guardarCoordenadas(coordenadas: any): Observable<any> {
+    return this.http.post(`${apiUrl}/coordenadas`, coordenadas);
+  }
+  
 
   
   ///////////////////////////// ROL /////////////////////////////////////
@@ -235,7 +258,13 @@ export class ApiService {
   getNewItemValue(): any {
     return this.newItemSubject.getValue();
   }
-
+  //// coordenadas
+  setNewCoordenadas(item:any){
+    this.newCoordenadasSubject.next(item);
+  }
+  getNewCoordenadas(){
+    return this.newCoordenadasSubject.asObservable();
+  }
 
 
   setCocheSelec(id_Vehiculo: number, coche: any): Observable<any>{
@@ -276,13 +305,13 @@ async loading(mensaje: string){
 //////////////////////////// CIERRE SESION ////////////////////////
 /* LIMPIO MEMORIA */
 cerrarSesion(){
-  localStorage.removeItem('token');
-  localStorage.removeItem('usuario');
-  localStorage.removeItem('rol');
+  // localStorage.removeItem('token');
+  // localStorage.removeItem('usuario');
+  // localStorage.removeItem('rol');
+  localStorage.clear();
   sessionStorage.clear();
   console.log('Sesión cerrada');
 }
-
   
 }
 

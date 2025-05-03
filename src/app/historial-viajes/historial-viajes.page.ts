@@ -4,9 +4,10 @@ import { Router } from '@angular/router';
 import { delay } from 'rxjs';
 
 @Component({
-  selector: 'app-historial-viajes',
-  templateUrl: './historial-viajes.page.html',
-  styleUrls: ['./historial-viajes.page.scss'],
+    selector: 'app-historial-viajes',
+    templateUrl: './historial-viajes.page.html',
+    styleUrls: ['./historial-viajes.page.scss'],
+    standalone: false
 })
 export class HistorialViajesPage implements OnInit {
 
