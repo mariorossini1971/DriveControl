@@ -35,10 +35,8 @@ export class UsuariosComponent implements OnDestroy {
   public usuario: Usuario = new Usuario(0,'', '','','',0);
   public usuarioRecuperado: Usuario = new Usuario(0,'','','','',0);
 
-  private subscription: Subscription = new Subscription;
-  private routerSubscription!: Subscription;
- 
-  
+  private subscripciones = new Subscription(); 
+
   constructor(
     private apiService: ApiService,
     private router: Router,
@@ -63,33 +61,21 @@ export class UsuariosComponent implements OnDestroy {
       if(this.rol === 'conductor'){
         this.recuperaUsuario(this.id)
       };
-
   
     }
 
-   ngOnDestroy() {
-
-      if (this.routerSubscription) {
-        this.routerSubscription.unsubscribe();
-      }
-  }
-
   controlRol() {
-    console.log('             con localStorage ');
-    this.apiService.cargarRol();
-    this.apiService.rol$.subscribe((rol) => {
-      this.rol = rol; // Actualiza el valor local
-      console.log('Rol actualizado en HomePage:', this.rol);
-    });
-
+    this.subscripciones.add (
+      this.apiService.getRol().subscribe(rol => {
+        this.rol = rol;
+        console.log("Rol actual   * * * ", this.rol);
+      })
+    );
     try {
       const User = localStorage.getItem('usuario');
       if (User) {
         this.usuario = JSON.parse(User); 
-      //  this.rol$.next(this.usuario.rol)       ya lo estoy haciendo en cargarRol
-     //   this.rol = this.usuario.rol;
         this.id = this.usuario.id_usuario;
-        console.log('*user *********** rol en usuario: ', this.rol);
         this.cdr.detectChanges();
       }
     } catch (error) {
@@ -120,15 +106,17 @@ export class UsuariosComponent implements OnDestroy {
   
 
   funcionPrincipal() {
-    this.apiService.getUsuarios().subscribe({
-      next: (data: any[]) => { 
-        this.usuarios = data;
-        console.log('Usuarios obtenidos:', this.usuarios);
-      },
-      error: (error) => {
-        console.error('Error al obtener los usuarios:', error);
-      }
-    });
+    this.subscripciones.add (
+      this.apiService.getUsuarios().subscribe({
+        next: (data: any[]) => { 
+          this.usuarios = data;
+          console.log('Usuarios obtenidos:', this.usuarios);
+        },
+        error: (error) => {
+          console.error('Error al obtener los usuarios:', error);
+        }
+      })
+    );
     this.cdr.detectChanges();
   }
   
@@ -155,26 +143,30 @@ activarMenu(){
 }
 
 recuperaUsuario(id: number) {
-  this.apiService.getUsuarioById(id).subscribe({
-    next: (data) => { 
-      this.usuarioRecuperado.id_usuario = data.id_usuario;
-      this.usuarioRecuperado.nombre = data.nombre;
-      this.usuarioRecuperado.correo = data.correo;
-      this.usuarioRecuperado.contrasena = data.contrasena;
-      this.usuarioRecuperado.rol= data.rol;
-      this.usuarioRecuperado.telefono = data.telefono;
-    },
-    error: (error) => {
-      console.error('Error al recuperar el usuario:', error);
-    },
-    complete: () => {
-      console.log('Proceso de recuperación completado');
-    }
-  });
+  this.subscripciones.add (
+    this.apiService.getUsuarioById(id).subscribe({
+      next: (data) => { 
+        this.usuarioRecuperado.id_usuario = data.id_usuario;
+        this.usuarioRecuperado.nombre = data.nombre;
+        this.usuarioRecuperado.correo = data.correo;
+        this.usuarioRecuperado.contrasena = data.contrasena;
+        this.usuarioRecuperado.rol= data.rol;
+        this.usuarioRecuperado.telefono = data.telefono;
+      },
+      error: (error) => {
+        console.error('Error al recuperar el usuario:', error);
+      },
+      complete: () => {
+        console.log('Proceso de recuperación completado');
+      }
+    })
+  );
   this.cdr.detectChanges();
 }
 
-
+ngOnDestroy() {
+  this.subscripciones.unsubscribe(); 
+}
 
 }
 

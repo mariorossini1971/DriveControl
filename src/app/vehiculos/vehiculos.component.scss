@@ -27,8 +27,9 @@ ion-back-button{
   }
 
   .car-matricula {
+    text-align: center;
     margin: 0 0 0 28px;
-    font-size: 14px;
+    font-size: 18px;
     color: #555;
   } 
 
@@ -67,7 +68,30 @@ ion-back-button{
       font-weight: bold; /* Opcional: negrita */
     }
   }
+
   
+.card-disponible {
+  border: 2px solid #10dc60; 
+}
+
+.card-ocupado {
+  border: 2px solid #ed0b12; 
+}
+
+.disponible-centrado {
+  text-align: center;
+  font-size: 16px;
+  font-weight: bold;
+  padding: 10px 0;
+}
+
+.disponible-text {
+  color: green;
+}
+
+.ocupado-text {
+  color: red;
+}
   ion-toolbar {
     --padding-start: 16px; /* Ajustar separación lateral */
     --padding-end: 16px; /* Ajustar separación lateral */

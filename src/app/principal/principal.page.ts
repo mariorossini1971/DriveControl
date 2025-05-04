@@ -13,7 +13,7 @@ import { BehaviorSubject } from 'rxjs';
 export class PrincipalPage implements OnInit {
 
   rol: string | null = 'conductor';
-  public rol$ = new BehaviorSubject<string>('');
+ // public rol$ = new BehaviorSubject<string>('');
   bloqueoPagina: boolean = false;
   usuario: any;
   
@@ -24,12 +24,9 @@ export class PrincipalPage implements OnInit {
      private cdr: ChangeDetectorRef, 
   ) { }
 
-  ngOnInit() {
-   
-   this.controlRol();
-    console.log('rol en principal: ', this.rol);
+  ngOnInit() { 
+ //   this.controlRol();
     this.usuarioGuardado();
-    console.log('usuarioGuardado en principal: ', this.usuario.nombre);
   }
   ionViewWillEnter(){
     this.controlRol();
@@ -44,7 +41,9 @@ export class PrincipalPage implements OnInit {
   }
 
   verVehiculos(){
-    this.router.navigate(['/vehiculos'], { state: { origen: 'dashboard' } });
+    // this.router.navigate(['/vehiculos'], { state: { origen: 'dashboard' } });
+    this.router.navigate(['/vehiculos'], { queryParams: { origen: 'dashboard' } });
+
   }
 
   verViajes(){
@@ -64,28 +63,33 @@ export class PrincipalPage implements OnInit {
   }
 
   controlRol(){
-    this.apiService.cargarRol();
-    this.apiService.rol$.subscribe((rol) => {
-      this.rol = rol; // Actualiza el valor local
-      console.log('Rol actualizado en HomePage:', this.rol);
-    });
-  }
+    //  this.apiService.cargarRol();
+    // this.apiService.rol$.subscribe((rol) => {
+    //   this.rol = rol; // Actualiza el valor local
+    //   console.log('Rol actualizado en HomePage:', this.rol);
+    // });
+      this.apiService.getRol().subscribe(rol => {
+        this.rol = rol;
+        console.log("Rol actual   * * * ", this.rol);
+      });
+    } 
+
 
   usuarioGuardado(){
     const usuarioGuardado = localStorage.getItem('usuario');
   if (usuarioGuardado) {
-    this.usuario = JSON.parse(usuarioGuardado); // Recupera los datos del usuario
+    this.usuario = JSON.parse(usuarioGuardado); // Recupera los datos del usuario para el footer
   } else {
     console.warn('Usuario no encontrado.');
   }
   }
 
   cerrarSesion(){
-    let token = String(localStorage.getItem('token'));
-    console.log('Token guardado:', token);             /// ojo borrar
+ //   let token = String(localStorage.getItem('token'));
+ //   console.log('Token guardado:', token);             /// ojo borrar
     this.apiService.cerrarSesion();
-    token = String(localStorage.getItem('token'));     ///  ojo borrar solo como control
-    console.log('Token guardado despues del cierre:', token);   /// borrar
+ //   token = String(localStorage.getItem('token'));     ///  ojo borrar solo como control
+ //   console.log('Token guardado despues del cierre:', token);   /// borrar
     this.router.navigate(['/login']);
   }
   

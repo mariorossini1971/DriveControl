@@ -73,7 +73,8 @@
             <ion-label position="floating">Contraseña</ion-label>
             <ion-input 
               [(ngModel)]="usuario.contrasena" name="contrasena"
-              type="password" required>
+              type="password" required
+              [readonly]="modo === 'ver'" required>
             </ion-input>
             <ion-icon class="ion-align-self-center" slot="end" name="lock-closed-outline" color="primary"></ion-icon>
           </ion-item>

@@ -1,6 +1,6 @@
 import { Component, OnInit, OnChanges, SimpleChanges, OnDestroy, ChangeDetectorRef  } from '@angular/core';
 import { ApiService } from '../api.service';
-import { Router } from '@angular/router';
+import { Router,ActivatedRoute } from '@angular/router';
 import { Usuario } from '../models/usuario.model';
 import { BehaviorSubject, Subscription } from 'rxjs';
 import { MenuController } from '@ionic/angular';
@@ -14,6 +14,8 @@ import { MenuController } from '@ionic/angular';
 })
 
 export class VehiculosComponent implements OnDestroy {
+
+  private subscripciones = new Subscription(); 
   vehiculos: any[] = [];
   modeloSeleccionado: string = "";
   disponible: boolean = false;
@@ -38,6 +40,7 @@ export class VehiculosComponent implements OnDestroy {
     public router: Router,
     private cdr: ChangeDetectorRef,
     private menuCtrl: MenuController,
+    private route: ActivatedRoute,
   ) { }
 
    ngOnInit() {
@@ -49,28 +52,19 @@ export class VehiculosComponent implements OnDestroy {
     console.log('usuarioGuardado en principal: ', this.usuario.nombre);
   }
 
-    // ngAfterViewInit() {
-    // this.controlPagina();
-    // this.activarMenu();
-    // this.controlRol();
-    // }
     ionViewWillEnter(){
-       this.cargarDatosVehiculos();
-      // this.controlRol();
-      // this.controlPagina();
-      // this.activarMenu();
-      // this.usuarioGuardado();
-      this.cdr.detectChanges(); // Forzar la actualización
-
-
+      this.controlPagina();
+      this.cargarDatosVehiculos();
+      this.cdr.detectChanges();
     }
 
   controlRol(){
-    this.apiService.cargarRol();
-    this.apiService.rol$.subscribe((rol) => {
-      this.rol = rol; // Actualiza el valor local
-      console.log('Rol actualizado en Vehiculos:', this.rol);
-    });
+    this.subscripciones.add (
+      this.apiService.getRol().subscribe(rol => {
+        this.rol = rol;
+        console.log("Rol actual   * * * ", this.rol);
+      })
+  );
   }
 
   activarMenu(){
@@ -85,45 +79,49 @@ export class VehiculosComponent implements OnDestroy {
 
 
   controlPagina() {
+    console.log("ENTRO EN CONTROL PAGINA");
     try {
-      const navigation = this.router.getCurrentNavigation();
-      const state = navigation?.extras?.state;
-  
-      console.log("antes de entrar en state");
-      if (state && state['origen']) {
-        this.origen = state['origen'];
-        console.log("Origen recibido:", this.origen);
-        if(this.origen === 'dashboard'){
-          this.mostrar = false; 
-          this.cdr.detectChanges(); // Forzar la actualización
-        } else { 
-          this.mostrar = true;
-          this.cdr.detectChanges(); // Forzar la actualización
-          };
-      } else {
-        console.log("No se recibió el estado esperado.");
-        this.mostrar = true;
-        this.cdr.detectChanges(); // Forzar la actualización
-
-      }
+      this.subscripciones.add (
+        this.route.queryParams.subscribe(params => {
+          if (params['origen']) {
+            this.origen = params['origen'];
+            console.log("Origen recibido correctamente:", this.origen);
+    
+            if (this.origen === 'dashboard') {
+              this.mostrar = false;
+            } else {
+              this.mostrar = true;
+            }
+    
+            this.cdr.detectChanges(); // Forzar actualización
+          } else {
+            console.log("No se recibió el estado esperado.");
+            this.mostrar = true;
+            this.cdr.detectChanges(); // Forzar actualización
+          }
+    
+          console.log("-------------------Muestro :", this.mostrar);
+        })
+    );
     } catch (error) {
       console.error("Error en controlPagina:", error);
     }
-    console.log("-------------------Muestro :", this.mostrar);
   }
+    
    
   cargarDatosVehiculos(){
     this.apiService.loading(this.mensajeLoading);
-    this.apiService.getVehiculos().subscribe((data: any[]) => {
-      this.apiService.LoadingController.dismiss();
-      if (this.origen !== 'dashboard'){
-        // this.vehiculos = data.filter(vehiculo => vehiculo.disponible == true);   //filtro solo los disponibles
-        data = data.filter(vehiculo => vehiculo.disponible == true);   //filtro solo los disponibles
-      }
-      this.vehiculos = data;
-      console.log(data);
-    });
-  //  this.apiService.LoadingController.dismiss();
+    this.subscripciones.add (
+      this.apiService.getVehiculos().subscribe((data: any[]) => {
+        this.apiService.LoadingController.dismiss();
+        if (this.origen !== 'dashboard'){
+          // this.vehiculos = data.filter(vehiculo => vehiculo.disponible == true);   //filtro solo los disponibles
+          data = data.filter(vehiculo => vehiculo.disponible == true);   //filtro solo los disponibles
+        }
+        this.vehiculos = data;
+        console.log(data);
+      })
+  );
     this.cdr.detectChanges(); // Forzar la actualización
   }
 
@@ -198,8 +196,8 @@ export class VehiculosComponent implements OnDestroy {
       }
 
 
-      ngOnDestroy(): void {
-          
+      ngOnDestroy() {
+        this.subscripciones.unsubscribe(); 
       }
 
 }

@@ -14,6 +14,8 @@ import { Usuario } from '../models/usuario.model';
 })
 
 export class GuardarPage implements OnDestroy{
+
+  private subscripciones = new Subscription(); 
  idViaje: number = 0;
   viaje$ = new BehaviorSubject<any>({
     id_viaje: 0,
@@ -50,48 +52,49 @@ export class GuardarPage implements OnDestroy{
 
   ngOnInit() {
     this.usuarioGuardado();
-    console.log('usuarioGuardado en principal: ', this.usuario.nombre);
-
-    this.apiService.getNewItem().subscribe({
-      next: (viaje) => {
-        console.log('viaje seleccionado:', viaje);
-
-        // Si no hay comentario, valo predeterminado
-   if (!viaje.comentario || viaje.comentario.trim() === '') {
-    viaje.comentario = '';
-   }
-
-    // Verificamos si el comentario contiene 'no hay comentarios' y lo reemplazamos por vacío
-    if (viaje.comentario === 'no hay comentarios') {
-      viaje.comentario = ''; // Lo dejamos vacío para que se vea el placeholder
-    }
-
-        this.viaje$.next(viaje);
-        console.log('comentario', this.viaje$.getValue().comentario)
-      },
-      error: (err) => {
-        console.error('Error al recuperar modelo seleccionado:', err);
-      },
-      complete: () => {
-        console.log('Suscripción completada.');
-      },
-    });
-    this.apiService.getNewCoordenadas().subscribe({
-      next: (coordenadas) => {
-        console.log('coordenadas seleccionadas:', coordenadas);
-        this.coordenadas$.next(coordenadas);
-      },
-      error: (err) => {
-        console.error('Error al recuperar modelo seleccionado:', err);
-      },
-      complete: () => {
-        console.log('Suscripción completada.');
-      },
-    });
-
+    this.funcionPrincipal();
   }
 
-  ngOnDestroy() {}
+  funcionPrincipal(){
+    this.subscripciones.add (
+      this.apiService.getNewItem().subscribe({
+        next: (viaje) => {
+          console.log('viaje seleccionado:', viaje);
+
+          // Si no hay comentario, valor predeterminado
+    if (!viaje.comentario || viaje.comentario.trim() === '') {
+      viaje.comentario = '';
+    }
+      // Verifico si el comentario contiene 'no hay comentarios' y lo reemplazo por vacío
+      if (viaje.comentario === 'no hay comentarios') {
+        viaje.comentario = ''; // Lo dejo vacío para que se vea el placeholder
+      }
+          this.viaje$.next(viaje);       // vuelvo a cargar el viaje con los comentarios para luego subirlo a la BBDD
+          console.log('comentario', this.viaje$.getValue().comentario)
+        },
+        error: (err) => {
+          console.error('Error al recuperar el viaje:', err);
+        },
+        complete: () => {
+          console.log('viaje recuperado.');
+        },
+      })
+    );
+    this.subscripciones.add(
+      this.apiService.getNewCoordenadas().subscribe({
+        next: (coordenadas) => {
+          console.log('coordenadas seleccionadas:', coordenadas);
+          this.coordenadas$.next(coordenadas);
+        },
+        error: (err) => {
+          console.error('Error al recuperar las coordenadas:', err);
+        },
+        complete: () => {
+          console.log('Cooredenadas recuperadas.');
+        },
+      })
+    );
+  }
 
   usuarioGuardado(){
     const usuarioGuardado = localStorage.getItem('usuario');
@@ -102,21 +105,11 @@ export class GuardarPage implements OnDestroy{
   }
   }
   
-
 async guardarStore() {
 
-    this.mensaje = '';
-    const viaje = this.viaje$.getValue(); // Extrae el objeto viaje
+    const viaje = this.viaje$.getValue(); // Extrae el  viaje
     console.log('Datos preparados para guardar:', viaje);
-
-      // Si no hay comentario, lo rellenamos
-      if (!viaje.comentario || viaje.comentario.trim() === '') {
-        viaje.comentario = 'gaurdarStore: no message';
-      }
-
-      this.mensaje = 'Guardando datos...';
-      console.log('2Guardando datos...', this.mensaje);
-
+    this.mensaje = 'Guardando datos...';
     let intentos = 0; // Contador de intentos
     const maxIntentos = 3; // Máximo número de intentos
     this.datosGuardados = false;
@@ -132,11 +125,9 @@ async guardarStore() {
                 // Guardar el ID en el BehaviorSubject
           this.coordenadas$.next({
             ...this.coordenadas$.getValue(), // Mantiene los valores anteriores
-            viaje_id: response.id_viaje, // Asigna el nuevo ID
+            viaje_id: response.id_viaje, // Añado el Viaje_id a las coordenadas
           });
-          console.log('ID del viaje:', this.coordenadas$.getValue().viaje_id);
-          
-
+          console.log('ID del viaje:', this.coordenadas$.getValue().viaje_id);    
         } else {
           console.warn('No se recibió un ID de viaje en la respuesta.');
         } 
@@ -167,7 +158,7 @@ async guardarStore() {
           console.error("Error en la actualización:", error);
          }
       });
-    // Usamos ChangeDetectorRef para asegurarnos de que Angular actualice la vista
+    // Uso ChangeDetectorRef para actualizar la vista
     this.cdRef.detectChanges();
 
     if (this.datosGuardados) {
@@ -177,12 +168,13 @@ async guardarStore() {
       this.mensaje = 'Error: no se pudo guardar los datos tras 3 intentos ❌';
       console.error(this.mensaje);
     }
-
-    // Redirigir después de un tiempo
+    // espero un tiempo antes de salir
     setTimeout(() => {
       this.mensaje = ''; 
       this.router.navigate(['/principal']);
     }, 3000);
   }
-
+  ngOnDestroy(){
+    this.subscripciones.unsubscribe(); 
+  }
 }

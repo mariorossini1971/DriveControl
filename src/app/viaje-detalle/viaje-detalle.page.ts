@@ -5,6 +5,7 @@ import { NavController, AlertController } from '@ionic/angular';
 import { HttpClient } from '@angular/common/http';
 import { Geolocation } from '@capacitor/geolocation';
 import { MenuController } from '@ionic/angular';
+import { Subscription } from 'rxjs';
 
 
 @Component({
@@ -14,8 +15,9 @@ import { MenuController } from '@ionic/angular';
     standalone: false
 })
 export class ViajeDetallePage implements OnInit {
-  modo: string = 'editar';
 
+  private subscripciones = new Subscription(); 
+  modo: string = 'editar';
   vehiculo: any = {
     id_vehiculo:0, 
     modelo:'', 
@@ -144,59 +146,62 @@ export class ViajeDetallePage implements OnInit {
 
   async obtenerUbicacion(id_viaje: number) {
     let id: number = id_viaje;
-    this.apiService.getCoordenadasById(id).subscribe({
-      next: (response) => {
-        console.log("Coordenadas obtenidas:", response);
-        this.coordenadas.lngInicial = response[0].lngInicial;
-        this.coordenadas.latInicial = response[0].latInicial;
-        this.coordenadas.lngFinal = response[0].lngFinal;
-        this.coordenadas.latFinal = response[0].latFinal;
+    this.subscripciones.add (
+      this.apiService.getCoordenadasById(id).subscribe({
+        next: (response) => {
+          console.log("Coordenadas obtenidas:", response);
+          this.coordenadas.lngInicial = response[0].lngInicial;
+          this.coordenadas.latInicial = response[0].latInicial;
+          this.coordenadas.lngFinal = response[0].lngFinal;
+          this.coordenadas.latFinal = response[0].latFinal;
 
-        this.calculadireccion(this.coordenadas.latInicial, this.coordenadas.lngInicial).then(direccion => {
-          this.direccionInicio = direccion;
-          console.log("Dirección Inicial:", this.direccionInicio);
-        }).catch(error => {
-          console.error("Error al calcular dirección inicial:", error);
-          this.direccionInicio = "Error al obtener dirección";
-        });
-    
-        this.calculadireccion(this.coordenadas.latFinal, this.coordenadas.lngFinal).then(direccion => {
-          this.direccionFinal = direccion;
-          console.log("Dirección Final:", this.direccionFinal);
-        }).catch(error => {
-          console.error("Error al calcular dirección Final:", error);
-          this.direccionInicio = "Error al obtener dirección";
-        });
-      },
-      error: (error) => {
-        console.error("Error al obtener coordenadas:", error);
-      }
-    });
+          this.calculadireccion(this.coordenadas.latInicial, this.coordenadas.lngInicial).then(direccion => {
+            this.direccionInicio = direccion;
+            console.log("Dirección Inicial:", this.direccionInicio);
+          }).catch(error => {
+            console.error("Error al calcular dirección inicial:", error);
+            this.direccionInicio = "Error al obtener dirección";
+          });
+      
+          this.calculadireccion(this.coordenadas.latFinal, this.coordenadas.lngFinal).then(direccion => {
+            this.direccionFinal = direccion;
+            console.log("Dirección Final:", this.direccionFinal);
+          }).catch(error => {
+            console.error("Error al calcular dirección Final:", error);
+            this.direccionInicio = "Error al obtener dirección";
+          });
+        },
+        error: (error) => {
+          console.error("Error al obtener coordenadas:", error);
+        }
+      })
+  );
   }
 
   calculadireccion(lat: number, lng: number): Promise<string> {
     return new Promise((resolve, reject) => {
       const url = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`;
-      
-      this.http.get(url).subscribe({
-        next: (data: any) => {
-          if (data && data.address) {
-            const numero = data.address.house_number || "Sin número";
-            const calle = data.address.road || 'Calle desconocida';
-            const ciudad = data.address.city || 'Ciudad desconocida';
-  
-            const direccion = `${calle}, ${numero} ${ciudad}`;
-            resolve(direccion); // Envía la dirección una vez obtenida
-          } else {
-            console.warn('No se encontraron datos de dirección en la respuesta.');
-            resolve('sin nombre de calle');
+      this.subscripciones.add (
+        this.http.get(url).subscribe({
+          next: (data: any) => {
+            if (data && data.address) {
+              const numero = data.address.house_number || "Sin número";
+              const calle = data.address.road || 'Calle desconocida';
+              const ciudad = data.address.city || 'Ciudad desconocida';
+    
+              const direccion = `${calle}, ${numero} ${ciudad}`;
+              resolve(direccion); // Envía la dirección una vez obtenida
+            } else {
+              console.warn('No se encontraron datos de dirección en la respuesta.');
+              resolve('sin nombre de calle');
+            }
+          },
+          error: (error) => {
+            console.error('Error obteniendo ubicación', error);
+            reject('Error obteniendo ubicación');
           }
-        },
-        error: (error) => {
-          console.error('Error obteniendo ubicación', error);
-          reject('Error obteniendo ubicación');
-        }
-      });
+        })
+    );
     });
   }
   activarMenu(){
@@ -210,15 +215,17 @@ export class ViajeDetallePage implements OnInit {
   }
 
   controlRol() {
-    console.log('             con localStorage ');
-    this.apiService.cargarRol();
-    this.apiService.rol$.subscribe((rol) => {
-      this.rol = rol; // Actualiza el valor local
-      console.log('Rol actualizado en HomePage:', this.rol);
-    });
-
+    this.subscripciones.add (
+      this.apiService.getRol().subscribe(rol => {
+        this.rol = rol;
+        console.log("Rol actual   * * * ", this.rol);
+      })
+    );
     this.cdr.detectChanges();
 
+  }
+  ngOnDestroy() {
+    this.subscripciones.unsubscribe(); 
   }
   
 }
