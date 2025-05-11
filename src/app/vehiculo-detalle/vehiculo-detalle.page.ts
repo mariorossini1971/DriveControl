@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ApiService } from '../api.service';
 import { Router } from '@angular/router';
 import { NavController, AlertController } from '@ionic/angular';  
+import { Subscription } from 'rxjs';
 
 @Component({
     selector: 'app-vehiculo-detalle',
@@ -10,6 +11,9 @@ import { NavController, AlertController } from '@ionic/angular';
     standalone: false
 })
 export class VehiculoDetallePage implements OnInit {
+
+  private subscripciones = new Subscription(); 
+  
   vehiculo: any = {
     id_vehiculo:0, 
     modelo:'', 
@@ -54,11 +58,9 @@ export class VehiculoDetallePage implements OnInit {
       // Si no se pasa el estado, redirige de nuevo
       this.presentAlert('Error', 'No se proporcionó el estado del usuario');
       this.navCtrl.navigateBack('/vehiculos');
-
     }
   }
 
-  
   guardarVehiculo(){
 
     console.log("Vehiculo a guardar:", this.vehiculo); // Verifica qué datos estás enviando
@@ -67,34 +69,35 @@ export class VehiculoDetallePage implements OnInit {
       this.presentAlert('Campos requeridos', 'Debes completar los campos');
       return;
     }
-
- 
     if (this.modo === 'crear'){
         // Eliminar id_usuario para evitar enviarlo al servidor al crear un nuevo usuario
       const { id, ...vehiculoSinId } = this.vehiculo;
-
-      this.apiService.createVehiculo(vehiculoSinId).subscribe({
-        next: () => {
-          this.presentAlert('Éxito', 'vehiculo creado correctamente');
-          this.navCtrl.navigateBack(['/vehiculos']);
-        },
-        error:() => {
-          console.error("Error al crear el vehiculo", Error); // Log de error
-          this.presentAlert('Error', 'No se pudo crear el vehiculo');
-        }
-      });
+      this.subscripciones.add (
+        this.apiService.createVehiculo(vehiculoSinId).subscribe({
+          next: () => {
+            this.presentAlert('Éxito', 'vehiculo creado correctamente');
+            this.router.navigate(['/vehiculos'], { queryParams: { origen: 'dashboard' } });
+          },
+          error:() => {
+            console.error("Error al crear el vehiculo", Error); // Log de error
+            this.presentAlert('Error', 'No se pudo crear el vehiculo');
+          }
+        })
+    );
     } 
     
     if (this.modo === 'editar' && this.vehiculo.id_vehiculo){
-      this.apiService.updateVehiculo(this.vehiculo.id_vehiculo, this.vehiculo).subscribe({
-        next:() => {
-          this.presentAlert('Éxito', 'Vehiculo actualizado correctamente');
-          this.navCtrl.navigateBack(['/vehiculos']);
-        },
-        error:() => {
-          this.presentAlert('Error', 'No se pudo actualizar el vehiculo');
-        }
-      });
+      this.subscripciones.add (
+        this.apiService.updateVehiculo(this.vehiculo.id_vehiculo, this.vehiculo).subscribe({
+          next:() => {
+            this.presentAlert('Éxito', 'Vehiculo actualizado correctamente');
+            this.router.navigate(['/vehiculos'], { queryParams: { origen: 'dashboard' } });
+          },
+          error:() => {
+            this.presentAlert('Error', 'No se pudo actualizar el vehiculo');
+          }
+        })
+    );
     } 
   }
 
@@ -119,46 +122,39 @@ export class VehiculoDetallePage implements OnInit {
         {
           text: 'Eliminar',
           handler: () => {
-            this.apiService.deleteVehiculo(this.vehiculo.id_vehiculo).subscribe({
-              next: () => {
-                this.presentAlert('Eliminado', 'Vehículo eliminado correctamente');
-                this.navCtrl.navigateBack(['/vehiculos'],{ state: { origen: 'dashboard' } });
-              },
-              error: () => {
-                this.presentAlert('Error', 'No se pudo eliminar el vehículo');
-              }
-            });
+            this.subscripciones.add (
+              this.apiService.deleteVehiculo(this.vehiculo.id_vehiculo).subscribe({
+                next: () => {
+                  this.presentAlert('Eliminado', 'Vehículo eliminado correctamente');
+                  this.navCtrl.navigateBack(['/vehiculos'],{ state: { origen: 'dashboard' } });
+                },
+                error: () => {
+                  this.presentAlert('Error', 'No se pudo eliminar el vehículo');
+                }
+              })
+          )
           }
         }
       ]
-    });
-  
+    }); 
     await alert.present();
   }
   
-
   cancelar(){
     console.log("modo en detalle vehiculo : ",this.modo);
     if(this.modo === 'ver'){
-     // this.navCtrl.navigateBack(['/vehiculos']);
-      this.router.navigate(['/vehiculos'], { state: { origen: 'dashboard' } });
+     this.router.navigate(['/vehiculos'], { queryParams: { origen: 'dashboard' } });
     } else if(this.modo === 'editar'){
-     this.router.navigate(['/vehiculos'], { state: { origen: 'otro' } });
-    // this.navCtrl.navigateBack(['/vehiculos']);
-    }
-    
+      this.router.navigate(['/vehiculos'], { queryParams: { origen: 'origen' } });
+    }   
   }
 
   cancelarEdicion() {
-  //  this.modo = 'ver'; // Cambiar de vuelta al modo de vista (no edición)
-    // Otras acciones de cancelación, si es necesario, como restablecer campos
     console.log("modo en detalle vehiculo : ",this.modo);
     if(this.modo === 'ver'){
-     // this.navCtrl.navigateBack(['/vehiculos']);
-      this.router.navigate(['/vehiculos'], { state: { origen: 'dashboard' } });
+     this.router.navigate(['/vehiculos'], { queryParams: { origen: 'origen' } });
     } else if(this.modo === 'editar'){
-     this.router.navigate(['/vehiculos'], { state: { origen: 'otro' } });
-    // this.navCtrl.navigateBack(['/vehiculos']);
+      this.router.navigate(['/vehiculos'], { queryParams: { origen: 'dashboard' } });
     }
   }
 
@@ -190,19 +186,8 @@ verHistorial() {
     console.error('ID del vehículo no válido.');
   }
 }
-
-
-
+ngOnDestroy() {
+  this.subscripciones.unsubscribe(); 
 }
 
-
- //   this.apiService.getHistorialViaje(this.vehiculo.id_vehiculo).subscribe(
-  //     (data) => {
-  //      this.historialViajes = data; // Asignamos los datos al array
-  //       console.log('Historial de viajes:', this.historialViajes);
-  //     },
-  //     (error) => {
-  //       console.error('Error al cargar el historial:', error);
-  //     }
-  //   );
-  //   this.router.navigate(['/historial-viajes'], { state: { historial: this.historialViajes } });
+}

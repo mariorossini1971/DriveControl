@@ -1,11 +1,10 @@
 import { Component, ElementRef, OnInit, OnDestroy, SimpleChange, ViewChild,ChangeDetectorRef,HostListener} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ApiService } from '../api.service';
-import { BehaviorSubject, catchError, Subscription } from 'rxjs';
+import { BehaviorSubject, Subscription } from 'rxjs';
 import { GestureController,ToastController} from '@ionic/angular';
 import { Usuario } from '../models/usuario.model';
 import { MenuController } from '@ionic/angular';
-import { formatDate } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Geolocation } from '@capacitor/geolocation';
 
@@ -19,6 +18,7 @@ import { Geolocation } from '@capacitor/geolocation';
 
 export class HomePage implements OnInit, OnDestroy {
 
+  private subscripciones = new Subscription(); 
   @ViewChild('swipeButton',{read: ElementRef }) swipeButton!: ElementRef;
   color = 'primary';
   text = 'Swipe';
@@ -60,8 +60,6 @@ export class HomePage implements OnInit, OnDestroy {
 
   public usuario: Usuario = new Usuario(0,'', '','','',0);
 
-  
-
   tiempoFormateado: string = '0 segundos'; // Inicializar el formato
 
   cocheSelBehaviorSubject$ = new BehaviorSubject<any>({
@@ -82,8 +80,8 @@ export class HomePage implements OnInit, OnDestroy {
     cohe: 'moto',
     conductor: 'mario',
   };
+
   rol : string | null = '';
-  public rol$ = new BehaviorSubject<string>('');
 
   direccion: string = '';
   latInicio: number = 0;
@@ -121,13 +119,20 @@ export class HomePage implements OnInit, OnDestroy {
     this.controlRol();
     this.controlaTiempo();
   }
+  ngAfterViewInit() {
+    this.controlaTiempo();
+    this.actualizarAncho();//calcula el ancho inicial
+    this.createSwipeGesture();
+  }
+
 
   controlRol(){
-    this.apiService.cargarRol();
-    this.apiService.rol$.subscribe((rol) => {
-      this.rol = rol; // Actualiza el valor local
-      console.log('Rol actualizado en HomePage:', this.rol);
-    });
+    this.subscripciones.add (
+      this.apiService.getRol().subscribe(rol => {
+        this.rol = rol;
+        console.log("Rol actual   * * * ", this.rol);
+      })
+    );
   }
 
   activarMenu(){
@@ -161,6 +166,7 @@ export class HomePage implements OnInit, OnDestroy {
     
     this.controlaTiempo();
     this.usuarioGuardado();
+    this.subscripciones.add (
       this.apiService.getCocheSeleccionado().subscribe({
         next: (coche) => {
           this.cocheSelBehaviorSubject$.next(coche);
@@ -173,14 +179,8 @@ export class HomePage implements OnInit, OnDestroy {
         complete: () => {
           console.log('Suscripción completada.');
         },
-      });
-
-  }
-
-  ngAfterViewInit() {
-    this.controlaTiempo();
-    this.actualizarAncho();//calcula el ancho inicial
-    this.createSwipeGesture();
+      })
+    );
   }
 
   private createSwipeGesture(){
@@ -300,9 +300,11 @@ export class HomePage implements OnInit, OnDestroy {
   }
 
   cargarDatosVehiculos() {
-    this.apiService.getVehiculos().subscribe((data: any[]) => {
-      this.vehiculos = data;
-    });
+    this.subscripciones.add (
+      this.apiService.getVehiculos().subscribe((data: any[]) => {
+        this.vehiculos = data;
+      })
+  );
   }
 
   cambiaPagina() {
@@ -319,8 +321,9 @@ export class HomePage implements OnInit, OnDestroy {
           });
 
       }
-      this.router.navigate(['/vehiculos']);
-  //  this.router.navigate(['/vehiculos'], { state: { origen: 'otro' } });
+
+      this.router.navigate(['/vehiculos'], { queryParams: { origen: 'origen' } });
+      console.log("ESTATE MANDADO DESDE HOME: ORIGEN")
 
   }
   cambioGuardar(){
@@ -347,26 +350,15 @@ export class HomePage implements OnInit, OnDestroy {
         console.log('latitud: ',this.latFinal, ' longitud: ',this.longFinal);
       }
     }
-    ngOnDestroy() {
-      this.modeloSeleccionado$.unsubscribe();
-      this.viaje$.unsubscribe();
-      if (this.intervalCuentaAtras) {
-        clearInterval(this.intervalCuentaAtras); // Detener el intervalo antes de que el componente se destruya
-        console.log("Intervalo detenido en ngOnDestroy.");
-      }
 
-    }
     ionViewWillLeave() {        // asegurarme al cambiar pantalla
       if (this.intervalCuentaAtras) {
         clearInterval(this.intervalCuentaAtras);
-        console.log("Intervalo detenido en ionViewWillLeave.");
       }
       this.eliminaVista();
     }
     
-
     controlaTiempo() {
-
       console.log("apago final: ", this.apagoFinal);
       this.segundosCuentaAtras = 10; // Reiniciar el contador de tiempo 1 minuto
       if(this.cocheSelBehaviorSubject$.getValue().matricula === "")    // si no hay coche seleccionado no lo inicio
@@ -409,7 +401,11 @@ export class HomePage implements OnInit, OnDestroy {
       };
       this.apiService.setCocheSeleccionado(coche);
     }
-}
+    ngOnDestroy() {
+      this.subscripciones.unsubscribe(); 
+      if (this.intervalCuentaAtras) {
+        clearInterval(this.intervalCuentaAtras); // Detener el intervalo antes de que el componente se destruya
+    }
+  }
   
-
-
+}

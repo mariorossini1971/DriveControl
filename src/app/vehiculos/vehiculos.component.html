@@ -48,19 +48,27 @@
       </ng-container>
 <!-- ************************     PARA ADMINISTRADOR ********************* -->
 
-       <!-- <ng-container *ngIf="rol === 'admin'"> -->
        <ng-container *ngIf="!mostrar">
 
-        <ion-card class="custom-card" *ngFor="let vehiculo of vehiculos" (click)="verVehiculo(vehiculo)">
+        <ion-card class="custom-card" *ngFor="let vehiculo of vehiculos" (click)="verVehiculo(vehiculo)" 
+        [ngClass]="{
+          'card-disponible': vehiculo.disponible === 1,
+          'card-ocupado': vehiculo.disponible === 0,
+        }">
           <ion-card-header>
          <!--  <ion-label> -->
           <ion-card-title>
             <ion-icon name="car-outline" class="icon-card"></ion-icon>
             {{ vehiculo.marca }} - {{ vehiculo.modelo }}
           </ion-card-title>
-          <ion-card-subtitle>Id: {{vehiculo.id_vehiculo}} </ion-card-subtitle>
+          <!-- <ion-card-subtitle>Id: {{vehiculo.id_vehiculo}} </ion-card-subtitle> -->
         </ion-card-header>
           <ion-card-content>
+
+            <div class="disponible-centrado">
+              <p *ngIf="vehiculo.disponible === 1" class="disponible-text">✅ <strong>DISPONIBLE</strong></p>
+              <p *ngIf="vehiculo.disponible === 0" class="ocupado-text">❌ <strong>OCUPADO</strong></p>
+            </div>
             <ion-item lines="none">
             <p class="car-matricula"><strong>Matrícula: </strong> {{ vehiculo.matricula }}</p>   
             </ion-item> 

@@ -18,6 +18,7 @@ export class AppComponent{
 
     ngOnInit() {
       this.controlRol();  // <<--- AGREGAR ESTO
+
     }
 
   cerrarSesion(){
@@ -45,7 +46,7 @@ export class AppComponent{
     }
   }
    vehiculoDash(){
-    this.router.navigate(['/vehiculos'], { state: { origen: 'dashboard' } });
+    this.router.navigate(['/vehiculos'], { queryParams: { origen: 'dashboard' } });
    }
 
 }

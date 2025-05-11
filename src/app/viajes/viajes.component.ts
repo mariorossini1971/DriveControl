@@ -6,6 +6,7 @@ import localeEs from '@angular/common/locales/es';
 import { registerLocaleData } from '@angular/common';
 import { Usuario } from '../models/usuario.model';
 import { MenuController } from '@ionic/angular';
+import { Subscription } from 'rxjs';
 
 
 
@@ -19,6 +20,7 @@ import { MenuController } from '@ionic/angular';
 
 export class ViajesComponent implements OnInit {
 
+  private subscripciones = new Subscription(); 
   viajes: any[] = [];
   control: number = 0;
   mensajeLoading: string = 'cargando datos..';
@@ -56,19 +58,12 @@ export class ViajesComponent implements OnInit {
 
   }
   controlRol() {
-    console.log('             con localStorage ');
-    try {
-      this.rol = localStorage.getItem('rol');
-      if (this.rol) {
-        console.log('************ rol en vehiculos: ', this.rol);
-      } else {
-        console.warn('No se ha encontrado rol en localStorage.');
-        this.rol = 'visitante'; //
-      }
-    } catch (error) {
-      console.error('Error al leer el rol desde localStorage:', error);
-      this.rol = 'visitante'; 
-    }
+      this.subscripciones.add(
+      this.apiService.getRol().subscribe(rol => {
+        this.rol = rol;
+        console.log("Rol actual   * * * ", this.rol);
+      })
+    );
   }
 
   usuarioGuardado(){
@@ -81,9 +76,7 @@ export class ViajesComponent implements OnInit {
   }
 
   loadViajes() {
-  // this.apiService.loading(this.mensajeLoading);
-  //  console.log("control =", this.control);
-    // Recupero el Id del Usuario
+
     const usuario = localStorage.getItem('usuario');
     if (usuario) {
       const usuarioId = JSON.parse(usuario); // Convertir JSON a objeto
@@ -93,37 +86,38 @@ export class ViajesComponent implements OnInit {
     }
 
     if (this.rol === 'admin') {
-      this.apiService.getViajes().subscribe({
-        next: (data: any[]) => {
-          this.viajes = data.sort((a, b) => a.id_viaje - b.id_viaje); // Ordenar por id_viaje
-        },
-        error: (error) => {
-          console.error("Error al cargar los viajes:", error);
-          this.apiService.LoadingController.dismiss();
-        },
-        complete: () => {
-          this.apiService.LoadingController.dismiss(); // Dismiss cuando el observable completa
-        }
-        
-      });
-     
-
+      this.subscripciones.add(
+        this.apiService.getViajes().subscribe({
+          next: (data: any[]) => {
+            this.viajes = data.sort((a, b) => a.id_viaje - b.id_viaje); // Ordenar por id_viaje
+          },
+          error: (error) => {
+            console.error("Error al cargar los viajes:", error);
+            this.apiService.LoadingController.dismiss();
+          },
+          complete: () => {
+            this.apiService.LoadingController.dismiss(); // Dismiss cuando el observable completa
+          }
+          
+        })
+    );
     } else if(this.rol === 'conductor'){
+      this.subscripciones.add(
+        this.apiService.getViajesById(this.idUsuario).subscribe({
+          next: (data) => {
+            this.viajes = data; // Asignamos los viajes obtenidos
+            console.log('Viajes recuperados:', this.viajes);
+          },
+          error: (error) => {
+            console.error('Error al recuperar viajes:', error);
+          },
+          complete: () => {
+            console.log('Consulta de viajes completada');
+            this.apiService.LoadingController.dismiss();
 
-      this.apiService.getViajesById(this.idUsuario).subscribe({
-        next: (data) => {
-          this.viajes = data; // Asignamos los viajes obtenidos
-          console.log('Viajes recuperados:', this.viajes);
-        },
-        error: (error) => {
-          console.error('Error al recuperar viajes:', error);
-        },
-        complete: () => {
-          console.log('Consulta de viajes completada');
-          this.apiService.LoadingController.dismiss();
-
-        }
-      });
+          }
+        })
+      );
      }     
     }
 
@@ -161,6 +155,9 @@ export class ViajesComponent implements OnInit {
         this.menuCtrl.enable(true, 'menu'); // Activa el menú de conductor
         this.menuCtrl.enable(false, 'menuAdmin'); // Desactiva el menú de administrador
       }
+    }
+    ngOnDestroy(){
+      this.subscripciones.unsubscribe(); 
     }
   }
   
