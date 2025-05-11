@@ -1,6 +1,8 @@
 import { Component, ChangeDetectorRef, OnInit } from '@angular/core';
 import { ApiService } from './api.service';
 import { Router } from '@angular/router';
+import { Platform } from '@ionic/angular';
+import { SplashScreen } from '@capacitor/splash-screen';
 
 @Component({
     selector: 'app-root',
@@ -14,11 +16,13 @@ export class AppComponent{
   
   constructor(
     private apiService: ApiService,
-    private router: Router ) {}
+    private router: Router,
+    private platform: Platform ) {
+    this.muestraSplash();
+  }
 
     ngOnInit() {
       this.controlRol();  // <<--- AGREGAR ESTO
-
     }
 
   cerrarSesion(){
@@ -49,4 +53,10 @@ export class AppComponent{
     this.router.navigate(['/vehiculos'], { queryParams: { origen: 'dashboard' } });
    }
 
+  async  muestraSplash(){
+      await SplashScreen.show({
+      autoHide: true,
+      showDuration: 3000,
+});
+    }
 }

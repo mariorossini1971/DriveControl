@@ -119,7 +119,7 @@ export class VehiculoDetallePage implements OnInit {
           role: 'cancel',
           handler: () => {
             console.log('Eliminación cancelada');
-            this.router.navigate(['/vehiculos']);
+            this.router.navigate(['/vehiculos'], { queryParams: { origen: 'dashboard' } });
 
           }
         },
@@ -130,7 +130,9 @@ export class VehiculoDetallePage implements OnInit {
               this.apiService.deleteVehiculo(this.vehiculo.id_vehiculo).subscribe({
                 next: () => {
                   this.presentAlert('Eliminado', 'Vehículo eliminado correctamente');
-                  this.navCtrl.navigateBack(['/vehiculos'],{ state: { origen: 'dashboard' } });
+                 // this.navCtrl.navigateBack(['/vehiculos'],{ state: { origen: 'origen' } });
+                  this.router.navigate(['/vehiculos'], { queryParams: { origen: 'dashboard' } });
+
                 },
                 error: () => {
                   this.presentAlert('Error', 'No se pudo eliminar el vehículo');

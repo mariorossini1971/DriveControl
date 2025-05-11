@@ -9,6 +9,8 @@ import { HttpClient } from '@angular/common/http';
 import { Geolocation } from '@capacitor/geolocation';
 import { Capacitor } from '@capacitor/core';
 
+import { Platform } from '@ionic/angular';
+
 
 @Component({
     selector: 'app-home',
@@ -101,8 +103,10 @@ export class HomePage implements OnInit, OnDestroy {
    // lngFinal: 2.17378,
     lngFinal: 0,
   }
-  public colorBar: string= '#FFFFF';
+  public colorBar: string= '#FFFFFF';
+  menuDeshabilitado = false;
 
+  private navigationHistory: string[] = [];
 
   constructor(
     private gestureCtrl: GestureController,
@@ -113,9 +117,23 @@ export class HomePage implements OnInit, OnDestroy {
     public router: Router,
     private menuCtrl: MenuController,
     private http: HttpClient,
+    private platform: Platform,
   ) {}
 
   ngOnInit() {
+
+    this.platform.ready().then(() => {
+      this.platform.backButton.subscribeWithPriority(10, () => {
+        if (this.canGoBack()) {
+          this.router.navigateByUrl(this.getPreviousUrl());
+        } else {
+          console.log('No hay más páginas a las que volver');
+        }
+      });
+    });
+  
+
+
 
     this.controlRol();
     this.activarMenu();
@@ -124,7 +142,7 @@ export class HomePage implements OnInit, OnDestroy {
         this.apiService.setStatusBarColor(this.colorBar);
       };
   }
-  
+
   ionViewWillEnter(){
     this.controlRol();
     this.controlaTiempo();
@@ -244,7 +262,7 @@ export class HomePage implements OnInit, OnDestroy {
   }
 
   capturarFechaHora() {
-
+    
     const fecha = new Date();
     const tiempo = fecha.toISOString().split('.')[0] + 'Z'; //   // mismo formato que la BBDD
 
@@ -252,12 +270,22 @@ export class HomePage implements OnInit, OnDestroy {
   
     if (this.esInicio) {
       // Si es "INICIO", captura la fecha de inicio
-      console.log('es inicio')
+
+      this.menuCtrl.enable(false); // Desactiva el menú lateral
+      this.menuDeshabilitado = true;
+      document.querySelector('ion-menu')?.setAttribute('disabled', 'true');
+
+      console.log('es inicio');
       this.fechaHoraInicio = tiempo;
       this.capturoDireccion();
       this.iniciarTemporizador(); // Iniciar el temporizador
       this.cdr.detectChanges(); //Forzar actualización de la vista 
     } else {
+      this.menuCtrl.enable(true); // Activa el menú lateral
+      this.menuDeshabilitado = false;
+      document.querySelector('ion-menu')?.setAttribute('disabled', 'false');
+
+
       this.fechaHoraFinal = tiempo;
       this. capturoDireccion();
       this.detenerTemporizador(); // Detener el temporizador
@@ -417,5 +445,14 @@ export class HomePage implements OnInit, OnDestroy {
         clearInterval(this.intervalCuentaAtras); // Detener el intervalo antes de que el componente se destruya
     }
   }
+
+  canGoBack(): boolean {
+    return this.navigationHistory.length > 1;
+  }
+    getPreviousUrl(): string {
+    return this.navigationHistory[this.navigationHistory.length - 2];
+  }
+
+
 }
   

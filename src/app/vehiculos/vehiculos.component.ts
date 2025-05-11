@@ -35,6 +35,10 @@ export class VehiculosComponent implements OnDestroy {
 
   mostrar: boolean = true;
   origen: string = '';
+  filtroTexto: string = '';
+  ordenDireccion: 'asc' | 'desc' = 'asc';  // A-Z o Z-A
+
+
 
   colorBar: string = '#FFFFFF';
 
@@ -200,7 +204,28 @@ export class VehiculosComponent implements OnDestroy {
         console.warn('Usuario no encontrado.');
       }
       }
-
+get vehiculosFiltradosYOrdenados() {
+    return this.vehiculos
+      .filter(vehiculos => {
+        const texto = this.filtroTexto.toLowerCase();
+        return (
+        
+          vehiculos.marca.toLowerCase().includes(texto) ||
+          vehiculos.modelo.toLowerCase().includes(texto) ||
+          vehiculos.matricula.toLowerCase().includes(texto)
+        );
+      })
+      .sort((a, b) => {
+        const valA = a.marca.toLowerCase();
+        const valB = b.marca.toLowerCase();
+        
+        if (this.ordenDireccion === 'asc') {
+          return valA.localeCompare(valB); // Orden ascendente
+        } else {
+          return valB.localeCompare(valA); // Orden descendente
+        }
+      });
+  }
 
       ngOnDestroy() {
         this.subscripciones.unsubscribe(); 

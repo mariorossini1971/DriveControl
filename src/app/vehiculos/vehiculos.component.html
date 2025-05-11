@@ -16,10 +16,10 @@
 <!-- ************************     PARA CONDUCTOR ********************* -->
  
 <ion-content [fullscreen]="true" class="ion-padding">
-<ion-title>Seleccionar un vehículo</ion-title>
+<ion-title *ngIf="rol === 'conductor'">Seleccionar un vehículo</ion-title>
      <ion-list>
      <!-- <ng-container *ngIf="rol === 'conductor'"> -->
-        <ng-container *ngIf="mostrar">
+    <ng-container *ngIf="mostrar">
 
       <ion-card class="custom-card" *ngFor="let vehiculo of vehiculos">
         <ion-card-header>
@@ -45,12 +45,30 @@
         </ion-card-content>    
       </ion-card>
       <ion-button *ngIf="mostrar" expand="full" (click)="guardarModelo()">Guardar</ion-button>
-      </ng-container>
+    </ng-container>
 <!-- ************************     PARA ADMINISTRADOR ********************* -->
 
-       <ng-container *ngIf="!mostrar">
+    <ng-container *ngIf="!mostrar">
+          <ion-searchbar
+            [(ngModel)]="filtroTexto"
+            placeholder="Nombre o matricula">
+          </ion-searchbar>
+          <ion-label class="ion-padding">Ordenar:
+              <ion-icon
+                name="arrow-down-outline"
+                class="ion-padding-start"
+                (click)="ordenDireccion = 'asc';"
+                [color]="ordenDireccion === 'asc' ? 'primary' : 'medium'">
+              </ion-icon>
+              <ion-icon
+                name="arrow-up-outline"
+                class="ion-padding-start"
+                (click)="ordenDireccion = 'desc';"
+                [color]="ordenDireccion === 'desc' ? 'primary' : 'medium'">
+              </ion-icon> 
+          </ion-label>
 
-        <ion-card class="custom-card" *ngFor="let vehiculo of vehiculos" (click)="verVehiculo(vehiculo)" 
+        <ion-card class="custom-card" *ngFor="let vehiculo of vehiculosFiltradosYOrdenados" (click)="verVehiculo(vehiculo)" 
         [ngClass]="{
           'card-disponible': vehiculo.disponible === 1,
           'card-ocupado': vehiculo.disponible === 0,
