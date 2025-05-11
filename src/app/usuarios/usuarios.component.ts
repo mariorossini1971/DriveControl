@@ -6,6 +6,7 @@ import { Usuario } from '../models/usuario.model';
 import { MenuController } from '@ionic/angular';
 import { Observable } from 'rxjs';
 import { BehaviorSubject } from 'rxjs';
+import { Capacitor } from '@capacitor/core';
 
 
 @Component({
@@ -37,6 +38,8 @@ export class UsuariosComponent implements OnDestroy {
 
   private subscripciones = new Subscription(); 
 
+  colorBar: string = '#FFFFFF';
+
   constructor(
     private apiService: ApiService,
     private router: Router,
@@ -47,41 +50,49 @@ export class UsuariosComponent implements OnDestroy {
   ngOnInit() {
     console.log('entro en Usuario.ts');
     this.controlRol()
+    this.usuarioGuardado();
     this.activarMenu();  
+    if (Capacitor.isNativePlatform()) {                     ///// El If es para controlar que no estamos en PC
+        this.apiService.setStatusBarColor(this.colorBar);
+      };
+  
     }
     
     ionViewWillEnter(){
-      console.log('entro cada vez que entro');
       this.controlRol()
+      this.usuarioGuardado();
+      this.cdr.detectChanges();
       this.activarMenu();  
 
-      if(this.rol === 'admin'){
+      if(this.rol === 'admin' || this.rol === 'gestor'){
         this.funcionPrincipal()
       };
       if(this.rol === 'conductor'){
         this.recuperaUsuario(this.id)
       };
-  
+ 
     }
 
   controlRol() {
-    this.subscripciones.add (
+    this.subscripciones.add(
       this.apiService.getRol().subscribe(rol => {
         this.rol = rol;
-        console.log("Rol actual   * * * ", this.rol);
+        this.cdr.detectChanges();
+        console.log("Rol = ",this.rol);
       })
     );
-    try {
-      const User = localStorage.getItem('usuario');
-      if (User) {
-        this.usuario = JSON.parse(User); 
-        this.id = this.usuario.id_usuario;
-        this.cdr.detectChanges();
-      }
-    } catch (error) {
-      console.error('Error al leer el usuario desde localStorage:', error);
-    }
   }
+  usuarioGuardado(){
+    const usuarioGuardado = localStorage.getItem('usuario');
+  if (usuarioGuardado) {
+    this.usuario = JSON.parse(usuarioGuardado); // Recupera los datos del usuario
+    this.id = this.usuario.id_usuario;
+    this.rol = this.usuario.rol;      /// ya se que lo busco antes pero así se me actualiza y antes no.
+  } else {
+    console.warn('Usuario no encontrado.');
+  }
+  }
+
   get usuariosFiltradosYOrdenados() {
     return this.usuarios
       .filter(usuario => {
@@ -133,7 +144,7 @@ nuevoUsuario(){
 }
 
 activarMenu(){
-  if (this.rol === 'admin') {
+  if (this.rol === 'admin' || this.rol == 'gestor') {
     this.menuCtrl.enable(true, 'menuAdmin'); // Activa el menú de administrador
     this.menuCtrl.enable(false, 'menu'); // Desactiva el menú de conductor
   } else if (this.rol === 'conductor') {

@@ -7,6 +7,7 @@ import { Usuario } from '../models/usuario.model';
 import { MenuController } from '@ionic/angular';
 import { HttpClient } from '@angular/common/http';
 import { Geolocation } from '@capacitor/geolocation';
+import { Capacitor } from '@capacitor/core';
 
 
 @Component({
@@ -43,7 +44,7 @@ export class HomePage implements OnInit, OnDestroy {
   segundo: number = 0;
   hora: number = 0;
 
-  segundosCuentaAtras = 300;
+  segundosCuentaAtras = 60;   //tiempo para volver a dejar el coche en disponible
 
   idUsuario: number = 0;
   
@@ -91,11 +92,16 @@ export class HomePage implements OnInit, OnDestroy {
   position: any;
 
   coordenadas = {
-    latInicial: 41.40735,
-    lngInicial: 2.15475,
-    latFinal: 41.39114,
-    lngFinal: 2.17378,
+   // latInicial: 41.40735,
+    latInicial: 0,
+    //lngInicial: 2.15475,
+    lngInicial: 0,
+    // latFinal: 41.39114,
+    latFinal: 0,
+   // lngFinal: 2.17378,
+    lngFinal: 0,
   }
+  public colorBar: string= '#FFFFF';
 
 
   constructor(
@@ -114,7 +120,11 @@ export class HomePage implements OnInit, OnDestroy {
     this.controlRol();
     this.activarMenu();
     this.funcionPrincipal();
+    if (Capacitor.isNativePlatform()) {                     ///// El If es para controlar que no estamos en PC
+        this.apiService.setStatusBarColor(this.colorBar);
+      };
   }
+  
   ionViewWillEnter(){
     this.controlRol();
     this.controlaTiempo();
@@ -335,18 +345,18 @@ export class HomePage implements OnInit, OnDestroy {
   }
  
   async capturoDireccion(){
-  //   this.position = await Geolocation.getCurrentPosition();
+      this.position = await Geolocation.getCurrentPosition();
       if(this.esInicio){
-        //this.coordenadas.latInicio = this.position.coords.latitude;
-        //this.coordenadas.lngInicio= this.position.coords.longitude;
-        this.latInicio = this.coordenadas.latInicial;
-        this.longInicio = this.coordenadas.lngInicial; 
+        this.coordenadas.latInicial = this.position.coords.latitude;
+        this.coordenadas.lngInicial= this.position.coords.longitude;
+        this.latInicio = this.position.coords.latitude;
+        this.longInicio = this.position.coords.longitude;
         console.log('latidud: ',this.latInicio, ' longitud: ',this.longInicio);
       }else{
-        //this.coordenadas.latFinal = this.position.coords.latitude;
-        //this.coordenadas.lngFinal = this.position.coords.longitude;
-        this.latFinal = this.coordenadas.latFinal;
-        this.longFinal = this.coordenadas.lngFinal;
+        this.coordenadas.latFinal = this.position.coords.latitude;
+        this.coordenadas.lngFinal = this.position.coords.longitude;
+        this.latFinal = this.position.coords.latitude
+        this.longFinal = this.position.coords.longitude;
         console.log('latitud: ',this.latFinal, ' longitud: ',this.longFinal);
       }
     }
@@ -407,5 +417,5 @@ export class HomePage implements OnInit, OnDestroy {
         clearInterval(this.intervalCuentaAtras); // Detener el intervalo antes de que el componente se destruya
     }
   }
-  
 }
+  

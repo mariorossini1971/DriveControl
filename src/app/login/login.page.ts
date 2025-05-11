@@ -5,6 +5,7 @@ import {ApiService} from '../api.service';
 import { delay, Subscription } from 'rxjs';
 import { jwtDecode } from 'jwt-decode';
 import { Usuario } from '../models/usuario.model';
+import { Capacitor } from '@capacitor/core';
 
 
 const TOKEN = '';
@@ -27,6 +28,7 @@ export class LoginPage implements OnInit {
   public usuario: Usuario = new Usuario(0,'', '','','',0);
   private rol$: Subscription = new Subscription();
   public rol2: string = '';
+  public colorBar: string ='#005BBB';
 
   constructor(
     private apiService: ApiService, 
@@ -38,6 +40,14 @@ export class LoginPage implements OnInit {
 ngOnInit() {
   const userEmail = this.email;
   this.username = this.userName(userEmail);
+  if (Capacitor.isNativePlatform()) {                     ///// El If es para controlar que no estamos en PC
+      this.apiService.setStatusBarColor(this.colorBar);
+    }
+}
+ionViewWillEnter(){
+  if (Capacitor.isNativePlatform()) {                     ///// El If es para controlar que no estamos en PC
+    this.apiService.setStatusBarColor(this.colorBar);
+  }
 }
 
   public userName(email: string): string {               ///////  CONTROLAR, porque si uso solo el nombre no me hace falta
@@ -71,17 +81,9 @@ ngOnInit() {
         this.usuario.rol = response.usuario.rol;          // capturo el rol 
         this.usuario.id_usuario = response.usuario.id_usuario;
         this.usuario.nombre = response.usuario.nombre;
-  
-        
-        
-        console.log('*************************************rol usuario: ', this.usuario.rol);
 
-        console.log('*************************************telefono usuario: ', this.usuario.correo);
-
-        this.apiService.setRol(this.usuario.rol);       ////       oooooooojjjjjjoooooo mirar cual uso al final
-       
+        this.apiService.setRol(this.usuario.rol);       ////  de momento para el rol esta !!!!!
         localStorage.setItem('usuario', JSON.stringify(this.usuario));   /////// pruebas
-
         this.apiService.LoadingController.dismiss(); 
        
         localStorage.setItem('token', response.token); // Guardar el token en memoria local
@@ -98,7 +100,7 @@ ngOnInit() {
           console.log('prueba nombre:', prueba);
         });
       
-        this.tokenExpirado(token); /***************************/
+       // this.tokenExpirado(token); /***************************/
         const active = document.activeElement as HTMLElement;
         if(active){
           active.blur();
@@ -133,7 +135,16 @@ ngOnInit() {
     console.log("Fecha de expiración legible: ", fechaExpiracion.toLocaleString());
     return exp < ahora; // Comparar si el token ha expirado.
   }
-  
+  async presentAlert(titulo: string, mensaje: string) {
+  const alert = await this.alertController.create({
+    header: titulo, // Título de la alerta
+    message: mensaje, // Mensaje a mostrar
+    buttons: ["Aceptar"], // Botón de cierre
+  });
+
+  await alert.present();
+}
+
 }
 
 

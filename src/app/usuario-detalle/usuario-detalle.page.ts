@@ -3,6 +3,7 @@ import { ApiService } from '../api.service';
 import { Router } from '@angular/router';
 import { NavController, AlertController } from '@ionic/angular'; 
 import { MenuController, } from '@ionic/angular';
+import { Capacitor } from '@capacitor/core';
 
 @Component({
     selector: 'app-usuario-detalle',
@@ -13,7 +14,7 @@ import { MenuController, } from '@ionic/angular';
 
 export class UsuarioDetallePage implements OnInit {
   usuario: any = {
-    id: '', 
+    id_usuario: '', 
     nombre:'', 
     correo:'',
     telefono:'',
@@ -24,6 +25,8 @@ export class UsuarioDetallePage implements OnInit {
   idUsuarioActual: string = ''; // id usuario logueado
   rolLogueado: string =''; 
   nombre: string = '';
+  contrasenaControl: string = '';
+  colorBar: string = '#FFFFFF';
  
   constructor(
     private router: Router,
@@ -39,6 +42,9 @@ export class UsuarioDetallePage implements OnInit {
     this.activarMenu();
     this.controlRol();
     this.funcionPrincipal(); 
+    if (Capacitor.isNativePlatform()) {                     ///// El If es para controlar que no estamos en PC
+        this.apiService.setStatusBarColor(this.colorBar);
+      };
   }
   ionViewWillEnter(){
     this.activarMenu();
@@ -78,20 +84,24 @@ export class UsuarioDetallePage implements OnInit {
     }
        
     if (this.modo === 'editar' && this.usuario.id_usuario){
-      this.apiService.updateUsuario(this.usuario.id_usuario, this.usuario).subscribe({
-        next: (response) => {
-          console.log('Respuesta del servidor:', response);
-          this.presentAlert('Éxito', 'Usuario actualizado correctamente');
-          this.navCtrl.navigateBack(['/usuarios']);
-        },
-        error: (err) => {
-          console.error('Error al actualizar:', err);
-          this.presentAlert('Error', 'No se pudo actualizar el usuario');
+        const datosUsuario = { ...this.usuario };
+        if(this.contrasenaControl === this.usuario.contrasena){
+            delete datosUsuario.contrasena;
         }
-      });
-      
+        this.apiService.updateUsuario(this.usuario.id_usuario, datosUsuario).subscribe({
+          next: (response) => {
+            console.log('Respuesta del servidor:', response);
+            this.presentAlert('Éxito', 'Usuario actualizado correctamente');
+            this.navCtrl.navigateBack(['/usuarios']);
+          },
+          error: (err) => {
+            console.error('Error al actualizar:', err);
+            this.presentAlert('Error', 'No se pudo actualizar el usuario');
+          }
+        });
+      }   
     } 
-  }
+  
 
   cancelarEdicion() {
     
@@ -144,11 +154,6 @@ export class UsuarioDetallePage implements OnInit {
     this.navCtrl.navigateBack(['/usuarios']);
   }
 
- /*  refrescarVista() {
-    // Forzar la actualización de la vista manualmente, si es necesario
-    window.location.reload(); // Esto recarga la página completa
-  } */
-
 async presentAlert (titulo:string, mensaje:string){
     const alert = await this.alertController.create({
       header:titulo,
@@ -170,13 +175,14 @@ async presentAlert (titulo:string, mensaje:string){
       console.log('el modo recibido es.... ', this.modo);
 
       if (this.modo === 'crear') {
-        // En modo crear no necesitas verificar el usuario
-        console.log('Modo creación, no se requiere usuario');
         return;
       }else if (state['usuario']){
-        this.usuario = { ...state['usuario']};
+    
+        this.usuario = state['usuario'];
 
         console.log('Usuario cargado: ', this.usuario); // Verifica que el usuario tiene un id
+        this.contrasenaControl = this.usuario.contrasena;
+        console.log("contraseña = ", this.contrasenaControl);
       
       } else if ( this.modo === 'editar' || this.modo === 'ver'){
         this.presentAlert('Error', 'No se proporcionó el usuario a editar/ver');
@@ -192,9 +198,8 @@ async presentAlert (titulo:string, mensaje:string){
     
   }
 
-  
 activarMenu(){
-  if (this.rolLogueado === 'admin') {
+  if (this.rolLogueado === 'admin' || this.rolLogueado === 'gestor') {
     this.menuCtrl.enable(true, 'menuAdmin'); // Activa el menú de administrador
     this.menuCtrl.enable(false, 'menu'); // Desactiva el menú de conductor
   } else if (this.rolLogueado === 'conductor') {

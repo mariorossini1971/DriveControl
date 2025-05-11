@@ -6,7 +6,7 @@ import { HttpClient } from '@angular/common/http';
 import { Geolocation } from '@capacitor/geolocation';
 import { MenuController } from '@ionic/angular';
 import { Subscription } from 'rxjs';
-
+import { Capacitor } from '@capacitor/core';
 
 @Component({
     selector: 'app-viaje-detalle',
@@ -36,6 +36,7 @@ export class ViajeDetallePage implements OnInit {
   modelo: '',
   matricula: 0,
   ano: 0,
+  comentario:'',
   }
 
   usuario: any; 
@@ -51,7 +52,7 @@ export class ViajeDetallePage implements OnInit {
 
   direccionInicio: string | null = null;
   direccionFinal: string | null = null;
-
+  colorBar: string = '#FFFFFF';
 
   constructor(
         private router: Router,
@@ -71,7 +72,11 @@ export class ViajeDetallePage implements OnInit {
     this.funcionPrincipal();
     this.usuarioGuardado();
     console.log('usuarioGuardado en principal: ', this.usuario.nombre);
+    if (Capacitor.isNativePlatform()) {                     ///// El If es para controlar que no estamos en PC
+        this.apiService.setStatusBarColor(this.colorBar);
+      };
   }
+  
   ionViewWillEnter(){
     this.controlRol();
     this.usuarioGuardado();

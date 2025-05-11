@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { ApiService } from '../api.service';
+import { Capacitor } from '@capacitor/core';
 
 @Component({
     selector: 'app-help-conductor',
@@ -221,10 +223,17 @@ export class HelpConductorPage implements OnInit {
 }
  ];
  
-  constructor() {}
+ colorBar: string = '#FFFFFF';
+
+  constructor(
+    private apiService: ApiService,
+  ) {}
 
   ngOnInit() {
     this.usuarioGuardado();
+    if (Capacitor.isNativePlatform()) {                     ///// El If es para controlar que no estamos en PC
+              this.apiService.setStatusBarColor(this.colorBar);
+            };
   }
 
   get temasFiltrados() {

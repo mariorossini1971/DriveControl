@@ -5,6 +5,7 @@ import { ActivatedRoute, Route, Router } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
 import { ChangeDetectorRef } from '@angular/core';
 import { Usuario } from '../models/usuario.model';
+import { Capacitor } from '@capacitor/core';
 
 @Component({
     selector: 'app-guardar',
@@ -16,7 +17,7 @@ import { Usuario } from '../models/usuario.model';
 export class GuardarPage implements OnDestroy{
 
   private subscripciones = new Subscription(); 
- idViaje: number = 0;
+  idViaje: number = 0;
   viaje$ = new BehaviorSubject<any>({
     id_viaje: 0,
     id_usuario: '',
@@ -39,7 +40,7 @@ export class GuardarPage implements OnDestroy{
    public usuario: Usuario = new Usuario(0,'', '','','',0);
    public usuarioRecuperado: Usuario = new Usuario(0,'','','','',0);
 
-
+  colorBar: string = '#FFFFFF';
   mensaje: string = '';
   datosGuardados: boolean = true;
 
@@ -53,6 +54,9 @@ export class GuardarPage implements OnDestroy{
   ngOnInit() {
     this.usuarioGuardado();
     this.funcionPrincipal();
+    if (Capacitor.isNativePlatform()) {                     ///// El If es para controlar que no estamos en PC
+          this.apiService.setStatusBarColor(this.colorBar);
+        };
   }
 
   funcionPrincipal(){

@@ -4,6 +4,7 @@ import { Router,ActivatedRoute } from '@angular/router';
 import { Usuario } from '../models/usuario.model';
 import { BehaviorSubject, Subscription } from 'rxjs';
 import { MenuController } from '@ionic/angular';
+import { Capacitor } from '@capacitor/core';
 
 
 @Component({
@@ -35,6 +36,8 @@ export class VehiculosComponent implements OnDestroy {
   mostrar: boolean = true;
   origen: string = '';
 
+  colorBar: string = '#FFFFFF';
+
   constructor(
     private apiService: ApiService,  
     public router: Router,
@@ -50,6 +53,9 @@ export class VehiculosComponent implements OnDestroy {
    // this.cargarDatosVehiculos();
     this.usuarioGuardado();
     console.log('usuarioGuardado en principal: ', this.usuario.nombre);
+    if (Capacitor.isNativePlatform()) {                     ///// El If es para controlar que no estamos en PC
+        this.apiService.setStatusBarColor(this.colorBar);
+      };
   }
 
     ionViewWillEnter(){

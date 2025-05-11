@@ -2,6 +2,7 @@ import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { ApiService } from '../api.service';
 import { Router } from '@angular/router';
 import { delay } from 'rxjs';
+import { Capacitor } from '@capacitor/core';
 
 @Component({
     selector: 'app-historial-viajes',
@@ -38,7 +39,7 @@ export class HistorialViajesPage implements OnInit {
 
   filtroTexto: string = '';
   ordenDireccion: 'asc' | 'desc' = 'asc';  // A-Z o Z-A
-
+  colorBar: string = '#FFFFFF'
 
   constructor(
     private apiService: ApiService,
@@ -49,6 +50,9 @@ export class HistorialViajesPage implements OnInit {
    ) { }
 
   ngOnInit() {
+    if (Capacitor.isNativePlatform()) {                     ///// El If es para controlar que no estamos en PC
+        this.apiService.setStatusBarColor(this.colorBar);
+      };
     console.log('*******************************entro en historial viaje por Vehiculo');
  //   this.cargarHistorial();
     this.reciboDatos().then(() => {

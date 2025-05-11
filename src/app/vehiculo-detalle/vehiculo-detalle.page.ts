@@ -3,6 +3,7 @@ import { ApiService } from '../api.service';
 import { Router } from '@angular/router';
 import { NavController, AlertController } from '@ionic/angular';  
 import { Subscription } from 'rxjs';
+import { Capacitor } from '@capacitor/core';
 
 @Component({
     selector: 'app-vehiculo-detalle',
@@ -25,6 +26,7 @@ export class VehiculoDetallePage implements OnInit {
   modo: 'crear' | 'ver' | 'verEditor' | 'editar' = 'ver';
   usuario: any;
   historialViajes: any[] = [];
+  colorBar: string = '#FFFFFF';
  
   constructor(
     private router: Router,
@@ -35,7 +37,9 @@ export class VehiculoDetallePage implements OnInit {
 
   ngOnInit() {
 
-
+    if (Capacitor.isNativePlatform()) {                     ///// El If es para controlar que no estamos en PC
+        this.apiService.setStatusBarColor(this.colorBar);
+      };
     const navigation = this.router.getCurrentNavigation();
     const state = navigation?.extras.state;
     this.usuarioGuardado();

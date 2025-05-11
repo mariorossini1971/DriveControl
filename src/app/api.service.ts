@@ -5,6 +5,8 @@ import { tap } from 'rxjs/operators';
 import { HttpHeaders } from '@angular/common/http';
 import { LoadingController } from '@ionic/angular';
 import { Usuario } from './models/usuario.model';
+import { Geolocation } from '@capacitor/geolocation';
+import { StatusBar } from '@capacitor/status-bar'
 
 const apiUrl = 'https://nice-roan-whippet.glitch.me/api';
 
@@ -14,12 +16,22 @@ const apiUrl = 'https://nice-roan-whippet.glitch.me/api';
 export class ApiService {
   public idCoche: number = 0; 
 
+  /////// Para el StatusBar
+
+  setStatusBarColor(color: string) {
+    StatusBar.setBackgroundColor({ color });
+  }
+
   /******Para mantener el valor actualizado ********/
  
   miCocheBehaviorSubject = new BehaviorSubject<string>("");
   miIdCocheBehaviorSubject = new BehaviorSubject<number>(0);
   cocheDispoBehaviorSubject = new BehaviorSubject<boolean>(true);
-  rolBehaviorSubject = new BehaviorSubject<string>("");
+  //rolBehaviorSubject = new BehaviorSubject<string>("");
+  private rolBehaviorSubject = new BehaviorSubject<string>(
+    localStorage.getItem('rol') || ''
+  );
+  
   rol$ = this.rolBehaviorSubject.asObservable();     // para subscribirme desde todas las ts
 
   newItemSubject = new BehaviorSubject<any>({
@@ -54,11 +66,7 @@ export class ApiService {
     contrasena: 0,
   });
 
-
-
-
   private usuarioSubject = new BehaviorSubject<any>(this.getUsuarioLocalStorage());
-
 
   /*****    TODO lo mismo con el id del coche, me será útil **********/
 
@@ -168,18 +176,18 @@ export class ApiService {
 
  ////////////////////////////////   VIAJES  ///////////////////////////////////////
   getViajes(): Observable<any> {
-    return this.http.get<any>(`${apiUrl}/viajes`);
+    return this.http.get<any>(`${apiUrl}/viajescomentario`);
   }
 
   getViajesById(id: number): Observable<any> {
-    return this.http.get(`${apiUrl}/viajes/usuario/detallado/${id}`);
+    return this.http.get(`${apiUrl}/viajes/usuario/detalladocomentario/${id}`);
   }
   getViajesByIdDetallado(id: number): Observable<any> {
-    return this.http.get(`${apiUrl}/viajes/detallado/${id}`);
+    return this.http.get(`${apiUrl}/viajes/detalladocomentario/${id}`);
   }
 
   createViaje(viaje: any): Observable<any> {
-    return this.http.post<any>(`${apiUrl}/viajes`, viaje);
+    return this.http.post<any>(`${apiUrl}/viajescomentario`, viaje);
   }
   deleteViaje(id:number): Observable<any> {
     return this.http.delete(`${apiUrl}/viajes/${id}`);
@@ -312,7 +320,9 @@ cerrarSesion(){
   sessionStorage.clear();
   console.log('Sesión cerrada');
 }
-  
+
+
+
 }
 
 

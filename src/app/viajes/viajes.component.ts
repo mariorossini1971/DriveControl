@@ -7,6 +7,7 @@ import { registerLocaleData } from '@angular/common';
 import { Usuario } from '../models/usuario.model';
 import { MenuController } from '@ionic/angular';
 import { Subscription } from 'rxjs';
+import { Capacitor } from '@capacitor/core';
 
 
 
@@ -31,8 +32,7 @@ export class ViajesComponent implements OnInit {
   ordenDireccion: 'asc' | 'desc' = 'asc';  // A-Z o Z-A
 
   usuario: any;
-
-
+  colorBar: string = '#FFFFFF';
 
   constructor(
     private apiService: ApiService,
@@ -45,9 +45,11 @@ export class ViajesComponent implements OnInit {
     this.activarMenu();
     this.controlRol();
     this.usuarioGuardado();
-    console.log('usuarioGuardado en principal: ', this.usuario.nombre);
     this.apiService.loading(this.mensajeLoading);
     this.loadViajes();   
+    if (Capacitor.isNativePlatform()) {                     ///// El If es para controlar que no estamos en PC
+        this.apiService.setStatusBarColor(this.colorBar);
+      };
   }
 
   ionViewWillEnter(){
@@ -61,7 +63,6 @@ export class ViajesComponent implements OnInit {
       this.subscripciones.add(
       this.apiService.getRol().subscribe(rol => {
         this.rol = rol;
-        console.log("Rol actual   * * * ", this.rol);
       })
     );
   }
@@ -85,7 +86,7 @@ export class ViajesComponent implements OnInit {
       console.log('No se encontró información de usuario en localStorage');
     }
 
-    if (this.rol === 'admin') {
+    if (this.rol === 'admin' || this.rol == 'gestor') {
       this.subscripciones.add(
         this.apiService.getViajes().subscribe({
           next: (data: any[]) => {

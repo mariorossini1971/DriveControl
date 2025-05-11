@@ -25,7 +25,8 @@ const routes: Routes = [
   },
   {
     path: 'viajes',
-    loadChildren: () => import('./viajes/viajes.module').then(m => m.ViajesModule)
+    loadChildren: () => import('./viajes/viajes.module').then(m => m.ViajesModule),
+    canActivate: [AuthGuard] 
   },
   {
     path: 'login',
@@ -43,11 +44,13 @@ const routes: Routes = [
   },
   {
     path: 'usuario-detalle',
-    loadChildren: () => import('./usuario-detalle/usuario-detalle.module').then( m => m.UsuarioDetallePageModule)
+    loadChildren: () => import('./usuario-detalle/usuario-detalle.module').then( m => m.UsuarioDetallePageModule),
+    canActivate: [AuthGuard] 
   },
   {
     path: 'vehiculo-detalle',
-    loadChildren: () => import('./vehiculo-detalle/vehiculo-detalle.module').then( m => m.VehiculoDetallePageModule)
+    loadChildren: () => import('./vehiculo-detalle/vehiculo-detalle.module').then( m => m.VehiculoDetallePageModule),
+    canActivate: [AuthGuard] 
   },
   {
     path: 'principal',
@@ -56,26 +59,28 @@ const routes: Routes = [
   },
   {
     path: 'viaje-detalle',
-    loadChildren: () => import('./viaje-detalle/viaje-detalle.module').then( m => m.ViajeDetallePageModule)
+    loadChildren: () => import('./viaje-detalle/viaje-detalle.module').then( m => m.ViajeDetallePageModule),
   },
   {
     path: 'historial-viajes',
-    loadChildren: () => import('./historial-viajes/historial-viajes.module').then( m => m.HistorialViajesPageModule)
+    loadChildren: () => import('./historial-viajes/historial-viajes.module').then( m => m.HistorialViajesPageModule),
+    canActivate: [AuthGuard] 
   },
   {
     path: 'help-administrador',
-    loadChildren: () => import('./help-administrador/help-administrador.module').then( m => m.HelpAdministradorPageModule)
+    loadChildren: () => import('./help-administrador/help-administrador.module').then( m => m.HelpAdministradorPageModule),
+    canActivate: [AuthGuard] 
   },
   {
     path: 'help-conductor',
-    loadChildren: () => import('./help-conductor/help-conductor.module').then( m => m.HelpConductorPageModule)
+    loadChildren: () => import('./help-conductor/help-conductor.module').then( m => m.HelpConductorPageModule),
+    canActivate: [AuthGuard] 
   },
   {
     path: 'help-gestor',
-    loadChildren: () => import('./help-gestor/help-gestor.module').then( m => m.HelpGestorPageModule)
+    loadChildren: () => import('./help-gestor/help-gestor.module').then( m => m.HelpGestorPageModule),
+    canActivate: [AuthGuard] 
   }
-
-
 ];
 
 @NgModule({

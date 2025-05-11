@@ -6,7 +6,7 @@
       </ion-buttons>
       <ion-title>{{ modo === 'crear' ? 'Nuevo Vehiculo' : modo === 'editar' ? 'Editar Vehiculo' : 'Detalle del Vehiculo'}}</ion-title>
       <ion-buttons slot="end">
-        <ion-back-button defaultHref="/principal" icon="return-down-back-outline"></ion-back-button>
+        <ion-back-button defaultHref="/vehiculos" icon="return-down-back-outline"></ion-back-button>
       </ion-buttons>
     </ion-toolbar>
   </ion-header>  
@@ -84,7 +84,7 @@
           </ion-button>
 
           <!-- Botón Editar solo en modo editar -->
-          <ion-button expand="full" class="boton" (click)="modo = 'editar'" *ngIf="modo === 'verEditor'"> Editar
+          <ion-button expand="full" class="boton" (click)="modo = 'editar'" *ngIf="modo === 'verEditor' && usuario.rol !== 'gestor'"> Editar
           <ion-icon slot="start" name="pencil"></ion-icon>
           </ion-button>
 
