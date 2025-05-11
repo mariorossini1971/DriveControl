@@ -1,7 +1,10 @@
 import { Component, OnInit,ChangeDetectorRef, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ApiService } from '../api.service';
-import { BehaviorSubject } from 'rxjs';
+import { Usuario } from '../models/usuario.model';
+import { Subscription } from 'rxjs';
+import { StatusBar } from '@capacitor/status-bar';
+import { Capacitor } from '@capacitor/core';
 
 
 @Component({
@@ -13,9 +16,11 @@ import { BehaviorSubject } from 'rxjs';
 export class PrincipalPage implements OnInit {
 
   rol: string | null = 'conductor';
- // public rol$ = new BehaviorSubject<string>('');
-  bloqueoPagina: boolean = false;
   usuario: any;
+ //   public usuario: Usuario = new Usuario(0,'', '','','',0);
+   public usuarioRecuperado: Usuario = new Usuario(0,'','','','',0);
+
+  private subscripciones = new Subscription(); 
   
 
   constructor(
@@ -25,10 +30,14 @@ export class PrincipalPage implements OnInit {
   ) { }
 
   ngOnInit() { 
- //   this.controlRol();
+    this.controlRol();
     this.usuarioGuardado();
+     if (Capacitor.isNativePlatform()) {
+      StatusBar.setBackgroundColor({ color: '#FFFFFF' }); 
+    }
   }
   ionViewWillEnter(){
+    this.usuarioGuardado();
     this.controlRol();
   }
 
@@ -36,13 +45,18 @@ export class PrincipalPage implements OnInit {
  this.router.navigate(['/home']);
   }
 
-  verUsuario(){
+  verUsuario(usuario:any){
+    if(this.rol === 'conductor'){
+      this.recuperaUsuario(this.usuario.id_usuario);
+       this.router.navigate(['/usuario-detalle'],{ state: {usuario, modo: 'ver' } });
+    }else{
     this.router.navigate(['/usuarios']);
+    }
   }
 
   verVehiculos(){
-    // this.router.navigate(['/vehiculos'], { state: { origen: 'dashboard' } });
-    this.router.navigate(['/vehiculos'], { queryParams: { origen: 'dashboard' } });
+    // /Uso queryParams para que los datos persistan cuando recargo
+    this.router.navigate(['/vehiculos'], { queryParams: { origen: 'dashboard' } });  
 
   }
 
@@ -63,14 +77,8 @@ export class PrincipalPage implements OnInit {
   }
 
   controlRol(){
-    //  this.apiService.cargarRol();
-    // this.apiService.rol$.subscribe((rol) => {
-    //   this.rol = rol; // Actualiza el valor local
-    //   console.log('Rol actualizado en HomePage:', this.rol);
-    // });
-      this.apiService.getRol().subscribe(rol => {
+        this.apiService.getRol().subscribe(rol => {
         this.rol = rol;
-        console.log("Rol actual   * * * ", this.rol);
       });
     } 
 
@@ -79,18 +87,35 @@ export class PrincipalPage implements OnInit {
     const usuarioGuardado = localStorage.getItem('usuario');
   if (usuarioGuardado) {
     this.usuario = JSON.parse(usuarioGuardado); // Recupera los datos del usuario para el footer
+    console.log('usuario: ',this.usuario);
   } else {
     console.warn('Usuario no encontrado.');
   }
   }
 
   cerrarSesion(){
- //   let token = String(localStorage.getItem('token'));
- //   console.log('Token guardado:', token);             /// ojo borrar
-    this.apiService.cerrarSesion();
- //   token = String(localStorage.getItem('token'));     ///  ojo borrar solo como control
- //   console.log('Token guardado despues del cierre:', token);   /// borrar
-    this.router.navigate(['/login']);
+     this.apiService.cerrarSesion();
+     this.router.navigate(['/login']);
   }
-  
+  recuperaUsuario(id: number) {
+  this.subscripciones.add (
+    this.apiService.getUsuarioById(id).subscribe({
+      next: (data) => { 
+        this.usuarioRecuperado.id_usuario = data.id_usuario;
+        this.usuarioRecuperado.nombre = data.nombre;
+        this.usuarioRecuperado.correo = data.correo;
+        this.usuarioRecuperado.contrasena = data.contrasena;
+        this.usuarioRecuperado.rol= data.rol;
+        this.usuarioRecuperado.telefono = data.telefono;
+      },
+      error: (error) => {
+        console.error('Error al recuperar el usuario:', error);
+      },
+      complete: () => {
+        console.log('Proceso de recuperación completado');
+      }
+    })
+  );
+  this.cdr.detectChanges();
+}
 }

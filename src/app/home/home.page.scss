@@ -199,6 +199,7 @@ ion-back-button{
       display: flex;
       align-items: center;
       color: #005BBB;
+      margin-left: 20px;
     
       ion-icon {
         font-size: 24px;
@@ -210,6 +211,7 @@ ion-back-button{
     .right-content {
       display: flex;
       align-items: center;
+      margin-right: 20px;
     
       ion-icon {
         font-size: 24px;
@@ -222,9 +224,10 @@ ion-back-button{
         font-weight: bold; /* Opcional: negrita */
       }
     }
-    
-    ion-toolbar {
-      --padding-start: 16px; /* Ajustar separación lateral */
-      --padding-end: 16px; /* Ajustar separación lateral */
+    ion-header{
+      margin-top: 30px;
+      ion-toolbar {
+        --padding-start: 16px; /* Ajustar separación lateral */
+        --padding-end: 16px; /* Ajustar separación lateral */
+      }
     }
-  

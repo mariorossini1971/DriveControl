@@ -6,6 +6,7 @@ html, body {
   box-sizing: border-box;
 }
 ion-header{
+  margin-top: 30px;
   ion-toolbar {
     --background: #005BBB;
     color: #FFFFFF;
@@ -170,6 +171,7 @@ ion-button.ion-color-primary {
     display: flex;
     align-items: center;
     color: #005BBB;
+    margin-right: 20px;
   
      ion-icon {
       font-size: 24px;

@@ -10,15 +10,16 @@
         <ion-button *ngIf="rol === 'admin'" (click)="nuevoUsuario()">
           <ion-icon slot="icon-only" name="person-add-outline" color="primary"></ion-icon>
         </ion-button>
-        <ion-back-button [defaultHref]= "rol === 'admin' ? '/principal' : '/home'" icon="return-down-back-outline"></ion-back-button>
+        <!-- <ion-back-button [defaultHref]= "rol === 'admin' ? '/principal' : '/home'" icon="return-down-back-outline"></ion-back-button> -->
+        <ion-back-button defaultHref="/principal" icon="return-down-back-outline"></ion-back-button>
       </ion-buttons>
     </ion-toolbar>
   </ion-header>  
 
   <ion-content [fullscreen]="true" class="ion-padding">
 
-  <!-- Contenido para ADMIN -->
-  <div *ngIf="rol === 'admin'">
+  <!-- Contenido para ADMIN y GESTOR -->
+  <div *ngIf="rol === 'admin' || rol === 'gestor'">
     <ion-grid class="ion-padding">
 
       <ion-row class="ion-align-items-center">

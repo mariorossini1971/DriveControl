@@ -72,6 +72,13 @@
             </div> 
             <ion-icon slot="end" name="calendar-outline" ></ion-icon>
           </ion-item>
+
+           <ion-item>
+            <div class="item-content">
+              <ion-label>Comentarios</ion-label>
+              <ion-text>{{ viaje.comentario }}</ion-text>
+            </div>
+          </ion-item>
                 
           <div>
             <ion-button expand="block" class="cancelar" (click)="cancelarEdicion()" *ngIf="modo === 'editar'">Cancelar
@@ -84,9 +91,13 @@
               <ion-icon slot="start" name="trash"></ion-icon>
             </ion-button>
         
-            <ion-button  expand="full" class="boton"  (click)="modo = 'editar'" *ngIf="rol === 'admin' && modo === 'ver'">Editar para eliminar
+            <!-- <ion-button  expand="full" class="boton"  (click)="modo = 'editar'" *ngIf="rol === 'admin' && modo === 'ver'">Editar para eliminar
               <ion-icon slot="start" name="pencil"></ion-icon>
+            </ion-button> -->
+            <ion-button  expand="full" class="boton"  (click)= "cancelarEdicion()"> Volver a Viajes
+              <ion-icon slot="start" name="return-down-back-outline"></ion-icon>
             </ion-button>
+
           </div>
         </form>
         
