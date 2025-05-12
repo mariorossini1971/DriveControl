@@ -8,6 +8,7 @@ import { MenuController } from '@ionic/angular';
 import { HttpClient } from '@angular/common/http';
 import { Geolocation } from '@capacitor/geolocation';
 import { Capacitor } from '@capacitor/core';
+import { Location } from '@angular/common';
 
 import { Platform } from '@ionic/angular';
 
@@ -118,23 +119,11 @@ export class HomePage implements OnInit, OnDestroy {
     private menuCtrl: MenuController,
     private http: HttpClient,
     private platform: Platform,
+    private location: Location,
   ) {}
 
   ngOnInit() {
-
-    this.platform.ready().then(() => {
-      this.platform.backButton.subscribeWithPriority(10, () => {
-        if (this.canGoBack()) {
-          this.router.navigateByUrl(this.getPreviousUrl());
-        } else {
-          console.log('No hay más páginas a las que volver');
-        }
-      });
-    });
-  
-
-
-
+    this.location.replaceState('/home'); // Borra el historial de navegación en /home
     this.controlRol();
     this.activarMenu();
     this.funcionPrincipal();
@@ -284,7 +273,6 @@ export class HomePage implements OnInit, OnDestroy {
       this.menuCtrl.enable(true); // Activa el menú lateral
       this.menuDeshabilitado = false;
       document.querySelector('ion-menu')?.setAttribute('disabled', 'false');
-
 
       this.fechaHoraFinal = tiempo;
       this. capturoDireccion();
@@ -445,14 +433,5 @@ export class HomePage implements OnInit, OnDestroy {
         clearInterval(this.intervalCuentaAtras); // Detener el intervalo antes de que el componente se destruya
     }
   }
-
-  canGoBack(): boolean {
-    return this.navigationHistory.length > 1;
-  }
-    getPreviousUrl(): string {
-    return this.navigationHistory[this.navigationHistory.length - 2];
-  }
-
-
 }
   
