@@ -1,5 +1,4 @@
 <ion-content>
-
   <ion-header>
     <ion-toolbar>
       <ion-title>Drive Control</ion-title>
@@ -31,8 +30,7 @@
                 <ion-input [(ngModel)]="password" name="password" [type]="showPassword ? 'text' : 'password'"></ion-input>
                 <ion-icon class="ion-align-self-center" slot="end" [name]="passwordIcono" (click)="muestraPassword()" color="primary"></ion-icon> 
               </ion-item>
-          </form>
-            <!--  <ion-button (click)="login()" color="primary"> Sign in </ion-button> -->
+            </form>
             <ion-button expand="block" (click)="iniciarSesion()"  color="primary">Login</ion-button>
           </ion-card-content>
         </ion-col>
@@ -44,15 +42,12 @@
 <ion-footer>
   <ion-toolbar>
     <div class="footer-content">
-       <div class="left-content">
-             
-            </div>
-        <!-- Nombre de la empresa y el ícono a la derecha -->
-          <div class="right-content">                
-            <ion-icon slot="end" name="car-outline"></ion-icon>
-      <span class="nombre-empresa">DriveControl</span>
+      <div class="left-content"></div>        
+      <div class="right-content">                
+          <ion-icon slot="end" name="car-outline"></ion-icon>
+          <span class="nombre-empresa">DriveControl</span>
+      </div>
     </div>
-  </div>
   </ion-toolbar>
 </ion-footer>
 

@@ -2,36 +2,27 @@ html, body {
   height: 100%;
   margin: 0;
   padding: 0;
- /*  overflow: hidden; */
   box-sizing: border-box;
 }
+
 ion-header{
   margin-top: 30px;
   ion-toolbar {
     --background: #005BBB;
     color: #FFFFFF;
   }
-
   ion-title {
     text-align: center;
     color: #fff;
   }
 }
 
-// Estilos parte central /
-
 ion-content {
   --background:#FFFFFF;
    font-family: 'Open Sans', sans-serif;
-   /* display: flex; */
    display: block;
-   flex-direction: column;
-   justify-content: center;
-   align-items: center;
-   overflow-y: hidden; //para evitar el scroll vertical
-   /* height: 100vh; */  //que no crezca más allá de la altura de la ventana
    height: 100%;
-   padding: 0;
+   overflow-y: hidden; //para evitar el scroll vertical
    box-sizing: border-box;
  }
 
@@ -51,29 +42,28 @@ ion-content {
  }
  
  .welcome{  
-  display: flex;      
-  color: #005BBB;
-  font-size: x-large;
-  justify-content: center;
-  margin-bottom: 16px;
-  }
+    display: flex; 
+    justify-content: center;     
+    color: #005BBB;
+    font-size: x-large;
+    margin-bottom: 16px;
+    }
 
  .img-col{
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 1rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem;
 
-  img.responsive-img{
-    width: 100%;
-    height: auto;
-    max-height: 200px;
-    object-fit: contain;
-  }
+    img.responsive-img{
+      width: 100%;
+      height: auto;
+      max-height: 200px;
+      object-fit: contain;
+    }
  }
 
 @media screen and (orientation: landscape) {
-
   html, body {
     overflow: auto;
   }
@@ -85,8 +75,6 @@ ion-content {
 
   .card-container ion-card ion-row {
     display: flex;
-    flex-direction: row;
-    flex-direction: row;
     flex-wrap: wrap;
   }
   
@@ -98,17 +86,11 @@ ion-content {
       width: auto;
     }
   }
+
   .welcome {
     font-size: large;
   }
 }
- .welcome { 
-        display: flex;
-        justify-content: center;
-        color: #005BBB;
-        font-size: x-large;
-        margin-bottom: 16px;
-      } 
      
 // Items de formulario //
 
@@ -135,13 +117,7 @@ ion-button.ion-color-primary {
     --border-radius: 8px;
   }
 
-/*   ion-button.ion-color-secondary {
-    --background: #005BBB;
-    color: #FFFFFF;
-    --border-radius: 8px;
-  } */
-
-  .footer-content {
+.footer-content {
     display: flex; /* Alinear elementos horizontalmente */
     justify-content: space-between; /* Separar elementos a los extremos */
     align-items: center; /* Centrar elementos verticalmente */
@@ -149,12 +125,12 @@ ion-button.ion-color-primary {
     color: #005BBB;
    }
 
-   ion-toolbar {
-      --padding-start: 16px; /* Ajustar separación lateral */
-      --padding-end: 16px; /* Ajustar separación lateral */
-    } 
+ion-toolbar {
+    --padding-start: 16px; /* Ajustar separación lateral */
+    --padding-end: 16px; /* Ajustar separación lateral */
+  } 
   
-   .left-content {
+.left-content {
     display: flex;
     align-items: center;
     color: #005BBB;
@@ -162,27 +138,27 @@ ion-button.ion-color-primary {
   
     ion-icon {
       font-size: 24px;
-      color: #005BBB; /* Azul personalizado */
-      margin-right: 8px; /* Espacio entre ícono y texto */
+      color: #005BBB; 
+      margin-right: 8px; /* Espacio entre icono y texto */
     }
   } 
   
-  .right-content {
+.right-content {
     display: flex;
     align-items: center;
     color: #005BBB;
     margin-right: 20px;
-  
-     ion-icon {
+
+    ion-icon {
       font-size: 24px;
       margin-right: 8px; /* Espacio entre ícono y texto */
       color: #005BBB;
     } 
-  
+
     .nombre-empresa {
       font-size: 16px; /* Ajustar tamaño del texto */
       font-weight: bold; /* Opcional: negrita */
     }
-  }
+}
  
 
