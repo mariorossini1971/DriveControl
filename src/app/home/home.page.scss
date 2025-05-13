@@ -231,3 +231,12 @@ ion-back-button{
         --padding-end: 16px; /* Ajustar separación lateral */
       }
     }
+
+    ion-menu[disabled] {
+      pointer-events: none;
+      opacity: 0.5;
+    }
+
+      ion-title {
+       text-align: center;
+    }

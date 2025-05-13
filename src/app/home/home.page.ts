@@ -8,6 +8,9 @@ import { MenuController } from '@ionic/angular';
 import { HttpClient } from '@angular/common/http';
 import { Geolocation } from '@capacitor/geolocation';
 import { Capacitor } from '@capacitor/core';
+import { Location } from '@angular/common';
+
+import { Platform } from '@ionic/angular';
 
 
 @Component({
@@ -101,8 +104,10 @@ export class HomePage implements OnInit, OnDestroy {
    // lngFinal: 2.17378,
     lngFinal: 0,
   }
-  public colorBar: string= '#FFFFF';
+  public colorBar: string= '#FFFFFF';
+  menuDeshabilitado = false;
 
+  private navigationHistory: string[] = [];
 
   constructor(
     private gestureCtrl: GestureController,
@@ -113,10 +118,12 @@ export class HomePage implements OnInit, OnDestroy {
     public router: Router,
     private menuCtrl: MenuController,
     private http: HttpClient,
+    private platform: Platform,
+    private location: Location,
   ) {}
 
   ngOnInit() {
-
+    this.location.replaceState('/home'); // Borra el historial de navegación en /home
     this.controlRol();
     this.activarMenu();
     this.funcionPrincipal();
@@ -124,7 +131,7 @@ export class HomePage implements OnInit, OnDestroy {
         this.apiService.setStatusBarColor(this.colorBar);
       };
   }
-  
+
   ionViewWillEnter(){
     this.controlRol();
     this.controlaTiempo();
@@ -244,7 +251,7 @@ export class HomePage implements OnInit, OnDestroy {
   }
 
   capturarFechaHora() {
-
+    
     const fecha = new Date();
     const tiempo = fecha.toISOString().split('.')[0] + 'Z'; //   // mismo formato que la BBDD
 
@@ -252,12 +259,21 @@ export class HomePage implements OnInit, OnDestroy {
   
     if (this.esInicio) {
       // Si es "INICIO", captura la fecha de inicio
-      console.log('es inicio')
+
+      this.menuCtrl.enable(false); // Desactiva el menú lateral
+      this.menuDeshabilitado = true;
+      document.querySelector('ion-menu')?.setAttribute('disabled', 'true');
+
+      console.log('es inicio');
       this.fechaHoraInicio = tiempo;
       this.capturoDireccion();
       this.iniciarTemporizador(); // Iniciar el temporizador
       this.cdr.detectChanges(); //Forzar actualización de la vista 
     } else {
+      this.menuCtrl.enable(true); // Activa el menú lateral
+      this.menuDeshabilitado = false;
+      document.querySelector('ion-menu')?.setAttribute('disabled', 'false');
+
       this.fechaHoraFinal = tiempo;
       this. capturoDireccion();
       this.detenerTemporizador(); // Detener el temporizador

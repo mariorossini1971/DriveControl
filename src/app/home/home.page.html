@@ -1,9 +1,9 @@
 <ion-header>
   <ion-toolbar>
     <ion-buttons slot="start" >
-    <ion-menu-button color="primary" name="menu"></ion-menu-button>
+    <ion-menu-button color="primary" name="menu" [disabled]="menuDeshabilitado"></ion-menu-button>
     </ion-buttons>
-    <ion-title>Menu</ion-title>
+    <ion-title>Iniciar Viaje</ion-title>
     <ion-buttons slot="end">
       <ion-back-button defaultHref="/informe" icon="return-down-back-outline" [disabled]="bloqueoPagina"></ion-back-button>
     </ion-buttons>
@@ -74,7 +74,7 @@
           <!-- Nombre de la empresa y el ícono a la derecha -->
            <div class="right-content">                
             <ion-icon slot="end" name="car-outline"></ion-icon>
-      <span class="nombre-empresa">DriveControl</span>
+      <span class="nombre-empresa">DriveControl v3 </span>
     </div>
   </div>
   </ion-toolbar>

@@ -1,6 +1,11 @@
 import { Component, ChangeDetectorRef, OnInit } from '@angular/core';
 import { ApiService } from './api.service';
 import { Router } from '@angular/router';
+import { Platform } from '@ionic/angular';
+import { SplashScreen } from '@capacitor/splash-screen';
+import { App } from '@capacitor/app';
+import { AlertController } from '@ionic/angular';
+
 
 @Component({
     selector: 'app-root',
@@ -14,12 +19,33 @@ export class AppComponent{
   
   constructor(
     private apiService: ApiService,
-    private router: Router ) {}
+    private router: Router,
+    private platform: Platform,
+    private alertCtrl: AlertController ) {
+    this.muestraSplash();
+  }
 
     ngOnInit() {
-      this.controlRol();  // <<--- AGREGAR ESTO
+      this.controlRol();
+     App.addListener('backButton', async ({ canGoBack }) => {
+        if (this.router.url === '/home') {
+          console.log('Botón de retroceso en /home, ignorando.');
+          return; 
+        }
 
-    }
+        if (this.router.url === '/principal') {
+          this.cerrarSesion();
+          return;
+        }
+
+        if (canGoBack) {
+          console.log('Volviendo atrás...');
+          window.history.back();
+        } else {
+          console.log('No hay historial de navegación.');
+        }
+  });
+  }
 
   cerrarSesion(){
     let token = String(localStorage.getItem('token'));
@@ -49,4 +75,10 @@ export class AppComponent{
     this.router.navigate(['/vehiculos'], { queryParams: { origen: 'dashboard' } });
    }
 
+  async  muestraSplash(){
+      await SplashScreen.show({
+      autoHide: true,
+      showDuration: 3000,
+});
+    }
 }

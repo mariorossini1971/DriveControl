@@ -3,7 +3,7 @@ import { ApiService } from '../api.service';
 import { Router } from '@angular/router';
 import { NavController, AlertController } from '@ionic/angular'; 
 import { MenuController, } from '@ionic/angular';
-import { Capacitor } from '@capacitor/core';
+import { Capacitor } from '@capacitor/core'; 
 
 @Component({
     selector: 'app-usuario-detalle',
@@ -39,6 +39,7 @@ export class UsuarioDetallePage implements OnInit {
   ) { }
 
   ngOnInit() {
+
     this.activarMenu();
     this.controlRol();
     this.funcionPrincipal(); 
@@ -58,6 +59,11 @@ export class UsuarioDetallePage implements OnInit {
 
     if (!this.usuario.correo || !emailRegex.test(this.usuario.correo)) {
       this.presentAlert('Error', 'Por favor, introduce un correo válido.');
+      return;
+    }
+
+    if (!this.usuario.contrasena) {
+      this.presentAlert('Error','La contraseña es obligatoria.');
       return;
     }
 
@@ -92,7 +98,11 @@ export class UsuarioDetallePage implements OnInit {
           next: (response) => {
             console.log('Respuesta del servidor:', response);
             this.presentAlert('Éxito', 'Usuario actualizado correctamente');
-            this.navCtrl.navigateBack(['/usuarios']);
+           if(this.rolLogueado === 'conductor'){
+               this.navCtrl.navigateBack(['/principal']);
+           }else{
+              this.navCtrl.navigateBack(['/usuarios']);
+           }
           },
           error: (err) => {
             console.error('Error al actualizar:', err);
@@ -106,7 +116,7 @@ export class UsuarioDetallePage implements OnInit {
   cancelarEdicion() {
     
     this.modo = 'ver'; // Cambiar de vuelta al modo de vista (no edición)
-    this.navCtrl.navigateBack(['/usuarios']);
+    //this.navCtrl.navigateBack(['/principal']);
 
   }
 
@@ -127,6 +137,7 @@ export class UsuarioDetallePage implements OnInit {
         role:'cancel',
         handler: () => {
           console.log('Eliminación cancelada');
+          this.navCtrl.navigateBack('/usuarios');
         }
       },
     {

@@ -9,15 +9,22 @@ const config: CapacitorConfig = {
       style: 'default',
       overlaysWebView: true
     },
-    // SplashScreen: {
-    //   launchShowDuration: 3000, // Tiempo en milisegundos (3 segundos)
-    //   launchAutoHide: true,
-    //  // backgroundColor: '#005BBB', // Color de fondo
-    //   //androidScaleType: 'CENTER_CROP',
-    //   androidScaleType: 'FIT_XY',
-    //   iosSpinnerStyle: 'large',
-    //   showSpinner: true
-    // }
+    SplashScreen: {
+      launchShowDuration: 0,
+      launchAutoHide: true,
+      launchFadeOutDuration: 3000,
+      backgroundColor: "#ffffffff",
+      androidSplashResourceName: "splash",
+      androidScaleType: "CENTER_CROP",
+      showSpinner: false,
+      androidSpinnerStyle: "large",
+      iosSpinnerStyle: "small",
+      spinnerColor: "#08089a",
+      splashFullScreen: true,
+      splashImmersive: true,
+      layoutName: "launch_screen",
+      useDialog: false,
+    },
   }
 };
 export default config;
