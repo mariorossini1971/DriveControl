@@ -23,28 +23,21 @@ export class AppComponent{
     private platform: Platform,
     private alertCtrl: AlertController ) {
     this.muestraSplash();
+    this.platform.backButton.subscribeWithPriority(10, () => {
+          if (this.router.url === '/home') {
+            console.log('En home, no hacemos nada.');
+            return;
+          }
+          if (this.router.url === '/principal') {
+           this.cerrarSesion();
+           return;
+         }
+          window.history.back();
+        });
   }
 
     ngOnInit() {
       this.controlRol();
-     App.addListener('backButton', async ({ canGoBack }) => {
-        if (this.router.url === '/home') {
-          console.log('Botón de retroceso en /home, ignorando.');
-          return; 
-        }
-
-        if (this.router.url === '/principal') {
-          this.cerrarSesion();
-          return;
-        }
-
-        if (canGoBack) {
-          console.log('Volviendo atrás...');
-          window.history.back();
-        } else {
-          console.log('No hay historial de navegación.');
-        }
-  });
   }
 
   cerrarSesion(){
@@ -78,7 +71,7 @@ export class AppComponent{
   async  muestraSplash(){
       await SplashScreen.show({
       autoHide: true,
-      showDuration: 3000,
+      showDuration: 2000,
 });
     }
 }

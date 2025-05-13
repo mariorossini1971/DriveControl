@@ -6,7 +6,7 @@ import { delay, Subscription } from 'rxjs';
 import { jwtDecode } from 'jwt-decode';
 import { Usuario } from '../models/usuario.model';
 import { Capacitor } from '@capacitor/core';
-
+import { Keyboard } from '@capacitor/keyboard';
 
 const TOKEN = '';
 @Component({
@@ -143,6 +143,18 @@ ionViewWillEnter(){
   });
 
   await alert.present();
+}
+saltarAlSiguiente(idElemento: string) {
+  const siguienteCampo = document.getElementById(idElemento);
+  if (siguienteCampo) {
+    siguienteCampo.focus();
+  }
+}
+cerrarTeclado(){
+    Keyboard.hide();
+    setTimeout(() => {    // para evitar que me salte el login
+        this.iniciarSesion();
+    }, 100);
 }
 
 }

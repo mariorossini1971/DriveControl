@@ -130,6 +130,10 @@ ion-input {
 //Botones /
 
 ion-button.ion-color-primary {
+    height: 50px;
+    margin-top: 20px;
+    font-size: 18px;
+    font-weight: bold;
     --background: #005BBB;
     color: #FFFFFF;
     --border-radius: 8px;

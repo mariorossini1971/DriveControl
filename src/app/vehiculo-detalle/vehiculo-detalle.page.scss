@@ -113,3 +113,14 @@ html, body {
     ion-title {
     text-align: center;
   }
+
+    ion-button{
+        width: 80%; 
+        max-width: 80%; 
+        height: 45px;
+        margin-top: 10px;
+        font-size: 14px;
+        display: block; /* Para que se centre con margin auto */
+        margin-left: auto;
+        margin-right: auto;
+    }
