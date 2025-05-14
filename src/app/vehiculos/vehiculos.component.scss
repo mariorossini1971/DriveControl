@@ -104,3 +104,13 @@ ion-header{
   ion-title {
     text-align: center;
   }
+  .botonGuardar {
+    width: 80%; 
+    max-width: 80%; 
+    height: 45px;
+    margin-top: 20px;
+    font-size: 18px;
+    display: block; /* Para que se centre con margin auto */
+    margin-left: auto;
+    margin-right: auto;
+  }
