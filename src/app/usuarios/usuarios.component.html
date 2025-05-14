@@ -2,129 +2,104 @@
   <ion-header>
     <ion-toolbar>
       <ion-buttons slot="start">
-        <ion-menu-button color="primary" name="menu"></ion-menu-button>
+        <ion-menu-button color="primary"></ion-menu-button>
       </ion-buttons>
-
       <ion-title>Usuarios</ion-title>
-        <ion-buttons slot="end">
+      <ion-buttons slot="end">
         <ion-button *ngIf="rol === 'admin'" (click)="nuevoUsuario()">
           <ion-icon slot="icon-only" name="person-add-outline" color="primary"></ion-icon>
         </ion-button>
-        <!-- <ion-back-button [defaultHref]= "rol === 'admin' ? '/principal' : '/home'" icon="return-down-back-outline"></ion-back-button> -->
         <ion-back-button defaultHref="/principal" icon="return-down-back-outline"></ion-back-button>
       </ion-buttons>
     </ion-toolbar>
   </ion-header>  
 
   <ion-content [fullscreen]="true" class="ion-padding">
-
-  <!-- Contenido para ADMIN y GESTOR -->
-  <div *ngIf="rol === 'admin' || rol === 'gestor'">
-    <ion-grid class="ion-padding">
-
-      <ion-row class="ion-align-items-center">
-        <ion-col size="12" size-md="6">
-          <ion-searchbar
-            [(ngModel)]="filtroTexto"
-            placeholder="Nombre o correo">
-          </ion-searchbar>
-        </ion-col>
+    <!-- Contenido para ADMIN y GESTOR -->
+    <div *ngIf="rol === 'admin' || rol === 'gestor'">
+      <ion-grid class="ion-padding">
+        <ion-row class="ion-align-items-center">
+          <ion-col size="12" size-md="6">
+            <ion-searchbar [(ngModel)]="filtroTexto" placeholder="Nombre o correo"></ion-searchbar>
+          </ion-col>
   
-        <ion-col size="12" size-md="6" class="ion-text-center">
-          <ion-label class="ion-padding">Ordenar:
-              <ion-icon
-                name="arrow-down-outline"
-                class="ion-padding-start"
-                (click)="ordenDireccion = 'asc';"
-                [color]="ordenDireccion === 'asc' ? 'primary' : 'medium'">
-              </ion-icon>
-              <ion-icon
-                name="arrow-up-outline"
-                class="ion-padding-start"
-                (click)="ordenDireccion = 'desc';"
-                [color]="ordenDireccion === 'desc' ? 'primary' : 'medium'">
-              </ion-icon> 
-          </ion-label>
-        </ion-col>
-      </ion-row>
-    </ion-grid>
+          <ion-col size="12" size-md="6" class="ion-text-center">
+            <ion-label class="ion-padding">Ordenar:
+              <ion-icon name="arrow-down-outline" class="ion-padding-start" (click)="ordenDireccion = 'asc'" [color]="ordenDireccion === 'asc' ? 'primary' : 'medium'"></ion-icon>
+              <ion-icon name="arrow-up-outline" class="ion-padding-start" (click)="ordenDireccion = 'desc'" [color]="ordenDireccion === 'desc' ? 'primary' : 'medium'"></ion-icon> 
+            </ion-label>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
 
-    <ion-list>
-      <ion-card class="custom-card" *ngFor="let usuario of usuariosFiltradosYOrdenados" (click)="verUsuario(usuario)"
-      [ngClass]="{
-        'card-admin': usuario.rol === 'admin',
-        'card-gestor': usuario.rol === 'gestor',
-        'card-conductor': usuario.rol === 'conductor'
-      }">
-        <ion-card-header class="user-header">
-          <div class="user-info">
-            <ion-card-title>
-                  <ion-icon name="person-outline" class="icon-card"></ion-icon> 
+      <ion-list>
+        <ion-card *ngFor="let usuario of usuariosFiltradosYOrdenados" (click)="verUsuario(usuario)" [ngClass]="{
+            'card-admin': usuario.rol === 'admin',
+            'card-gestor': usuario.rol === 'gestor',
+            'card-conductor': usuario.rol === 'conductor'
+          }">
+          <ion-card-header class="user-header">
+            <div class="user-info">
+              <ion-card-title>
+                <ion-icon name="person-outline" class="icon-card"></ion-icon>
                 {{ usuario.nombre }}
-           </ion-card-title>
-         
-           <ion-card-content>
-                <p class="user-email"> {{ usuario.correo }}</p>
-            </ion-card-content>
+              </ion-card-title>
+              <ion-card-content>
+                <p class="user-email">{{ usuario.correo }}</p>
+              </ion-card-content>
+            </div>
+          </ion-card-header>
+          <div class="card-actions">
+            <ion-button size="small" fill="clear">
+              <ion-icon name="eye-outline"></ion-icon>
+              <ion-icon name="pencil-outline"></ion-icon>
+              <ion-icon name="trash-outline"></ion-icon>
+            </ion-button>
           </div>
-            </ion-card-header>
-        <div class="card-actions">
-          <ion-button size="small" fill="clear">
-            <ion-icon name="eye-outline"></ion-icon>
-            <ion-icon name="pencil-outline"></ion-icon>
-            <ion-icon name="trash-outline"></ion-icon>
-          </ion-button>
-        </div>
-      </ion-card>
-    </ion-list>
-  </div>
-
-  <!-- Contenido para CONDUCTOR -->
-  <div *ngIf="rol === 'conductor'">
-
-    <ion-list>
-      <ion-card class="custom-card" (click)="verUsuario(usuarioRecuperado)">
-        <ion-card-header class="user-header">
-          <div class="user-info">
-            <ion-card-title>
-                  <ion-icon name="person-outline" class="icon-card"></ion-icon> 
-                {{ usuarioRecuperado.nombre  }}
-           </ion-card-title>
-            <ion-card-content>
-              <p class="user-email"> {{ usuarioRecuperado.correo }}</p>
-            </ion-card-content>
-           
-         </div>
-        </ion-card-header>
-        <div class="card-actions">
-          <ion-button size="small" fill="clear">
-            <ion-icon name="eye-outline"></ion-icon>
-          </ion-button>
-          <ion-button size="small" fill="clear">
-            <ion-icon name="create-outline"></ion-icon>
-          </ion-button>
-        </div>
-        
-      </ion-card>
-    </ion-list>
- </div>
-</ion-content>
-
-<ion-footer>
-  <ion-toolbar>
-    <div class="footer-content">
-      <div class="left-content">
-            <ion-icon slot="start" name="person-circle-outline"></ion-icon>
-            {{usuario.nombre}} 
-          </div>
-
-          <!-- Nombre de la empresa y el ícono a la derecha -->
-          <div class="right-content">                
-            <ion-icon slot="end" name="car-outline"></ion-icon>
-      <span class="nombre-empresa">DriveControl  v1</span>
+        </ion-card>
+      </ion-list>
     </div>
-  </div>
-  </ion-toolbar>
-</ion-footer>
 
+    <!-- Contenido para CONDUCTOR -->
+    <div *ngIf="rol === 'conductor'">
+      <ion-list>
+        <ion-card (click)="verUsuario(usuarioRecuperado)">
+          <ion-card-header class="user-header">
+            <div class="user-info">
+              <ion-card-title>
+                <ion-icon name="person-outline" class="icon-card"></ion-icon>
+                {{ usuarioRecuperado.nombre }}
+              </ion-card-title>
+              <ion-card-content>
+                <p class="user-email">{{ usuarioRecuperado.correo }}</p>
+              </ion-card-content>
+            </div>
+          </ion-card-header>
+          <div class="card-actions">
+            <ion-button size="small" fill="clear">
+              <ion-icon name="eye-outline"></ion-icon>
+            </ion-button>
+            <ion-button size="small" fill="clear">
+              <ion-icon name="create-outline"></ion-icon>
+            </ion-button>
+          </div>
+        </ion-card>
+      </ion-list>
+    </div>
+  </ion-content>
+
+  <ion-footer>
+    <ion-toolbar>
+      <div class="footer-content">
+        <div class="left-content">
+          <ion-icon slot="start" name="person-circle-outline"></ion-icon>
+          {{ usuario.nombre }} 
+        </div>
+        <div class="right-content">
+          <ion-icon slot="end" name="car-outline"></ion-icon>
+          <span class="nombre-empresa">DriveControl v1</span>
+        </div>
+      </div>
+    </ion-toolbar>
+  </ion-footer>
 </div>

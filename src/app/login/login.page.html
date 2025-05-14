@@ -10,28 +10,27 @@
       <ion-row class="login-row">
         <ion-col class="img-col" size="12" size-md="4" size-lg="3">
           <img src="assets/images/Logo_ProyectoFinal.png" class="responsive-img" alt="DriveControl logo" loading="lazy" />
-
         </ion-col>
-        <ion-col size="12" size-md="8" size-lg="9" >
-          <!-- <ion-card-header> -->
-            <!-- <ion-card-title  class="welcome">Bienvenido a DriveControl</ion-card-title> -->
-            <h1  class="welcome">Bienvenido a DriveControl</h1>
-          <!-- </ion-card-header> -->
-
+        <ion-col size="12" size-md="8" size-lg="9">
+          <h1 class="welcome">Bienvenido a DriveControl</h1>
           <ion-card-content>
             <form>
               <ion-item>
                 <ion-label position="floating">Nombre</ion-label>
-                <ion-input (keydown.enter)="saltarAlSiguiente('password')" [(ngModel)]="email" name="email"></ion-input>
+                <ion-input (keydown.enter)="saltarAlSiguiente('password')" [(ngModel)]="email" name="email">
+                </ion-input>
                 <ion-icon class="ion-align-self-center" slot="end" name="mail-outline" color="primary"></ion-icon>
               </ion-item>
+
               <ion-item>
                 <ion-label position="floating">Password</ion-label>
-                <ion-input id="password" (keydown.enter)="cerrarTeclado()" [(ngModel)]="password" name="password" [type]="showPassword ? 'text' : 'password'"></ion-input>
-                <ion-icon class="ion-align-self-center" slot="end" [name]="passwordIcono" (click)="muestraPassword()" color="primary"></ion-icon> 
+                <ion-input id="password" (keydown.enter)="cerrarTeclado()" [(ngModel)]="password" name="password" [type]="showPassword ? 'text' : 'password'">
+                </ion-input>
+                <ion-icon class="ion-align-self-center" slot="end" [name]="passwordIcono" (click)="muestraPassword()" color="primary">
+                </ion-icon>
               </ion-item>
             </form>
-            <ion-button expand="block" (click)="iniciarSesion()"  color="primary">Login</ion-button>
+            <ion-button expand="block" (click)="iniciarSesion()" color="primary">Login</ion-button>
           </ion-card-content>
         </ion-col>
       </ion-row>
@@ -42,13 +41,10 @@
 <ion-footer>
   <ion-toolbar>
     <div class="footer-content">
-      <div class="left-content"></div>        
-      <div class="right-content">                
-          <ion-icon slot="end" name="car-outline"></ion-icon>
-          <span class="nombre-empresa">DriveControl</span>
+      <div class="right-content">
+        <ion-icon slot="end" name="car-outline"></ion-icon>
+        <span class="nombre-empresa">DriveControl</span>
       </div>
     </div>
   </ion-toolbar>
 </ion-footer>
-
-

@@ -14,101 +14,73 @@
 </ion-header>
 
 <!-- ************************     PARA CONDUCTOR ********************* -->
- 
 <ion-content [fullscreen]="true" class="ion-padding">
-<ion-title *ngIf="rol === 'conductor'">Seleccionar un vehículo</ion-title>
-     <ion-list>
-     <!-- <ng-container *ngIf="rol === 'conductor'"> -->
+  <ion-title *ngIf="rol === 'conductor'">Seleccionar un vehículo</ion-title>
+  <ion-list>
+    <!-- Mostrar lista de vehículos solo si 'mostrar' es verdadero -->
     <ng-container *ngIf="mostrar">
-
       <ion-card class="custom-card" *ngFor="let vehiculo of vehiculos">
         <ion-card-header>
-       <!--  <ion-label> -->
-        <ion-card-title>
-          <ion-icon name="car-outline" class="icon-card"></ion-icon>
-          {{ vehiculo.marca }} - {{ vehiculo.modelo }}
-        </ion-card-title>
-        <ion-card-subtitle>Id: {{vehiculo.id_vehiculo}} </ion-card-subtitle>
-      </ion-card-header>
+          <ion-card-title>
+            <ion-icon name="car-outline" class="icon-card"></ion-icon>
+            {{ vehiculo.marca }} - {{ vehiculo.modelo }}
+          </ion-card-title>
+          <ion-card-subtitle>Id: {{vehiculo.id_vehiculo}}</ion-card-subtitle>
+        </ion-card-header>
         <ion-card-content>
           <ion-item lines="none">
-          <p class="car-matricula"><strong>Matrícula: </strong> {{ vehiculo.matricula }}</p> 
-           <ion-checkbox *ngIf="mostrar"
-              [checked]="vehiculo === vehiculoSeleccionado" 
-              (ionChange)="seleccionarVehiculo(vehiculo)" 
+            <p class="car-matricula"><strong>Matrícula: </strong> {{ vehiculo.matricula }}</p>
+            <ion-checkbox *ngIf="mostrar"
+              [checked]="vehiculo === vehiculoSeleccionado"
+              (ionChange)="seleccionarVehiculo(vehiculo)"
               slot="end">
             </ion-checkbox>
             <ion-button *ngIf="!mostrar" size="large" slot="end" fill="clear">
               <ion-icon name="eye-outline"></ion-icon>
             </ion-button>
-          </ion-item> 
-        </ion-card-content>    
+          </ion-item>
+        </ion-card-content>
       </ion-card>
       <ion-button class="botonGuardar" *ngIf="mostrar" expand="full" (click)="guardarModelo()">Guardar</ion-button>
     </ng-container>
-<!-- ************************     PARA ADMINISTRADOR ********************* -->
 
+    <!-- ************************     PARA ADMINISTRADOR ********************* -->
     <ng-container *ngIf="!mostrar">
-          <ion-searchbar
-            [(ngModel)]="filtroTexto"
-            placeholder="Nombre o matricula">
-          </ion-searchbar>
-          <ion-label class="ion-padding">Ordenar:
-              <ion-icon
-                name="arrow-down-outline"
-                class="ion-padding-start"
-                (click)="ordenDireccion = 'asc';"
-                [color]="ordenDireccion === 'asc' ? 'primary' : 'medium'">
-              </ion-icon>
-              <ion-icon
-                name="arrow-up-outline"
-                class="ion-padding-start"
-                (click)="ordenDireccion = 'desc';"
-                [color]="ordenDireccion === 'desc' ? 'primary' : 'medium'">
-              </ion-icon> 
-          </ion-label>
+      <!-- Barra de búsqueda -->
+      <ion-searchbar [(ngModel)]="filtroTexto" placeholder="Nombre o matrícula"></ion-searchbar>
 
-        <ion-card class="custom-card" *ngFor="let vehiculo of vehiculosFiltradosYOrdenados" (click)="verVehiculo(vehiculo)" 
+      <!-- Control de orden de los vehículos -->
+      <ion-label class="ion-padding">Ordenar:
+        <ion-icon name="arrow-down-outline" class="ion-padding-start" (click)="ordenDireccion = 'asc';"
+          [color]="ordenDireccion === 'asc' ? 'primary' : 'medium'">
+        </ion-icon>
+        <ion-icon name="arrow-up-outline" class="ion-padding-start" (click)="ordenDireccion = 'desc';"
+          [color]="ordenDireccion === 'desc' ? 'primary' : 'medium'">
+        </ion-icon>
+      </ion-label>
+
+      <!-- Mostrar lista de vehículos filtrados y ordenados -->
+      <ion-card class="custom-card" *ngFor="let vehiculo of vehiculosFiltradosYOrdenados" (click)="verVehiculo(vehiculo)"
         [ngClass]="{
           'card-disponible': vehiculo.disponible === 1,
-          'card-ocupado': vehiculo.disponible === 0,
+          'card-ocupado': vehiculo.disponible === 0
         }">
-          <ion-card-header>
-         <!--  <ion-label> -->
+        <ion-card-header>
           <ion-card-title>
             <ion-icon name="car-outline" class="icon-card"></ion-icon>
             {{ vehiculo.marca }} - {{ vehiculo.modelo }}
           </ion-card-title>
-          <!-- <ion-card-subtitle>Id: {{vehiculo.id_vehiculo}} </ion-card-subtitle> -->
         </ion-card-header>
-          <ion-card-content>
-            <div class="disponible-centrado">
-              <p *ngIf="vehiculo.disponible === 1" class="disponible-text">✅ <strong>DISPONIBLE</strong></p>
-              <p *ngIf="vehiculo.disponible === 0" class="ocupado-text">❌ <strong>OCUPADO</strong></p>
-            </div>
-            <ion-item lines="none">
-            <p class="car-matricula"><strong>Matrícula: </strong> {{ vehiculo.matricula }}</p>   
-            </ion-item> 
-          </ion-card-content>    
-        </ion-card>
-        </ng-container>
-    </ion-list>
-  </ion-content>
-  <ion-footer>
-    <ion-toolbar>
-      <div class="footer-content">
-        <div class="left-content">
-              <ion-icon slot="start" name="person-circle-outline"></ion-icon>
-              {{usuario.nombre}} 
-            </div>
-  
-            <!-- Nombre de la empresa y el ícono a la derecha -->
-            <div class="right-content">                
-              <ion-icon slot="end" name="car-outline"></ion-icon>
-        <span class="nombre-empresa">DriveControl</span>
-      </div>
-    </div>
-    </ion-toolbar>
-  </ion-footer>
+        <ion-card-content>
+          <div class="disponible-centrado">
+            <p *ngIf="vehiculo.disponible === 1" class="disponible-text">✅ <strong>DISPONIBLE</strong></p>
+            <p *ngIf="vehiculo.disponible === 0" class="ocupado-text">❌ <strong>OCUPADO</strong></p>
+          </div>
+        </ion-card-content>
+      </ion-card>
+    </ng-container>
+  </ion-list>
+</ion-content>
+
   
   

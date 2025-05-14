@@ -4,125 +4,116 @@
       <ion-buttons slot="start">
         <ion-menu-button color="primary" name="menu"></ion-menu-button>
       </ion-buttons>
-      <ion-title>{{modo === 'editar' ? 'Editar Viaje' : 'Detalle de viajes'}}</ion-title>
+      <ion-title>{{ modo === 'editar' ? 'Editar Viaje' : 'Detalle de viajes' }}</ion-title>
       <ion-buttons slot="end">
         <ion-back-button defaultHref="/home" icon="return-down-back-outline"></ion-back-button>
       </ion-buttons>
     </ion-toolbar>
-  </ion-header>  
- 
-<ion-content [fullscreen]="true" class="ion-padding">
-  <div class="card-container">
-    <ion-card>
-      <ion-card-content>
+  </ion-header>
 
-        <form *ngIf="viaje">
-          <ion-item>
-            <div class="item-content">
-              <ion-label>Usuario</ion-label>
-              <ion-text>{{ viaje.nombre_conductor }}</ion-text>
+  <ion-content [fullscreen]="true" class="ion-padding">
+    <div class="card-container">
+      <ion-card>
+        <ion-card-content>
+          <form *ngIf="viaje">
+            <ion-item>
+              <div class="item-content">
+                <ion-label>Usuario</ion-label>
+                <ion-text>{{ viaje.nombre_conductor }}</ion-text>
+              </div>
+              <ion-icon slot="end" name="person-outline" color="primary"></ion-icon>
+            </ion-item>
+
+            <ion-item>
+              <div class="item-content">
+                <ion-label>Vehículo marca</ion-label>
+                <ion-text>{{ viaje.marca }}</ion-text>
+              </div>
+              <ion-icon slot="end" name="car-outline"></ion-icon>
+            </ion-item>
+
+            <ion-item>
+              <div class="item-content">
+                <ion-label>Vehículo modelo</ion-label>
+                <ion-text>{{ viaje.modelo }}</ion-text>
+              </div>
+              <ion-icon slot="end" name="car-outline"></ion-icon>
+            </ion-item>
+
+            <ion-item>
+              <div class="item-content">
+                <ion-label>Matrícula</ion-label>
+                <ion-text>{{ viaje.matricula }}</ion-text>
+              </div>
+              <ion-icon slot="end" name="code-working-outline"></ion-icon>
+            </ion-item>
+
+            <ion-item>
+              <div class="item-content">
+                <ion-label>Inicio</ion-label>
+                <ion-text *ngIf="viaje.fecha_inicio && viaje.fecha_inicio !== '0000-00-00 00:00:00'">
+                  {{ viaje.fecha_inicio | date: 'd \'de\' MMMM \'del\' y \'a las\' HH:mm' }}
+                </ion-text>
+                <br>
+                <ion-text>{{ direccionInicio }}</ion-text>
+              </div>
+              <ion-icon slot="end" name="calendar-outline"></ion-icon>
+            </ion-item>
+
+            <ion-item>
+              <div class="item-content">
+                <ion-label>Fin</ion-label>
+                <ion-text *ngIf="viaje.fecha_fin && viaje.fecha_fin !== '0000-00-00 00:00:00'">
+                  {{ viaje.fecha_fin | date: 'd \'de\' MMMM \'del\' y \'a las\' HH:mm' }}
+                </ion-text>
+                <br>
+                <ion-text>{{ direccionFinal }}</ion-text>
+              </div>
+              <ion-icon slot="end" name="calendar-outline"></ion-icon>
+            </ion-item>
+
+            <ion-item>
+              <div class="item-content">
+                <ion-label>Comentarios</ion-label>
+                <ion-text>{{ viaje.comentario }}</ion-text>
+              </div>
+            </ion-item>
+
+            <div>
+              <ion-button expand="block" class="cancelar" (click)="cancelarEdicion()" *ngIf="modo === 'editar'">
+                Cancelar
+                <ion-icon slot="start" name="close-circle-outline"></ion-icon>
+              </ion-button>
+
+              <ion-button expand="block" color="danger" (click)="cancelar()" *ngIf="modo === 'crear'">Cancelar</ion-button>
+
+              <ion-button expand="full" color="danger" (click)="eliminarViaje()" *ngIf="modo === 'editar'">
+                Eliminar
+                <ion-icon slot="start" name="trash"></ion-icon>
+              </ion-button>
+
+              <ion-button class="botonVolver" expand="full" (click)="cancelarEdicion()"> Volver a Viajes
+                <ion-icon slot="start" name="return-down-back-outline"></ion-icon>
+              </ion-button>
             </div>
-            <ion-icon slot="end" name="person-outline" color="primary"></ion-icon>
-          </ion-item>
-        
-          <ion-item>
-            <div class="item-content">
-              <ion-label>Vehículo marca</ion-label>
-              <ion-text>{{ viaje.marca }}</ion-text>
-            </div>
-            <ion-icon slot="end" name="car-outline" ></ion-icon>
-          </ion-item>
-        
-          <ion-item>
-            <div class="item-content">
-              <ion-label>Vehículo modelo</ion-label>
-              <ion-text>{{ viaje.modelo }}</ion-text>
-            </div>
-            <ion-icon slot="end" name="car-outline" ></ion-icon>
-          </ion-item>
-        
-          <ion-item>
-            <div class="item-content">
-              <ion-label>Matrícula</ion-label>
-              <ion-text>{{ viaje.matricula }}</ion-text>
-            </div>
-            <ion-icon slot="end" name="code-working-outline" ></ion-icon>
-          </ion-item>
-        
-          <ion-item>
-            <div class="item-content">
-            <ion-label>Inicio</ion-label>
-            <ion-text *ngIf="viaje.fecha_inicio && viaje.fecha_inicio !== '0000-00-00 00:00:00'">
-              {{ viaje.fecha_inicio | date: 'd \'de\' MMMM \'del\' y \'a las\' HH:mm' }}
-            </ion-text>
-            <br>
-            <ion-text>{{ direccionInicio }}</ion-text>
-            </div>
-            <ion-icon slot="end" name="calendar-outline" ></ion-icon>
-          </ion-item>        
-          <ion-item>
-           <div class="item-content"> 
-            <ion-label>Fin</ion-label>     
-               <ion-text *ngIf="viaje.fecha_fin && viaje.fecha_fin !== '0000-00-00 00:00:00'">
-                {{ viaje.fecha_fin | date: 'd \'de\' MMMM \'del\' y \'a las\' HH:mm' }} 
-             </ion-text> 
-             <br>
-             <ion-text>{{ direccionFinal }}</ion-text>
-
-            </div> 
-            <ion-icon slot="end" name="calendar-outline" ></ion-icon>
-          </ion-item>
-
-           <ion-item>
-            <div class="item-content">
-              <ion-label>Comentarios</ion-label>
-              <ion-text>{{ viaje.comentario }}</ion-text>
-            </div>
-          </ion-item>
-                
-          <div>
-            <ion-button expand="block" class="cancelar" (click)="cancelarEdicion()" *ngIf="modo === 'editar'">Cancelar
-              <ion-icon slot="start" name="close-circle-outline"></ion-icon>
-            </ion-button>
-        
-            <ion-button expand="block" color="danger" (click)="cancelar()" *ngIf="modo ==='crear'">Cancelar</ion-button> 
-        
-            <ion-button expand="full" color="danger" (click)="eliminarViaje()" *ngIf="modo === 'editar'">Eliminar
-              <ion-icon slot="start" name="trash"></ion-icon>
-            </ion-button>
-        
-            <!-- <ion-button  expand="full" class="boton"  (click)="modo = 'editar'" *ngIf="rol === 'admin' && modo === 'ver'">Editar para eliminar
-              <ion-icon slot="start" name="pencil"></ion-icon>
-            </ion-button> -->
-            <ion-button class="botonVolver" expand="full"  (click)= "cancelarEdicion()"> Volver a Viajes
-              <ion-icon slot="start" name="return-down-back-outline"></ion-icon>
-            </ion-button>
-
-          </div>
-        </form>
-        
-
-      </ion-card-content>
-    </ion-card>
-  </div>
-
-</ion-content>
-
-<ion-footer>
-  <ion-toolbar>
-    <div class="footer-content">
-      <div class="left-content">
-            <ion-icon slot="start" name="person-circle-outline"></ion-icon>
-            {{usuario?.nombre}} 
-          </div>
-
-          <!-- Nombre de la empresa y el ícono a la derecha -->
-          <div class="right-content">                
-            <ion-icon slot="end" name="car-outline"></ion-icon>
-      <span class="nombre-empresa">DriveControl</span>
+          </form>
+        </ion-card-content>
+      </ion-card>
     </div>
-  </div>
-  </ion-toolbar>
-</ion-footer>
+  </ion-content>
 
+  <ion-footer>
+    <ion-toolbar>
+      <div class="footer-content">
+        <div class="left-content">
+          <ion-icon slot="start" name="person-circle-outline"></ion-icon>
+          {{ usuario?.nombre }}
+        </div>
+        <div class="right-content">
+          <ion-icon slot="end" name="car-outline"></ion-icon>
+          <span class="nombre-empresa">DriveControl</span>
+        </div>
+      </div>
+    </ion-toolbar>
+  </ion-footer>
 </div>

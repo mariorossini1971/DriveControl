@@ -1,50 +1,49 @@
-/* .mensaje_guardar{
-    border: 1px solid red;
-    
-  background-color: rgba(255, 0, 0, 0.1); /* Fondo rojo claro */
- /* } */
-
-  .footer-content {
-    display: flex; /* Alinear elementos horizontalmente */
-    justify-content: space-between; /* Separar elementos a los extremos */
-    align-items: center; /* Centrar elementos verticalmente */
-    width: 100%; /* Usar todo el ancho disponible */
-    color: #005BBB; 
-  }
-  
-  .left-content {
-    display: flex;
-    align-items: center;
-    margin-left: 20px;
-  
-    ion-icon {
-      font-size: 24px;
-      margin-right: 8px; /* Espacio entre ícono y texto */
-      color: #005BBB; 
-      
-    }
-  }
-  
-  .right-content {
-    display: flex;
-    align-items: center;
-    margin-right: 20px;
-  
-    ion-icon {
-      font-size: 24px;
-      margin-right: 8px; /* Espacio entre ícono y texto */
-      color: #005BBB; 
-    }
-  
-    .nombre-empresa {
-      font-size: 16px; /* Ajustar tamaño del texto */
-      font-weight: bold; /* Opcional: negrita */
-    }
-  }
-  ion-header{
+ion-header {
   margin-top: 30px;
-  ion-toolbar {
-    --padding-start: 16px; /* Ajustar separación lateral */
-    --padding-end: 16px; /* Ajustar separación lateral */
-  }
+}
+
+ion-toolbar {
+  --padding-start: 16px;
+  --padding-end: 16px;
+}
+
+.footer-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  color: #005BBB;
+}
+
+.left-content,
+.right-content {
+  display: flex;
+  align-items: center;
+}
+
+.left-content {
+  margin-left: 20px;
+}
+
+.right-content {
+  margin-right: 20px;
+}
+
+.left-content ion-icon,
+.right-content ion-icon {
+  font-size: 24px;
+  margin-right: 8px;
+  color: #005BBB;
+}
+
+.nombre-empresa {
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.mensaje_guardar {
+  color: #2ECC71;
+  font-size: 1rem;
+  text-align: center;
+  margin-top: 10px;
 }

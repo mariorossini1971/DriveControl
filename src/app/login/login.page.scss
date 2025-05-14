@@ -5,164 +5,144 @@ html, body {
   box-sizing: border-box;
 }
 
-ion-header{
+ion-header {
   margin-top: 30px;
-  ion-toolbar {
-    --background: #005BBB;
-    color: #FFFFFF;
-  }
-  ion-title {
-    text-align: center;
-    color: #fff;
-  }
+}
+
+ion-toolbar {
+  --background: #005BBB;
+  color: #fff;
+  --padding-start: 16px;
+  --padding-end: 16px;
+}
+
+ion-title {
+  text-align: center;
+  color: #fff;
 }
 
 ion-content {
-  --background:#FFFFFF;
-   font-family: 'Open Sans', sans-serif;
-   display: block;
-   height: 100%;
-   overflow-y: hidden; //para evitar el scroll vertical
-   box-sizing: border-box;
- }
+  --background: #fff;
+  font-family: 'Open Sans', sans-serif;
+  display: block;
+  height: 100%;
+  overflow-y: hidden;
+  box-sizing: border-box;
+}
 
 .card-container {
   display: flex;
   justify-content: center;
   align-items: center;
   padding: 1rem;
-  height: auto;
   width: 100%;
   box-sizing: border-box;
+}
 
-  ion-card {
-    max-width: 600px;
-    width: 100%;
-   }
- }
- 
- .welcome{  
-    display: flex; 
-    justify-content: center;     
-    color: #005BBB;
-    font-size: x-large;
-    margin-bottom: 16px;
-    }
+ion-card {
+  max-width: 600px;
+  width: 100%;
+}
 
- .img-col{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 1rem;
+.welcome {
+  display: flex;
+  justify-content: center;
+  color: #005BBB;
+  font-size: x-large;
+  margin-bottom: 16px;
+}
 
-    img.responsive-img{
-      width: 100%;
-      height: auto;
-      max-height: 200px;
-      object-fit: contain;
-    }
- }
+.img-col {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem;
+}
+
+img.responsive-img {
+  width: 100%;
+  height: auto;
+  max-height: 200px;
+  object-fit: contain;
+}
 
 @media screen and (orientation: landscape) {
   html, body {
     overflow: auto;
   }
 
-  ion-content{
-    overflow-y:auto; // hace scroll si es necesario
-    height: auto;  //crece si el contenido lo necesita
+  ion-content {
+    overflow-y: auto;
+    height: auto;
   }
 
   .card-container ion-card ion-row {
     display: flex;
     flex-wrap: wrap;
   }
-  
-  .img-col{
-     max-width: 200px;
-    
-    img.responsive-img{
-      max-height: 150px;
-      width: auto;
-    }
+
+  .img-col {
+    max-width: 200px;
+  }
+
+  .img-col img.responsive-img {
+    max-height: 150px;
+    width: auto;
   }
 
   .welcome {
     font-size: large;
   }
 }
-     
-// Items de formulario //
 
 ion-item {
   --padding-start: 0;
   --padding-end: 0;
   color: grey;
-  border-bottom: 1px solid #BDC3C7; 
+  border-bottom: 1px solid #BDC3C7;
 }
 
-ion-label {
-  color: grey;
-}
-
+ion-label,
 ion-input {
   color: grey;
 }
 
-//Botones /
-
 ion-button.ion-color-primary {
-    height: 50px;
-    margin-top: 20px;
-    font-size: 18px;
-    font-weight: bold;
-    --background: #005BBB;
-    color: #FFFFFF;
-    --border-radius: 8px;
-  }
+  height: 50px;
+  margin-top: 20px;
+  font-size: 18px;
+  font-weight: bold;
+  --background: #005BBB;
+  color: #fff;
+  --border-radius: 8px;
+}
 
 .footer-content {
-    display: flex; /* Alinear elementos horizontalmente */
-    justify-content: space-between; /* Separar elementos a los extremos */
-    align-items: center; /* Centrar elementos verticalmente */
-    width: 100%; /* Usar todo el ancho disponible */
-    color: #005BBB;
-   }
-
-ion-toolbar {
-    --padding-start: 16px; /* Ajustar separación lateral */
-    --padding-end: 16px; /* Ajustar separación lateral */
-  } 
-  
-.left-content {
-    display: flex;
-    align-items: center;
-    color: #005BBB;
-    
-  
-    ion-icon {
-      font-size: 24px;
-      color: #005BBB; 
-      margin-right: 8px; /* Espacio entre icono y texto */
-    }
-  } 
-  
-.right-content {
-    display: flex;
-    align-items: center;
-    color: #005BBB;
-    margin-right: 20px;
-
-    ion-icon {
-      font-size: 24px;
-      margin-right: 8px; /* Espacio entre ícono y texto */
-      color: #005BBB;
-    } 
-
-    .nombre-empresa {
-      font-size: 16px; /* Ajustar tamaño del texto */
-      font-weight: bold; /* Opcional: negrita */
-    }
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  color: #005BBB;
 }
- 
 
+.left-content,
+.right-content {
+  display: flex;
+  align-items: center;
+  color: #005BBB;
+}
+
+.right-content {
+  margin-right: 20px;
+}
+
+ion-icon {
+  font-size: 24px;
+  color: #005BBB;
+  margin-right: 8px;
+}
+
+.nombre-empresa {
+  font-size: 16px;
+  font-weight: bold;
+}

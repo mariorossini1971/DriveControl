@@ -1,138 +1,109 @@
 <ion-header>
   <ion-toolbar>
     <ion-buttons slot="start">
-      <ion-menu-button color="primary" name="menu"></ion-menu-button>
+      <ion-menu-button color="primary"></ion-menu-button>
     </ion-buttons>
-    <ion-title>{{ modo === 'crear' ? 'Nuevo Usuario' : modo === 'editar' ? 'Editar Usuario' : 'Detalle del Usuario'}}</ion-title>
+    <ion-title>
+      {{ modo === 'crear' ? 'Nuevo Usuario' : modo === 'editar' ? 'Editar Usuario' : 'Detalle del Usuario'}}
+    </ion-title>
     <ion-buttons slot="end">
-    <ion-back-button *ngIf="rolLogueado === 'conductor'" defaultHref="/principal" icon="return-down-back-outline"></ion-back-button>
-    <ion-back-button *ngIf="rolLogueado === 'admin' || rolLogueado === 'gestor'" defaultHref="/usuarios" icon="return-down-back-outline"></ion-back-button>
+      <ion-back-button *ngIf="rolLogueado === 'conductor'" defaultHref="/principal" 
+        icon="return-down-back-outline">
+      </ion-back-button>
+      <ion-back-button *ngIf="rolLogueado === 'admin' || rolLogueado === 'gestor'" defaultHref="/usuarios" icon="return-down-back-outline"></ion-back-button>
     </ion-buttons>
   </ion-toolbar>
-</ion-header>  
+</ion-header>
 
 <ion-content [fullscreen]="true" class="ion-padding">
-<div class="card-container">
-  <ion-card>
-    <ion-card-content>
+  <div class="card-container">
+    <ion-card>
+      <ion-card-content>
+        <form (ngSubmit)="guardarUsuario()" *ngIf="usuario">
+          <ion-item>
+            <ion-label position="floating">Nombre</ion-label>
+            <ion-input [(ngModel)]="usuario.nombre" name="nombre" [readonly]="modo === 'ver'" required></ion-input>
+            <ion-icon slot="end" name="person-outline" color="primary"></ion-icon>
+          </ion-item>
 
-      <form (ngSubmit)="guardarUsuario()" *ngIf="usuario">
+          <ion-item *ngIf="modo !== 'crear'">
+            <ion-label position="floating">Id</ion-label>
+            <ion-input [(ngModel)]="usuario.id_usuario" name="id_usuario" [readonly]="true" required></ion-input>
+            <ion-icon slot="end" name="finger-print-outline" color="primary"></ion-icon>
+          </ion-item>
 
-        <ion-item>
-          <ion-label position="floating">Nombre</ion-label>
-          <ion-input 
-            [(ngModel)]="usuario.nombre" name="nombre"
-            [readonly]="modo === 'ver'" required>
-          </ion-input>
-          <ion-icon class="ion-align-self-center" slot="end" name="person-outline" color="primary"></ion-icon>
-        </ion-item>
-
-        <ion-item *ngIf="modo !== 'crear'">
-              <!-- solo mostrar en ver   -->
-          <ion-label position="floating">Id</ion-label>
-          <ion-input 
-            [(ngModel)]="usuario.id_usuario" name="id_usuario"
-            [readonly]="true" required>
-          </ion-input>
-          <ion-icon class="ion-align-self-center" slot="end" name="finger-print-outline" color="primary"></ion-icon>
-        </ion-item>
-
-        <ion-item>
-          <ion-label position="floating">Correo Electrónico</ion-label>
-          <ion-input 
-            [(ngModel)]="usuario.correo" name="correo" type="email"
-            [readonly]="modo === 'ver'" required
-            pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$">
+          <ion-item>
+            <ion-label position="floating">Correo Electrónico</ion-label>
+            <ion-input [(ngModel)]="usuario.correo" name="correo" type="email" [readonly]="modo === 'ver'" required 
+                 pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$">
             </ion-input>
-            <ion-icon class="ion-align-self-center" slot="end" name="mail-outline" color="primary"></ion-icon>
+            <ion-icon slot="end" name="mail-outline" color="primary"></ion-icon>
           </ion-item>
 
           <ion-item>
             <ion-label position="floating">Teléfono</ion-label>
-            <ion-input 
-              [(ngModel)]="usuario.telefono" name="telefono"
-              [readonly]="modo === 'ver'" required>
-            </ion-input>
-            <ion-icon class="ion-align-self-center" slot="end" name="call-outline" color="primary"></ion-icon>
+            <ion-input [(ngModel)]="usuario.telefono" name="telefono" [readonly]="modo === 'ver'" required></ion-input>
+            <ion-icon slot="end" name="call-outline" color="primary"></ion-icon>
           </ion-item>
 
-          <ion-item  *ngIf="rolLogueado === 'admin'"> <!-- *ngIf="rolLogueado === 'admin'" -->
+          <ion-item *ngIf="rolLogueado === 'admin'">
             <ion-label position="floating">Rol</ion-label>
-            <ion-select 
-              [(ngModel)]="usuario.rol" name="rol"
-              [disabled]="modo === 'ver'" 
-              interface="popover"
-              placeholder="Selecciona un rol">
-                  <ion-select-option value="admin">Administrador</ion-select-option>
-                  <ion-select-option value="conductor">Conductor</ion-select-option>
-                  <ion-select-option value="gestor">Gestor</ion-select-option>
+            <ion-select [(ngModel)]="usuario.rol" name="rol" [disabled]="modo === 'ver'" interface="popover" placeholder="Selecciona un rol">
+              <ion-select-option value="admin">Administrador</ion-select-option>
+              <ion-select-option value="conductor">Conductor</ion-select-option>
+              <ion-select-option value="gestor">Gestor</ion-select-option>
             </ion-select>
-            <ion-icon class="ion-align-self-center" slot="end" name="briefcase-outline" color="primary"></ion-icon>
+            <ion-icon slot="end" name="briefcase-outline" color="primary"></ion-icon>
           </ion-item>
 
           <ion-item>
             <ion-label position="floating">Contraseña</ion-label>
-            <ion-input 
-              [(ngModel)]="usuario.contrasena" 
-              name="contrasena"
-              type="password" required
-              [readonly]="modo === 'ver'" required>
-            </ion-input>
-            <ion-icon class="ion-align-self-center" slot="end" name="lock-closed-outline" color="primary"></ion-icon>
+            <ion-input [(ngModel)]="usuario.contrasena" name="contrasena" type="password" [readonly]="modo === 'ver'" required></ion-input>
+            <ion-icon slot="end" name="lock-closed-outline" color="primary"></ion-icon>
           </ion-item>
-      
-      <div>
-      
-        <!-- Botón Guardar solo en modo crear o editar -->
-        <ion-button expand="block" class="guardar" type="submit" *ngIf="modo === 'crear'  || modo === 'editar' && rolLogueado !== 'gestor'">Guardar
-          <ion-icon slot="start" name="save-outline"></ion-icon>
-        </ion-button>
 
-         <!-- Botón Cancelar Edición en modo editar -->
-         <ion-button expand="block" class="cancelar"  (click)="cancelarEdicion()" *ngIf="modo === 'editar' && rolLogueado !== 'gestor'">Cancelar
-          <ion-icon slot="start" name="close-circle-outline"></ion-icon>
-         </ion-button>
+          <div>
+            <ion-button expand="block" class="guardar" type="submit" *ngIf="modo === 'crear' || modo === 'editar' && rolLogueado !== 'gestor'">
+              Guardar
+              <ion-icon slot="start" name="save-outline"></ion-icon>
+            </ion-button>
 
-          <!-- Botón Cancelar Edición en modo crear  -->
-          <ion-button expand="block" color="danger" (click)="cancelar()" *ngIf="modo === 'crear' && rolLogueado !== 'gestor'">Cancelar
-          </ion-button>
+            <ion-button expand="block" class="cancelar" (click)="cancelarEdicion()" *ngIf="modo === 'editar' && rolLogueado !== 'gestor'">
+              Cancelar
+              <ion-icon slot="start" name="close-circle-outline"></ion-icon>
+            </ion-button>
 
-         
-        <!-- Botón Eliminar solo en modo ver -->
-        <ion-button expand="block" color="danger"  (click)="eliminarUsuario()" *ngIf="modo === 'editar' && usuario.id_usuario !== idUsuarioActual && rolLogueado === 'admin'">Eliminar
-          <ion-icon slot="start" name="trash"></ion-icon>
-        </ion-button> 
-         
+            <ion-button expand="block" color="danger" (click)="cancelar()" *ngIf="modo === 'crear' && rolLogueado !== 'gestor'">
+              Cancelar
+            </ion-button>
 
-        <!-- Botón Editar solo en modo ver -->
-        <ion-button expand="block"  (click)="modo = 'editar'" *ngIf="modo === 'ver' && rolLogueado !== 'gestor'">Editar
-          <ion-icon slot="start" name="pencil"></ion-icon>
-        </ion-button>
-      </div>
-    
-    </form>
+            <ion-button expand="block" color="danger" (click)="eliminarUsuario()" *ngIf="modo === 'editar' && usuario.id_usuario !== idUsuarioActual && rolLogueado === 'admin'">
+              Eliminar
+              <ion-icon slot="start" name="trash"></ion-icon>
+            </ion-button>
 
-    </ion-card-content>
-  </ion-card>
-   
-</div>
-
+            <ion-button expand="block" (click)="modo = 'editar'" *ngIf="modo === 'ver' && rolLogueado !== 'gestor'">
+              Editar
+              <ion-icon slot="start" name="pencil"></ion-icon>
+            </ion-button>
+          </div>
+        </form>
+      </ion-card-content>
+    </ion-card>
+  </div>
 </ion-content>
 
 <ion-footer>
   <ion-toolbar>
     <div class="footer-content">
       <div class="left-content">
-            <ion-icon slot="start" name="person-circle-outline"></ion-icon>
-            {{nombre}} 
-          </div>
-
-          <!-- Nombre de la empresa y el ícono a la derecha -->
-          <div class="right-content">
-                
-            <ion-icon slot="end" name="car-outline"></ion-icon>
-      <span class="nombre-empresa">DriveControl</span>
+        <ion-icon slot="start" name="person-circle-outline"></ion-icon>
+        {{ nombre }}
+      </div>
+      <div class="right-content">
+        <ion-icon slot="end" name="car-outline"></ion-icon>
+        <span class="nombre-empresa">DriveControl</span>
+      </div>
     </div>
-  </div>
   </ion-toolbar>
 </ion-footer>

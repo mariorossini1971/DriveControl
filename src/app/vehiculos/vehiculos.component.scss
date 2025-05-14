@@ -1,85 +1,81 @@
-ion-back-button{
-  color: #005BBB; 
+/* Estilos generales */
+ion-back-button {
+  color: #005BBB;
 }
+
+/* Estilos para los vehículos */
 .custom-card {
-    margin-bottom: 16px;
-    border-radius: 12px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-  }
+  margin-bottom: 16px;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
 
-  ion-checkbox {
-    --background: #fff; /* Fondo blanco */
-    --border-radius: 50%; /* Hacerlo redondo */
-    --border-width: 2px; /* Un borde un poco más grueso */
-    --border-color: #3880ff; /* Color del borde (puedes cambiarlo) */
-  }
-  
-  ion-checkbox[checked] {
-    --background: #3880ff; /* Fondo azul cuando está seleccionado */
-    --border-color: #3880ff; /* Borde azul cuando está seleccionado */
-  }
+/* Estilos para los checkboxes */
+ion-checkbox {
+  --background: #fff;
+  --border-radius: 50%;
+  --border-width: 2px;
+  --border-color: #3880ff;
+}
 
-  .icon-card{
-    font-size: 30px; 
-    color: #3880ff; 
-    margin-right: 8px;
-    vertical-align: middle
-  }
+ion-checkbox[checked] {
+  --background: #3880ff;
+  --border-color: #3880ff;
+}
 
-  .car-matricula {
-    text-align: center;
-    margin: 0 0 0 28px;
-    font-size: 18px;
-    color: #555;
-  } 
+/* Iconos dentro de las tarjetas */
+.icon-card {
+  font-size: 30px;
+  color: #3880ff;
+  margin-right: 8px;
+  vertical-align: middle;
+}
 
-  .footer-content {
-    display: flex; /* Alinear elementos horizontalmente */
-    justify-content: space-between; /* Separar elementos a los extremos */
-    align-items: center; /* Centrar elementos verticalmente */
-    width: 100%; /* Usar todo el ancho disponible */
-    color: #005BBB; 
-  }
-  
-  .left-content {
-    display: flex;
-    align-items: center;
-    margin-left: 20px;
-  
-    ion-icon {
-      font-size: 24px;
-      margin-right: 8px; /* Espacio entre ícono y texto */
-      color: #005BBB; 
-      
-    }
-  }
-  
-  .right-content {
-    display: flex;
-    align-items: center;
-    margin-right: 20px;
-  
-    ion-icon {
-      font-size: 24px;
-      margin-right: 8px; /* Espacio entre ícono y texto */
-      color: #005BBB; 
-    }
-  
-    .nombre-empresa {
-      font-size: 16px; /* Ajustar tamaño del texto */
-      font-weight: bold; /* Opcional: negrita */
-    }
-  }
+/* Estilos para la matrícula */
+.car-matricula {
+  text-align: center;
+  margin: 0 0 0 28px;
+  font-size: 18px;
+  color: #555;
+}
 
-  
+/* Estilos para el footer */
+.footer-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  color: #005BBB;
+}
+
+.left-content,
+.right-content {
+  display: flex;
+  align-items: center;
+  margin-left: 20px;
+}
+
+ion-icon {
+  font-size: 24px;
+  margin-right: 8px;
+  color: #005BBB;
+}
+
+.nombre-empresa {
+  font-size: 16px;
+  font-weight: bold;
+}
+
+/* Estilos de tarjetas para disponibilidad */
 .card-disponible {
-  border: 2px solid #10dc60; 
+  border: 2px solid #10dc60;
 }
 
 .card-ocupado {
-  border: 2px solid #ed0b12; 
+  border: 2px solid #ed0b12;
 }
 
+/* Estilos de disponibilidad */
 .disponible-centrado {
   text-align: center;
   font-size: 16px;
@@ -94,23 +90,29 @@ ion-back-button{
 .ocupado-text {
   color: red;
 }
-ion-header{
+
+/* Estilos para el header */
+ion-header {
   margin-top: 30px;
-  ion-toolbar {
-    --padding-start: 16px; /* Ajustar separación lateral */
-    --padding-end: 16px; /* Ajustar separación lateral */
-  }
 }
-  ion-title {
-    text-align: center;
-  }
-  .botonGuardar {
-    width: 80%; 
-    max-width: 80%; 
-    height: 45px;
-    margin-top: 20px;
-    font-size: 18px;
-    display: block; /* Para que se centre con margin auto */
-    margin-left: auto;
-    margin-right: auto;
-  }
+
+ion-toolbar {
+  --padding-start: 16px;
+  --padding-end: 16px;
+}
+
+ion-title {
+  text-align: center;
+}
+
+/* Estilos para el botón de guardar */
+.botonGuardar {
+  width: 80%;
+  max-width: 80%;
+  height: 45px;
+  margin-top: 20px;
+  font-size: 18px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}

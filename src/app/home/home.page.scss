@@ -1,194 +1,169 @@
-ion-back-button{
-  color: #005BBB; 
+html, body {
+  height: 100%;
+  overflow: hidden;
 }
 
-.container { 
-  display: flex; 
-  flex-direction: column; 
-  height: 100%; 
-  width: 100%; 
-  box-sizing: border-box; 
-  padding-top: var(--ion-safe-area-top, 56px); /* espacio seguro para el header */
-  padding-bottom: 50px; 
-  justify-content: flex-start;//centra horizontal 
-  align-items: center; //centra vertical 
-}
-   
-.seccion{ 
-  flex: 0.5; 
-  display: flex; 
-  align-items: center; 
-  justify-content: center; 
-} 
-  
-.vehiculo-container { 
-  display: flex; 
-  flex-direction: column; 
-  align-items: center; 
-  width: 100%; 
-  max-width: 400px; 
-  margin-bottom: 20px;   /* Espaciado en pantallas grandes */ 
-} 
-
-  /* Cronómetro centrado */ 
-.cronometro-container { 
-  display: flex; 
-  justify-content: center; 
-  align-items: center; 
-  width: 100%; 
-  max-width: 400px; 
-  margin-bottom: 30px; 
+ion-back-button {
+  color: #005BBB;
 }
 
-.cronometro { 
-  font-size: 3.5rem; 
-  font-weight: bold; 
-  background: rgb(192, 208, 247); 
-  color: #34495E; 
-  padding: 20px; 
-  border-radius: 10px; 
-  text-align: center; 
-  min-width: 220px; 
-} 
- 
-ion-row{ 
-  display: flex; 
-  justify-content: center; // Centra horizontal 
-  align-items: center; // Centra vertical 
-  width: 100%; // Ocupa todo el ancho 
-} 
-
-ion-col{ 
-    display: flex; 
-    align-items: center; //centra vertical 
-    border-radius: 50px; 
-    width: 100%; 
-    max-width: 300px; 
-    position: relative;//para contener los iconos dentro 
-
-    /* Texto centrado */ 
-    .texto-swiper { 
-      font-size: medium; 
-      margin-left: 8px; 
-      flex-grow: 1;//ocupa espacio restante 
-      text-align: left; // Asegura el centrado del texto 
-    } 
-    
-    ion-icon{ 
-      position: absolute; 
-    } 
-
-    .left{ 
-      left: 0; 
-      transform: translateX(3px); 
-    } 
-
-    .right{ 
-      right: 0; 
-      transform: translateX(-3px); 
-    } 
-  } 
-
-ion-button { 
-   width: 100%; 
-} 
-
-  /* Estilos botones */ 
-.boton { 
-    max-width: 350px; /* Controla el ancho en pantallas grandes */ 
-    background-color: #005BBB; 
-    color: white; 
-    font-weight: bold; 
-    text-align: center; 
-    height: 50px; /* Tamaño uniforme */ 
-    border-radius: 38px; 
-    display: flex; 
-    align-items: center; 
-    justify-content: center; 
-} 
-
-    /* Mensaje de guardado */ 
-.mensaje { 
-  text-align: center; 
-  font-size: 1rem; 
-  margin-top: 10px; 
-  color: #2ECC71; 
-}  
-
-    /* Asegurar que el body y html no interfieran */ 
-html, body { 
-   height: 100%; 
-   overflow: hidden; /* Prevenir scroll general */ 
-} 
-
-    /*para evitar scroll innecesario*/ 
-ion-content { 
-    --overflow: auto; 
-    overflow-y: auto;
-    display: flex; 
-    flex-direction: column; 
-    padding-bottom: env(safe-area-inset-bottom); 
-} 
-
-    /* Ajustar en móviles (subimos un poco el botón Selecciona Vehículo) */ 
- @media (max-width: 768px) { 
-  .container { 
-    justify-content: center; /* Contenido centrado */ 
-  } 
-  .cronometro-container { 
-   margin-bottom: 20px; /* Más separación con los botones */ 
-  } 
+.container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  padding-top: var(--ion-safe-area-top, 56px);
+  padding-bottom: 50px;
+  align-items: center;
+  justify-content: flex-start;
+  box-sizing: border-box;
 }
 
-    /*Ajustar en móviles en horizontal*/ 
-@media (max-width: 800px) and (orientation: landscape) { 
+.seccion {
+  flex: 0.5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 
-  .vehiculo-container, 
-  .cronometro-container { 
-    margin-top: 0px; /* separación con los botones */ 
-    margin-bottom: 0px; /* separación con los botones */ 
-  } 
-  
-  .container{
-    justify-content: flex-start;
-   /*  padding-top: var(--ion-safe-area-top, 56px); */
-  }
+.vehiculo-container,
+.cronometro-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 400px;
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.cronometro-container {
+  margin-bottom: 30px;
+}
+
+.cronometro {
+  font-size: 3.5rem;
+  font-weight: bold;
+  background: #c0d0f7;
+  color: #34495E;
+  padding: 20px;
+  border-radius: 10px;
+  text-align: center;
+  min-width: 220px;
+}
+
+ion-row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+ion-col {
+  display: flex;
+  align-items: center;
+  position: relative;
+  border-radius: 50px;
+  max-width: 300px;
+  width: 100%;
+}
+
+ion-button {
+  width: 100%;
+}
+
+.boton {
+  max-width: 350px;
+  height: 50px;
+  border-radius: 38px;
+  font-weight: bold;
+  background-color: #005BBB;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.texto-swiper {
+  font-size: medium;
+  margin-left: 8px;
+  flex-grow: 1;
+  text-align: left;
+}
+
+ion-col ion-icon {
+  position: absolute;
+}
+
+.left {
+  left: 0;
+  transform: translateX(3px);
+}
+
+.right {
+  right: 0;
+  transform: translateX(-3px);
+}
+
+ion-content {
+  --overflow: auto;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  padding-bottom: env(safe-area-inset-bottom);
 }
 
 .footer-content {
-    display: flex; /* Alinear elementos horizontalmente */
-    justify-content: space-between; /* Separar elementos a los extremos */
-    align-items: center; /* Centrar elementos verticalmente */
-    width: 100%; /* Usar todo el ancho disponible */
-    color: #005BBB;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  color: #005BBB;
 }
-    
-.left-content {
-    display: flex;
-    align-items: center;
-    color: #005BBB;
-    margin-left: 20px;
 
-    ion-icon {
-      font-size: 24px;
-      margin-right: 8px; /* Espacio entre icono y texto */
-      color: #005BBB;
-    }
+.left-content,
+.right-content {
+  display: flex;
+  align-items: center;
+}
+
+.left-content {
+  margin-left: 20px;
 }
 
 .right-content {
-    display: flex;
-    align-items: center;
-    margin-right: 20px;
+  margin-right: 20px;
+}
 
-    ion-icon {
-      font-size: 24px;
-      margin-right: 8px; /* Espacio entre icono y texto */
-      color: #005BBB;
-    }
+.left-content ion-icon,
+.right-content ion-icon {
+  font-size: 24px;
+  margin-right: 8px;
+  color: #005BBB;
+}
 
-    .nombre-empresa {
-      font-size: 16px; /* Ajustar tamaño del texto */
-      font-weight: bold; /* Opcional: negrita */
-    }
+.nombre-empresa {
+  font-size: 16px;
+  font-weight: bold;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .container {
+    justify-content: center;
+  }
+
+  .cronometro-container {
+    margin-bottom: 20px;
+  }
+}
+
+@media (max-width: 800px) and (orientation: landscape) {
+  .vehiculo-container,
+  .cronometro-container {
+    margin: 0;
+  }
+
+  .container {
+    justify-content: flex-start;
+  }
 }

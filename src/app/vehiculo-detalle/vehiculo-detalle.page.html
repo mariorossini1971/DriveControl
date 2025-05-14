@@ -4,125 +4,88 @@
       <ion-buttons slot="start">
         <ion-menu-button color="primary" name="menu"></ion-menu-button>
       </ion-buttons>
-      <ion-title>{{ modo === 'crear' ? 'Nuevo Vehiculo' : modo === 'editar' ? 'Editar Vehiculo' : 'Detalle del Vehiculo'}}</ion-title>
+      <ion-title>{{ modo === 'crear' ? 'Nuevo Vehiculo' : modo === 'editar' ? 'Editar Vehiculo' : 'Detalle del Vehiculo' }}</ion-title>
       <ion-buttons slot="end">
         <ion-back-button defaultHref="/vehiculos" icon="return-down-back-outline"></ion-back-button>
       </ion-buttons>
     </ion-toolbar>
-  </ion-header>  
- 
-<ion-content [fullscreen]="true" class="ion-padding">
-  <div class="card-container">
-    <ion-card>
-      <ion-card-content>
+  </ion-header>
 
-        <form (ngSubmit)="guardarVehiculo()" *ngIf="vehiculo">
-          <ion-item>
-            <ion-label position="floating">Matricula</ion-label>
-            <ion-input 
-              [(ngModel)]="vehiculo.matricula" name="matricula"
-              [readonly]="modo !== 'editar' && modo !== 'crear'" required>
-            </ion-input>
-            <ion-icon class="ion-align-self-center" slot="end" name="code-working-outline" color="primary"></ion-icon>
-          </ion-item>
-          <ion-item>
-        <!-- <ion-item *ngIf="modo !== 'crear'"> -->
-               <!-- solo mostrar en ver   -->
-          <ion-label position="floating">Marca</ion-label>
-          <ion-input 
-            [(ngModel)]="vehiculo.marca" name="marca"
-            [readonly]="modo !== 'editar' && modo !== 'crear'"  required>
-          </ion-input>
-          <ion-icon class="ion-align-self-center" slot="end" name="car-outline" color="primary"></ion-icon>
-        </ion-item>
+  <ion-content [fullscreen]="true" class="ion-padding">
+    <div class="card-container">
+      <ion-card>
+        <ion-card-content>
+          <form (ngSubmit)="guardarVehiculo()" *ngIf="vehiculo">
+            <ion-item>
+              <ion-label position="floating">Matricula</ion-label>
+              <ion-input [(ngModel)]="vehiculo.matricula" name="matricula" [readonly]="modo !== 'editar' && modo !== 'crear'" required></ion-input>
+              <ion-icon class="ion-align-self-center" slot="end" name="code-working-outline" color="primary"></ion-icon>
+            </ion-item>
+            <ion-item>
+              <ion-label position="floating">Marca</ion-label>
+              <ion-input [(ngModel)]="vehiculo.marca" name="marca" [readonly]="modo !== 'editar' && modo !== 'crear'" required></ion-input>
+              <ion-icon class="ion-align-self-center" slot="end" name="car-outline" color="primary"></ion-icon>
+            </ion-item>
+            <ion-item>
+              <ion-label position="floating">Modelo</ion-label>
+              <ion-input [(ngModel)]="vehiculo.modelo" name="modelo" [readonly]="modo !== 'editar' && modo !== 'crear'" required></ion-input>
+              <ion-icon class="ion-align-self-center" slot="end" name="car-sport-outline" color="primary"></ion-icon>
+            </ion-item>
+            <ion-item>
+              <ion-label position="floating">Año</ion-label>
+              <ion-input [(ngModel)]="vehiculo.ano" name="ano" [readonly]="modo !== 'editar' && modo !== 'crear'" required></ion-input>
+              <ion-icon class="ion-align-self-center" slot="end" name="calendar-outline" color="primary"></ion-icon>
+            </ion-item>
+            <ion-item>
+              <ion-label position="floating">Disponible</ion-label>
+              <ion-select [(ngModel)]="vehiculo.disponible" name="disponible" interface="popover" [disabled]="modo !== 'editar' && modo !== 'crear'">
+                <ion-select-option [value]="1">Sí</ion-select-option>
+                <ion-select-option [value]="0">No</ion-select-option>
+              </ion-select>
+              <ion-icon class="ion-align-self-center" slot="end" name="briefcase-outline" color="primary"></ion-icon>
+            </ion-item>
 
-          <ion-item>
-            <ion-label position="floating">Modelo</ion-label>
-            <ion-input 
-            [(ngModel)]="vehiculo.modelo" name="modelo"
-            [readonly]="modo !== 'editar' && modo !== 'crear'"required>
-          </ion-input>
-          <ion-icon class="ion-align-self-center" slot="end" name="car-sport-outline" color="primary"></ion-icon>
-        </ion-item>
-
-        <ion-item>
-          <ion-label position="floating">Año</ion-label>
-          <ion-input 
-            [(ngModel)]="vehiculo.ano" name="ano"
-            [readonly]="modo !== 'editar' && modo !== 'crear'" required>
-          </ion-input>
-          <ion-icon class="ion-align-self-center" slot="end" name="calendar-outline" color="primary"></ion-icon>
-        </ion-item>
-        <ion-item>
-          <ion-label position="floating">Disponible</ion-label>
-          <ion-select [(ngModel)]="vehiculo.disponible" name="disponible" interface="popover" [disabled]="modo !== 'editar' && modo !== 'crear'" >
-            <ion-select-option [value]= 1 >Sí</ion-select-option>
-            <ion-select-option [value]= 0 >No</ion-select-option>
-          </ion-select>
-          <ion-icon class="ion-align-self-center" slot="end" name="briefcase-outline" color="primary"></ion-icon>
-        </ion-item>
- 
-        <div>
-          <!-- Botón Guardar solo en modo crear o editar -->
-          <ion-button expand="full" class="boton" type="submit" *ngIf="modo === 'crear' || modo === 'editar'">Guardar
-            <ion-icon slot="start" name="save-outline"></ion-icon>
-          </ion-button>
-
-          <!-- Botón Cancelar Edición en modo editar -->
-          <ion-button expand="block" class="cancelar"  (click)="cancelarEdicion()" *ngIf="modo === 'editar'"> Cancelar
-            <ion-icon slot="start" name="close-circle-outline"></ion-icon>
-          </ion-button>
-
-            <!-- Botón Cancelar Edición en modo crear  -->
-            <ion-button expand="block" color="danger" (click)="cancelar()" *ngIf="modo ==='crear'"> Cancelar
-            </ion-button> 
-
-          <!-- Botón Eliminar solo en modo editar o ver -->
-          <ion-button expand="full" color="danger" (click)="eliminarVehiculo()" *ngIf="modo === 'editar'"> Eliminar
-            <ion-icon slot="start" name="trash"></ion-icon>
-
-          </ion-button>
-
-          <!-- Botón Editar solo en modo editar -->
-          <ion-button expand="full" class="boton" (click)="modo = 'editar'" *ngIf="modo === 'verEditor' && usuario.rol !== 'gestor'"> Editar
-          <ion-icon slot="start" name="pencil"></ion-icon>
-          </ion-button>
-
-          <ion-button expand="block" color="medium" (click)="cancelar()" *ngIf="modo ==='ver'"> Volver a Vehiculos
-            <ion-icon slot="start" name="return-down-back-outline"></ion-icon>
-          </ion-button> 
-
-          <ion-button expand="block" color="success" (click)="verHistorial()"  *ngIf="modo ==='verEditor'"> Historial del Vehiculo
-            <ion-icon slot="start" name="archive-outline"></ion-icon>
-          </ion-button> 
-          </div>
-
-
-
-      </form>
-
-      </ion-card-content>
-    </ion-card>
-  </div>
-
-</ion-content>
-
-<ion-footer>
-  <ion-toolbar>
-    <div class="footer-content">
-      <div class="left-content">
-            <ion-icon slot="start" name="person-circle-outline"></ion-icon>
-            {{usuario.nombre}} 
-          </div>
-
-          <!-- Nombre de la empresa y el ícono a la derecha -->
-          <div class="right-content">                
-            <ion-icon slot="end" name="car-outline"></ion-icon>
-      <span class="nombre-empresa">DriveControl</span>
+            <div>
+              <ion-button expand="full" class="boton" type="submit" *ngIf="modo === 'crear' || modo === 'editar'">Guardar
+                <ion-icon slot="start" name="save-outline"></ion-icon>
+              </ion-button>
+              <ion-button expand="block" class="cancelar" (click)="cancelarEdicion()" *ngIf="modo === 'editar'">Cancelar
+                <ion-icon slot="start" name="close-circle-outline"></ion-icon>
+              </ion-button>
+              <ion-button expand="block" color="danger" (click)="cancelar()" *ngIf="modo === 'crear'">Cancelar</ion-button>
+              <ion-button expand="full" color="danger" (click)="eliminarVehiculo()" *ngIf="modo === 'editar'">Eliminar
+                <ion-icon slot="start" name="trash"></ion-icon>
+              </ion-button>
+              <ion-button expand="full" class="boton" (click)="modo = 'editar'" *ngIf="modo === 'verEditor' && usuario.rol !== 'gestor'">Editar
+                <ion-icon slot="start" name="pencil"></ion-icon>
+              </ion-button>
+              <ion-button expand="block" color="medium" (click)="cancelar()" *ngIf="modo === 'ver'">Volver a Vehiculos
+                <ion-icon slot="start" name="return-down-back-outline"></ion-icon>
+              </ion-button>
+              <ion-button expand="block" color="success" (click)="verHistorial()" *ngIf="modo === 'verEditor'">Historial del Vehiculo
+                <ion-icon slot="start" name="archive-outline"></ion-icon>
+              </ion-button>
+            </div>
+          </form>
+        </ion-card-content>
+      </ion-card>
     </div>
-  </div>
-  </ion-toolbar>
-</ion-footer>
+  </ion-content>
 
+  <ion-footer>
+    <ion-toolbar>
+      <div class="footer-content">
+        <div class="left-content">
+          <ion-icon slot="start" name="person-circle-outline"></ion-icon>
+          {{usuario.nombre}}
+        </div>
+        <div class="right-content">
+          <ion-icon slot="end" name="car-outline"></ion-icon>
+          <span class="nombre-empresa">DriveControl</span>
+        </div>
+      </div>
+    </ion-toolbar>
+  </ion-footer>
 </div>
+
 
