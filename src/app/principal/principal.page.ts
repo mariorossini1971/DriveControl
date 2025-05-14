@@ -1,5 +1,5 @@
 import { Component, OnInit,ChangeDetectorRef, OnDestroy } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { ApiService } from '../api.service';
 import { Usuario } from '../models/usuario.model';
 import { Subscription } from 'rxjs';
@@ -16,10 +16,9 @@ import { Capacitor } from '@capacitor/core';
 export class PrincipalPage implements OnInit {
 
   rol: string | null = 'conductor';
-  usuario: any;
- //   public usuario: Usuario = new Usuario(0,'', '','','',0);
-   public usuarioRecuperado: Usuario = new Usuario(0,'','','','',0);
-
+  //usuario: any;
+  public usuario: Usuario = new Usuario(0,'', '','','',0);
+  public usuarioRecuperado: Usuario = new Usuario(0,'','','','',0);
   private subscripciones = new Subscription(); 
   
 
@@ -36,6 +35,7 @@ export class PrincipalPage implements OnInit {
       StatusBar.setBackgroundColor({ color: '#FFFFFF' }); 
     }
   }
+
   ionViewWillEnter(){
     this.usuarioGuardado();
     this.controlRol();
@@ -57,7 +57,6 @@ export class PrincipalPage implements OnInit {
   verVehiculos(){
     // /Uso queryParams para que los datos persistan cuando recargo
     this.router.navigate(['/vehiculos'], { queryParams: { origen: 'dashboard' } });  
-
   }
 
   verViajes(){
@@ -77,45 +76,50 @@ export class PrincipalPage implements OnInit {
   }
 
   controlRol(){
+      this.subscripciones.add(
         this.apiService.getRol().subscribe(rol => {
         this.rol = rol;
-      });
-    } 
-
+      })
+    );
+  } 
 
   usuarioGuardado(){
     const usuarioGuardado = localStorage.getItem('usuario');
-  if (usuarioGuardado) {
-    this.usuario = JSON.parse(usuarioGuardado); // Recupera los datos del usuario para el footer
-    console.log('usuario: ',this.usuario);
-  } else {
-    console.warn('Usuario no encontrado.');
-  }
+    if (usuarioGuardado) {
+        this.usuario = JSON.parse(usuarioGuardado); // Recupera los datos del usuario para el footer
+        console.log('usuario: ',this.usuario);
+      } else {
+        console.warn('Usuario no encontrado.');
+      }
   }
 
   cerrarSesion(){
      this.apiService.cerrarSesion();
      this.router.navigate(['/login']);
   }
+
   recuperaUsuario(id: number) {
-  this.subscripciones.add (
-    this.apiService.getUsuarioById(id).subscribe({
-      next: (data) => { 
-        this.usuarioRecuperado.id_usuario = data.id_usuario;
-        this.usuarioRecuperado.nombre = data.nombre;
-        this.usuarioRecuperado.correo = data.correo;
-        this.usuarioRecuperado.contrasena = data.contrasena;
-        this.usuarioRecuperado.rol= data.rol;
-        this.usuarioRecuperado.telefono = data.telefono;
-      },
-      error: (error) => {
-        console.error('Error al recuperar el usuario:', error);
-      },
-      complete: () => {
-        console.log('Proceso de recuperación completado');
-      }
-    })
-  );
-  this.cdr.detectChanges();
-}
+    this.subscripciones.add (
+      this.apiService.getUsuarioById(id).subscribe({
+        next: (data) => { 
+          this.usuarioRecuperado.id_usuario = data.id_usuario;
+          this.usuarioRecuperado.nombre = data.nombre;
+          this.usuarioRecuperado.correo = data.correo;
+          this.usuarioRecuperado.contrasena = data.contrasena;
+          this.usuarioRecuperado.rol= data.rol;
+          this.usuarioRecuperado.telefono = data.telefono;
+        },
+        error: (error) => {
+          console.error('Error al recuperar el usuario:', error);
+        },
+        complete: () => {
+          console.log('Proceso de recuperación completado');
+        }
+      })
+    );
+    this.cdr.detectChanges();
+  }
+  ngOnDestroy() { 
+    this.subscripciones.unsubscribe(); 
+  }
 }

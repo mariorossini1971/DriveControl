@@ -146,3 +146,11 @@ ion-icon {
   font-size: 16px;
   font-weight: bold;
 }
+ion-footer {
+  background-color: white !important;
+}
+
+ion-footer ion-toolbar {
+  --background: white !important;
+  background-color: white !important;
+}

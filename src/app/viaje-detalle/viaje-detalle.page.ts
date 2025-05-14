@@ -185,16 +185,18 @@ export class ViajeDetallePage implements OnInit {
 
   calculadireccion(lat: number, lng: number): Promise<string> {
     return new Promise((resolve, reject) => {
-      const url = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`;
+        const apiKey = '57356b10fa564f7188ec06c8a6982641';
+        const url = `https://api.geoapify.com/v1/geocode/reverse?lat=${lat}&lon=${lng}&apiKey=${apiKey}`;
+     // const url = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`;
       this.subscripciones.add (
         this.http.get(url).subscribe({
           next: (data: any) => {
-            if (data && data.address) {
-              const numero = data.address.house_number || "Sin número";
-              const calle = data.address.road || 'Calle desconocida';
-              const ciudad = data.address.city || 'Ciudad desconocida';
+            if (data && data.features.length > 0) {
+            //  const numero = data.address.house_number || "Sin número";
+              const calle = data.features[0].properties.address_line1 || 'Calle desconocida';
+              const ciudad = data.features[0].properties.city || 'Ciudad desconocida';
     
-              const direccion = `${calle}, ${numero} ${ciudad}`;
+             const direccion = `${calle}, ${ciudad}`;
               resolve(direccion); // Envía la dirección una vez obtenida
             } else {
               console.warn('No se encontraron datos de dirección en la respuesta.');

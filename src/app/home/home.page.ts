@@ -23,6 +23,7 @@ import { Platform } from '@ionic/angular';
 export class HomePage implements OnInit, OnDestroy {
 
   private subscripciones = new Subscription(); 
+
   @ViewChild('swipeButton',{read: ElementRef }) swipeButton!: ElementRef;
   color = 'primary';
   text = 'Swipe';
@@ -48,12 +49,7 @@ export class HomePage implements OnInit, OnDestroy {
   hora: number = 0;
 
   segundosCuentaAtras = 60;   //tiempo para volver a dejar el coche en disponible
-
   idUsuario: number = 0;
-  
-
- // mensaje: string = '';
-
   vehiculos: any[] = [];
   modeloSeleccionado: any;
 
@@ -95,13 +91,9 @@ export class HomePage implements OnInit, OnDestroy {
   position: any;
 
   coordenadas = {
-   // latInicial: 41.40735,
     latInicial: 0,
-    //lngInicial: 2.15475,
     lngInicial: 0,
-    // latFinal: 41.39114,
     latFinal: 0,
-   // lngFinal: 2.17378,
     lngFinal: 0,
   }
   public colorBar: string= '#FFFFFF';
@@ -251,51 +243,49 @@ export class HomePage implements OnInit, OnDestroy {
   }
 
   capturarFechaHora() {
+      const fecha = new Date();
+      const tiempo = fecha.toISOString().split('.')[0] + 'Z'; //   // mismo formato que la BBDD
+      this.bloqueoPagina = true;
     
-    const fecha = new Date();
-    const tiempo = fecha.toISOString().split('.')[0] + 'Z'; //   // mismo formato que la BBDD
+      if (this.esInicio) {
+          // Si es "INICIO", captura la fecha de inicio
 
-    this.bloqueoPagina = true;
-  
-    if (this.esInicio) {
-      // Si es "INICIO", captura la fecha de inicio
+          this.menuCtrl.enable(false); // Desactiva el menú lateral
+          this.menuDeshabilitado = true;
+          document.querySelector('ion-menu')?.setAttribute('disabled', 'true');
 
-      this.menuCtrl.enable(false); // Desactiva el menú lateral
-      this.menuDeshabilitado = true;
-      document.querySelector('ion-menu')?.setAttribute('disabled', 'true');
+          console.log('es inicio');
+          this.fechaHoraInicio = tiempo;
+          this.capturoDireccion();
+          this.iniciarTemporizador(); // Iniciar el temporizador
+          this.cdr.detectChanges(); //Forzar actualización de la vista 
+       } else {
+          this.menuCtrl.enable(true); // Activa el menú lateral
+          this.menuDeshabilitado = false;
+          document.querySelector('ion-menu')?.setAttribute('disabled', 'false');
 
-      console.log('es inicio');
-      this.fechaHoraInicio = tiempo;
-      this.capturoDireccion();
-      this.iniciarTemporizador(); // Iniciar el temporizador
-      this.cdr.detectChanges(); //Forzar actualización de la vista 
-    } else {
-      this.menuCtrl.enable(true); // Activa el menú lateral
-      this.menuDeshabilitado = false;
-      document.querySelector('ion-menu')?.setAttribute('disabled', 'false');
-
-      this.fechaHoraFinal = tiempo;
-      this. capturoDireccion();
-      this.detenerTemporizador(); // Detener el temporizador
-      this.guardarStore();
-      this.cambioGuardar();
-    }
-    // Cambiar el estado del botón de INICIO a FINAL y viceversa
-    this.esInicio = !this.esInicio;
+          this.fechaHoraFinal = tiempo;
+          this. capturoDireccion();
+          this.detenerTemporizador(); // Detener el temporizador
+          this.guardarStore();
+          this.cambioGuardar();
+       }
+      // Cambiar el estado del botón de INICIO a FINAL y viceversa
+        this.esInicio = !this.esInicio;   
   }
 
   async guardarStore() {
-    this.mostrarGuardar = !this.mostrarGuardar;
-    let viaje = {
-      id_usuario: this.idUsuario,
-      id_vehiculo: this.cocheSelBehaviorSubject$.getValue().id_vehiculo,
-      fecha_inicio: this.fechaHoraInicio || 'No definido',
-      fecha_fin: this.fechaHoraFinal || 'No definido',
-      comentario: 'no hay comentarios',
-    };
-    console.log('id: ',this.cocheSelBehaviorSubject$.getValue().id_vehiculo);
-    this.apiService.setNewItem(viaje);
-    this.apiService.setNewCoordenadas(this.coordenadas)
+      this.mostrarGuardar = !this.mostrarGuardar;
+      let viaje = {
+        id_usuario: this.idUsuario,
+        id_vehiculo: this.cocheSelBehaviorSubject$.getValue().id_vehiculo,
+        fecha_inicio: this.fechaHoraInicio || 'No definido',
+        fecha_fin: this.fechaHoraFinal || 'No definido',
+        comentario: 'no hay comentarios',
+      };
+      console.log('id: ',this.cocheSelBehaviorSubject$.getValue().id_vehiculo);
+      this.apiService.setNewItem(viaje);
+      this.apiService.setNewCoordenadas(this.coordenadas)
   }
 
   iniciarTemporizador() {
@@ -318,7 +308,6 @@ export class HomePage implements OnInit, OnDestroy {
   }
 
   async reiniciarEstado() {
-    // this.esInicio = true; // Vuelve a mostrar INICIO
     this.fechaHoraInicio = null; // Limpia la hora de inicio
     this.fechaHoraFinal = null; // Limpia la hora de final
     this.minuto = 0; // Reinicia el temporizador
@@ -330,28 +319,27 @@ export class HomePage implements OnInit, OnDestroy {
       this.apiService.getVehiculos().subscribe((data: any[]) => {
         this.vehiculos = data;
       })
-  );
+    );
   }
 
   cambiaPagina() {
-      if(this.cocheSelBehaviorSubject$.getValue().matricula != ""){
-          let id = this.cocheSelBehaviorSubject$.getValue().id_vehiculo;
-           // vuelvo a actualizar el vehiculo para dejarlo disponible
-           this.apiService.updateEstadoVehiculo(id, 1).subscribe({
-            next: (response) => {
-              console.log("Estado actualizado correctamente:", response);
-            },
-            error: (error) => {
-              console.error("Error en la actualización:", error);
-            }
-          });
-
-      }
-
-      this.router.navigate(['/vehiculos'], { queryParams: { origen: 'origen' } });
-      console.log("ESTATE MANDADO DESDE HOME: ORIGEN")
-
+    if(this.cocheSelBehaviorSubject$.getValue().matricula != ""){
+        let id = this.cocheSelBehaviorSubject$.getValue().id_vehiculo;
+          // vuelvo a actualizar el vehiculo para dejarlo disponible
+          this.subscripciones.add (
+            this.apiService.updateEstadoVehiculo(id, 1).subscribe({
+              next: (response) => {
+                console.log("Estado actualizado correctamente:", response);
+              },
+              error: (error) => {
+                console.error("Error en la actualización:", error);
+              }
+            })
+          );
+    }
+    this.router.navigate(['/vehiculos'], { queryParams: { origen: 'origen' } });
   }
+  
   cambioGuardar(){
     console.log("dentro");
     this.bloqueoPagina = false;
@@ -361,7 +349,14 @@ export class HomePage implements OnInit, OnDestroy {
   }
  
   async capturoDireccion(){
-      this.position = await Geolocation.getCurrentPosition();
+
+      const options = {
+        enableHighAccuracy: true, // Mayor precisión
+        timeout: 10000, // Espera más tiempo
+        maximumAge: 0 // No usa datos en caché
+      };
+        this.position = await Geolocation.getCurrentPosition(options);
+     // this.position = await Geolocation.getCurrentPosition();
       if(this.esInicio){
         this.coordenadas.latInicial = this.position.coords.latitude;
         this.coordenadas.lngInicial= this.position.coords.longitude;
@@ -398,14 +393,16 @@ export class HomePage implements OnInit, OnDestroy {
            clearInterval(this.intervalCuentaAtras); // Detener el intervalo cuando llegue a 0 y actualizo el vehiculo
           let id = this.cocheSelBehaviorSubject$.getValue().id_vehiculo;
            // vuelvo a actualizar el vehiculo para dejarlo disponible
-           this.apiService.updateEstadoVehiculo(id, 1).subscribe({
-            next: (response) => {
-              console.log("Estado actualizado correctamente:", response);
-            },
-            error: (error) => {
-              console.error("Error en la actualización:", error);
-            }
-          });
+           this.subscripciones.add (
+              this.apiService.updateEstadoVehiculo(id, 1).subscribe({
+                next: (response) => {
+                  console.log("Estado actualizado correctamente:", response);
+                },
+                error: (error) => {
+                  console.error("Error en la actualización:", error);
+                }
+              })
+           );
           this.eliminaVista();    
           return;        
         }
