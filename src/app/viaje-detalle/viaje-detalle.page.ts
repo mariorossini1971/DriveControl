@@ -119,16 +119,17 @@ export class ViajeDetallePage implements OnInit {
 
   eliminarViaje(){
     if(!this.viaje.id_viaje) return;
-
-    this.apiService.deleteViaje(this.viaje.id_viaje).subscribe({
-      next: () => {
-        this.presentAlert('Eliminado', 'viaje eliminado correctamente');
-        this.navCtrl.navigateBack('/viajes');
-      },
-      error:() => {
-        this.presentAlert('Error', 'No se pudo eliminar el viaje');
-      }
-    });
+      this.subscripciones.add(
+        this.apiService.deleteViaje(this.viaje.id_viaje).subscribe({
+          next: () => {
+            this.presentAlert('Eliminado', 'viaje eliminado correctamente');
+            this.navCtrl.navigateBack('/viajes');
+          },
+          error:() => {
+            this.presentAlert('Error', 'No se pudo eliminar el viaje');
+          }
+        })
+    );
   }
 
   usuarioGuardado(){
@@ -151,37 +152,65 @@ export class ViajeDetallePage implements OnInit {
 
   async obtenerUbicacion(id_viaje: number) {
     let id: number = id_viaje;
-    this.subscripciones.add (
-      this.apiService.getCoordenadasById(id).subscribe({
-        next: (response) => {
-          console.log("Coordenadas obtenidas:", response);
-          this.coordenadas.lngInicial = response[0].lngInicial;
-          this.coordenadas.latInicial = response[0].latInicial;
-          this.coordenadas.lngFinal = response[0].lngFinal;
-          this.coordenadas.latFinal = response[0].latFinal;
+    
+    this.subscripciones.add(
+      this.apiService.getCoordenadasById(id).subscribe(async (response) => {
+        console.log("Coordenadas obtenidas:", response);
+        this.coordenadas.lngInicial = response[0].lngInicial;
+        this.coordenadas.latInicial = response[0].latInicial;
+        this.coordenadas.lngFinal = response[0].lngFinal;
+        this.coordenadas.latFinal = response[0].latFinal;
 
-          this.calculadireccion(this.coordenadas.latInicial, this.coordenadas.lngInicial).then(direccion => {
-            this.direccionInicio = direccion;
-            console.log("Dirección Inicial:", this.direccionInicio);
-          }).catch(error => {
-            console.error("Error al calcular dirección inicial:", error);
-            this.direccionInicio = "Error al obtener dirección";
-          });
-      
-          this.calculadireccion(this.coordenadas.latFinal, this.coordenadas.lngFinal).then(direccion => {
-            this.direccionFinal = direccion;
-            console.log("Dirección Final:", this.direccionFinal);
-          }).catch(error => {
-            console.error("Error al calcular dirección Final:", error);
-            this.direccionInicio = "Error al obtener dirección";
-          });
-        },
-        error: (error) => {
-          console.error("Error al obtener coordenadas:", error);
+        try {
+          this.direccionInicio = await this.calculadireccion(this.coordenadas.latInicial, this.coordenadas.lngInicial);
+          console.log("Dirección Inicial:", this.direccionInicio);
+
+          this.direccionFinal = await this.calculadireccion(this.coordenadas.latFinal, this.coordenadas.lngFinal);
+          console.log("Dirección Final:", this.direccionFinal);
+          
+        } catch (error) {
+          console.error("Error al calcular dirección:", error);
         }
+      }, error => {
+        console.error("Error al obtener coordenadas:", error);
       })
-  );
-  }
+    );
+}
+
+
+  // async obtenerUbicacion(id_viaje: number) {
+  //   let id: number = id_viaje;
+  //   this.subscripciones.add (
+  //     this.apiService.getCoordenadasById(id).subscribe({
+  //       next: (response) => {
+  //         console.log("Coordenadas obtenidas:", response);
+  //         this.coordenadas.lngInicial = response[0].lngInicial;
+  //         this.coordenadas.latInicial = response[0].latInicial;
+  //         this.coordenadas.lngFinal = response[0].lngFinal;
+  //         this.coordenadas.latFinal = response[0].latFinal;
+         
+  //         this.calculadireccion(this.coordenadas.latInicial, this.coordenadas.lngInicial).then(direccion => {
+  //           this.direccionInicio = direccion;
+  //           console.log("Dirección Inicial:", this.direccionInicio);
+  //         }).catch(error => {
+  //           console.error("Error al calcular dirección inicial:", error);
+  //           this.direccionInicio = "Error al obtener dirección";
+  //         });
+      
+  //         this.calculadireccion(this.coordenadas.latFinal, this.coordenadas.lngFinal).then(direccion => {
+  //           this.direccionFinal = direccion;
+  //           console.log("Dirección Final:", this.direccionFinal);
+  //         }).catch(error => {
+  //           console.error("Error al calcular dirección Final:", error);
+  //           this.direccionInicio = "Error al obtener dirección";
+  //         });
+  //       },
+  //       error: (error) => {
+  //         console.error("Error al obtener coordenadas:", error);
+  //       }
+  //     })
+  // );
+  // }
 
   calculadireccion(lat: number, lng: number): Promise<string> {
     return new Promise((resolve, reject) => {

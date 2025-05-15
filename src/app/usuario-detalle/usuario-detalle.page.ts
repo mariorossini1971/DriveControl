@@ -1,9 +1,11 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Usuario } from '../models/usuario.model';
 import { ApiService } from '../api.service';
 import { Router } from '@angular/router';
 import { NavController, AlertController } from '@ionic/angular'; 
 import { MenuController, } from '@ionic/angular';
 import { Capacitor } from '@capacitor/core'; 
+import { Subscription } from 'rxjs';
 
 @Component({
     selector: 'app-usuario-detalle',
@@ -13,6 +15,10 @@ import { Capacitor } from '@capacitor/core';
 })
 
 export class UsuarioDetallePage implements OnInit {
+
+    private subscripciones = new Subscription(); 
+      
+  
   usuario: any = {
     id_usuario: '', 
     nombre:'', 
@@ -92,8 +98,10 @@ export class UsuarioDetallePage implements OnInit {
     if (this.modo === 'editar' && this.usuario.id_usuario){
         const datosUsuario = { ...this.usuario };
         if(this.contrasenaControl === this.usuario.contrasena){
+            console.log( "**************************contraseñas igiales")
             delete datosUsuario.contrasena;
         }
+        console.log("contraseña:    ",datosUsuario.contraseña)
         this.apiService.updateUsuario(this.usuario.id_usuario, datosUsuario).subscribe({
           next: (response) => {
             console.log('Respuesta del servidor:', response);

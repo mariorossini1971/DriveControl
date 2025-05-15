@@ -357,18 +357,20 @@ export class HomePage implements OnInit, OnDestroy {
       };
         this.position = await Geolocation.getCurrentPosition(options);
      // this.position = await Geolocation.getCurrentPosition();
-      if(this.esInicio){
-        this.coordenadas.latInicial = this.position.coords.latitude;
-        this.coordenadas.lngInicial= this.position.coords.longitude;
-        this.latInicio = this.position.coords.latitude;
-        this.longInicio = this.position.coords.longitude;
-        console.log('latidud: ',this.latInicio, ' longitud: ',this.longInicio);
+     console.log("es inicio ?" ,this.esInicio);
+      if(!this.esInicio){
+          this.coordenadas.latInicial = this.position.coords.latitude;
+          this.coordenadas.lngInicial= this.position.coords.longitude;
+          this.latInicio = this.position.coords.latitude;
+          this.longInicio = this.position.coords.longitude;
+          console.log('latidud: ',this.latInicio, ' longitud: ',this.longInicio);
       }else{
-        this.coordenadas.latFinal = this.position.coords.latitude;
-        this.coordenadas.lngFinal = this.position.coords.longitude;
-        this.latFinal = this.position.coords.latitude
-        this.longFinal = this.position.coords.longitude;
-        console.log('latitud: ',this.latFinal, ' longitud: ',this.longFinal);
+          console.log("es inicio ?" ,this.esInicio);
+          this.coordenadas.latFinal = this.position.coords.latitude;
+          this.coordenadas.lngFinal = this.position.coords.longitude;
+          this.latFinal = this.position.coords.latitude
+          this.longFinal = this.position.coords.longitude;
+          console.log('latitud: ',this.latFinal, ' longitud: ',this.longFinal);
       }
     }
 

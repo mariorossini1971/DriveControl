@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { BehaviorSubject, Subscription } from 'rxjs';
 import { ApiService } from '../api.service';
-import { ActivatedRoute, Route, Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
 import { ChangeDetectorRef } from '@angular/core';
 import { Usuario } from '../models/usuario.model';
@@ -35,20 +35,17 @@ export class GuardarPage implements OnDestroy{
     lngFinal: 0,
   });
 
-  rol: string = "";
-
-   public usuario: Usuario = new Usuario(0,'', '','','',0);
-   public usuarioRecuperado: Usuario = new Usuario(0,'','','','',0);
-
+  public usuario: Usuario = new Usuario(0,'', '','','',0);
+ 
   colorBar: string = '#FFFFFF';
   mensaje: string = '';
   datosGuardados: boolean = true;
 
   constructor(
         public activateRoute: ActivatedRoute,
-        private apiService: ApiService, // Inyecta el servicio API
+        private apiService: ApiService, 
         public router: Router,
-        private cdRef: ChangeDetectorRef // Inyectamos ChangeDetectorRef
+        private cdRef: ChangeDetectorRef 
   ) { }
 
   ngOnInit() {
@@ -66,13 +63,13 @@ export class GuardarPage implements OnDestroy{
           console.log('viaje seleccionado:', viaje);
 
           // Si no hay comentario, valor predeterminado
-    if (!viaje.comentario || viaje.comentario.trim() === '') {
-      viaje.comentario = '';
-    }
+          if (!viaje.comentario || viaje.comentario.trim() === '') {
+            viaje.comentario = '';
+          }
       // Verifico si el comentario contiene 'no hay comentarios' y lo reemplazo por vacío
-      if (viaje.comentario === 'no hay comentarios') {
-        viaje.comentario = ''; // Lo dejo vacío para que se vea el placeholder
-      }
+          if (viaje.comentario === 'no hay comentarios') {
+            viaje.comentario = ''; // Lo dejo vacío para que se vea el placeholder
+          }
           this.viaje$.next(viaje);       // vuelvo a cargar el viaje con los comentarios para luego subirlo a la BBDD
           console.log('comentario', this.viaje$.getValue().comentario)
         },
@@ -87,7 +84,6 @@ export class GuardarPage implements OnDestroy{
     this.subscripciones.add(
       this.apiService.getNewCoordenadas().subscribe({
         next: (coordenadas) => {
-          console.log('coordenadas seleccionadas:', coordenadas);
           this.coordenadas$.next(coordenadas);
         },
         error: (err) => {
@@ -102,82 +98,82 @@ export class GuardarPage implements OnDestroy{
 
   usuarioGuardado(){
     const usuarioGuardado = localStorage.getItem('usuario');
-  if (usuarioGuardado) {
-    this.usuario = JSON.parse(usuarioGuardado); // Recupera los datos del usuario
-  } else {
-    console.warn('Usuario no encontrado.');
-  }
+    if (usuarioGuardado) {
+      this.usuario = JSON.parse(usuarioGuardado); // Recupera los datos del usuario
+    } else {
+      console.warn('Usuario no encontrado.');
+    }
   }
   
 async guardarStore() {
-
-    const viaje = this.viaje$.getValue(); // Extrae el  viaje
+    const viaje = this.viaje$.getValue(); // Obtener datos del viaje
     console.log('Datos preparados para guardar:', viaje);
     this.mensaje = 'Guardando datos...';
-    let intentos = 0; // Contador de intentos
-    const maxIntentos = 3; // Máximo número de intentos
+    let intentos = 0;
+    const maxIntentos = 3;
     this.datosGuardados = false;
+    let viajeGuardado: any;
 
+    // Intento guardar el viaje, solo 3 intentos 
     while (!this.datosGuardados && intentos < maxIntentos) {
-      try {
-        const response = await firstValueFrom(this.apiService.createViaje(viaje));    
-    
-        if (response && response.id_viaje) {
-          console.log('Viaje guardado con ID:', response.id_viaje);
-          this.datosGuardados = true;
+        try {
+            viajeGuardado = await firstValueFrom(this.apiService.createViaje(viaje));
 
-                // Guardar el ID en el BehaviorSubject
-          this.coordenadas$.next({
-            ...this.coordenadas$.getValue(), // Mantiene los valores anteriores
-            viaje_id: response.id_viaje, // Añado el Viaje_id a las coordenadas
-          });
-          console.log('ID del viaje:', this.coordenadas$.getValue().viaje_id);    
-        } else {
-          console.warn('No se recibió un ID de viaje en la respuesta.');
-        } 
-      } catch (error) {
-        intentos++;
-        console.error(`Error al guardar en la API (Intento ${intentos}):`, error);
-      }
-      let coord = this.coordenadas$.getValue();
-      console.log('datos de coordenadas: ',this.coordenadas$.getValue());
-      console.log('ide del vehiculo: ', viaje.id_Vehiculo);
-
-      this.apiService.guardarCoordenadas(coord).subscribe({
-        next: (response) => {
-          console.log("Coordenadas guardadas con ID:", response.id);
-        },
-        error: (error) => {
-          console.error("Error al guardar coordenadas:", error);
+            if (viajeGuardado && viajeGuardado.id_viaje) {
+                console.log('Viaje guardado con ID:', viajeGuardado.id_viaje);
+                this.datosGuardados = true;
+            } else {
+                console.warn('No se recibió un ID de viaje en la respuesta.');
+            }
+        } catch (error) {
+            intentos++;
+            console.error(`Error al guardar en la API (Intento ${intentos}):`, error);
         }
-      }); // guardo coordenadas en la BBDD
-
     }
-    //actualizo estado del vehiculo
-       this.apiService.updateEstadoVehiculo(viaje.id_vehiculo, 1).subscribe({
-         next: (response) => {
-           console.log("Estado actualizado correctamente:", response);
-        },
-        error: (error) => {
-          console.error("Error en la actualización:", error);
-         }
-      });
-    // Uso ChangeDetectorRef para actualizar la vista
-    this.cdRef.detectChanges();
 
+    // Si guardo el viaje, guardo luego las coordenadas
     if (this.datosGuardados) {
-      this.mensaje = 'Datos guardados con éxito ✅';
-      console.log(this.mensaje);
+        const coordenadasActualizadas = {
+            ...this.coordenadas$.getValue(),
+            viaje_id: viajeGuardado.id_viaje //  ID del viaje
+        };
+
+        this.subscripciones.add(
+            this.apiService.guardarCoordenadas(coordenadasActualizadas).subscribe({
+                next: (response) => {
+                    console.log("Coordenadas guardadas con ID:", response.id);
+                },
+                error: (error) => {
+                    console.error("Error al guardar coordenadas:", error);
+                }
+            })
+        );
+
+        // Actualizo estado del vehículo
+        this.subscripciones.add(
+            this.apiService.updateEstadoVehiculo(viaje.id_vehiculo, 1).subscribe({
+                next: (response) => {
+                    console.log("Estado actualizado correctamente:", response);
+                },
+                error: (error) => {
+                    console.error("Error en la actualización:", error);
+                }
+            })
+        );
+
+        this.cdRef.detectChanges();
+        this.mensaje = 'Datos guardados con éxito';
     } else {
-      this.mensaje = 'Error: no se pudo guardar los datos tras 3 intentos ❌';
-      console.error(this.mensaje);
+        this.mensaje = 'Error: no se pudo guardar los datos tras 3 intentos';
     }
-    // espero un tiempo antes de salir
+
+    // Espero antes de navegar a la pantalla principal
     setTimeout(() => {
-      this.mensaje = ''; 
-      this.router.navigate(['/principal']);
+        this.mensaje = ''; 
+        this.router.navigate(['/principal']);
     }, 3000);
-  }
+}
+
   ngOnDestroy(){
     this.subscripciones.unsubscribe(); 
   }
