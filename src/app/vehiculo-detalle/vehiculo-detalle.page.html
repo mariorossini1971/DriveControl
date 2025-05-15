@@ -17,24 +17,26 @@
         <ion-card-content>
           <form (ngSubmit)="guardarVehiculo()" *ngIf="vehiculo">
             <ion-item>
-              <ion-label position="floating">Matricula</ion-label>
+              <div class="item-content">
+              <ion-label position="floating">Matrícula</ion-label>
               <ion-input [(ngModel)]="vehiculo.matricula" name="matricula" [readonly]="modo !== 'editar' && modo !== 'crear'" required></ion-input>
-              <ion-icon class="ion-align-self-center" slot="end" name="code-working-outline" color="primary"></ion-icon>
-            </ion-item>
+              </div>
+              <ion-icon class="ion-align-self-center" slot="end" name="code-working-outline"></ion-icon>
+             </ion-item>
             <ion-item>
               <ion-label position="floating">Marca</ion-label>
               <ion-input [(ngModel)]="vehiculo.marca" name="marca" [readonly]="modo !== 'editar' && modo !== 'crear'" required></ion-input>
-              <ion-icon class="ion-align-self-center" slot="end" name="car-outline" color="primary"></ion-icon>
+              <ion-icon class="ion-align-self-center" slot="end" name="car-outline"></ion-icon>
             </ion-item>
             <ion-item>
               <ion-label position="floating">Modelo</ion-label>
               <ion-input [(ngModel)]="vehiculo.modelo" name="modelo" [readonly]="modo !== 'editar' && modo !== 'crear'" required></ion-input>
-              <ion-icon class="ion-align-self-center" slot="end" name="car-sport-outline" color="primary"></ion-icon>
+              <ion-icon class="ion-align-self-center" slot="end" name="car-sport-outline"></ion-icon>
             </ion-item>
             <ion-item>
               <ion-label position="floating">Año</ion-label>
               <ion-input [(ngModel)]="vehiculo.ano" name="ano" [readonly]="modo !== 'editar' && modo !== 'crear'" required></ion-input>
-              <ion-icon class="ion-align-self-center" slot="end" name="calendar-outline" color="primary"></ion-icon>
+              <ion-icon class="ion-align-self-center" slot="end" name="calendar-outline"></ion-icon>
             </ion-item>
             <ion-item>
               <ion-label position="floating">Disponible</ion-label>
@@ -42,7 +44,7 @@
                 <ion-select-option [value]="1">Sí</ion-select-option>
                 <ion-select-option [value]="0">No</ion-select-option>
               </ion-select>
-              <ion-icon class="ion-align-self-center" slot="end" name="briefcase-outline" color="primary"></ion-icon>
+              <ion-icon class="ion-align-self-center" slot="end" name="briefcase-outline"></ion-icon>
             </ion-item>
 
             <div>
@@ -62,7 +64,7 @@
               <ion-button expand="block" color="medium" (click)="cancelar()" *ngIf="modo === 'ver'">Volver a Vehiculos
                 <ion-icon slot="start" name="return-down-back-outline"></ion-icon>
               </ion-button>
-              <ion-button expand="block" color="success" (click)="verHistorial()" *ngIf="modo === 'verEditor'">Historial del Vehiculo
+              <ion-button expand="block" class="historialVehiculo" (click)="verHistorial()" *ngIf="modo === 'verEditor'">Historial del Vehiculo
                 <ion-icon slot="start" name="archive-outline"></ion-icon>
               </ion-button>
             </div>

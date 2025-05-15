@@ -125,15 +125,18 @@ ion-button.ion-color-primary {
   color: #005BBB;
 }
 
-.left-content,
+/* .left-content {
+    display: flex;
+    align-items: center;
+    color: #005BBB;
+    margin-left: 20px;    
+} */
+  
 .right-content {
-  display: flex;
-  align-items: center;
-  color: #005BBB;
-}
-
-.right-content {
-  margin-right: 20px;
+    display: flex;
+    align-items: center;
+    color: #005BBB;
+    margin-right: 20px; 
 }
 
 ion-icon {

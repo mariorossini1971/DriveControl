@@ -5,6 +5,15 @@ html, body {
   box-sizing: border-box;
 }
 
+ion-header {
+  margin-top: 30px;
+}
+
+ion-toolbar {
+  --padding-start: 16px;
+  --padding-end: 16px;
+}
+
 ion-back-button {
   color: #005BBB;
 }
@@ -35,11 +44,15 @@ ion-card {
   width: 100%;
 }
 
+ion-card-content ion-label{
+   font-size: 16px;
+}
+
 /* Estilos para los items de formulario */
 ion-item {
   --padding-start: 0;
   --padding-end: 0;
-  color: grey;
+  color: black;
   border-bottom: 1px solid #BDC3C7;
 }
 
@@ -53,6 +66,7 @@ ion-label {
 
 ion-text {
   font-size: 14px;
+  color: rgb(105, 100, 100);
 }
 
 /* Botones */
@@ -60,6 +74,7 @@ ion-text {
   height: 45px;
   margin-top: 20px;
   font-size: 18px;
+  text-transform: capitalize;
 }
 
 .cancelar {
@@ -103,11 +118,4 @@ ion-text {
   font-weight: bold;
 }
 
-ion-header {
-  margin-top: 30px;
-}
 
-ion-toolbar {
-  --padding-start: 16px;
-  --padding-end: 16px;
-}

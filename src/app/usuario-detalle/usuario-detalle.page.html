@@ -63,6 +63,11 @@
           </ion-item>
 
           <div>
+            <ion-button expand="block" (click)="modo = 'editar'" *ngIf="modo === 'ver' && rolLogueado !== 'gestor'">
+              Editar
+              <ion-icon slot="start" name="pencil"></ion-icon>
+            </ion-button>
+          
             <ion-button expand="block" class="guardar" type="submit" *ngIf="modo === 'crear' || modo === 'editar' && rolLogueado !== 'gestor'">
               Guardar
               <ion-icon slot="start" name="save-outline"></ion-icon>
@@ -82,10 +87,7 @@
               <ion-icon slot="start" name="trash"></ion-icon>
             </ion-button>
 
-            <ion-button expand="block" (click)="modo = 'editar'" *ngIf="modo === 'ver' && rolLogueado !== 'gestor'">
-              Editar
-              <ion-icon slot="start" name="pencil"></ion-icon>
-            </ion-button>
+            
           </div>
         </form>
       </ion-card-content>

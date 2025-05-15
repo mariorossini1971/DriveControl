@@ -69,7 +69,6 @@ ionViewWillEnter(){
   }
 
   iniciarSesion() {
-
     console.log(" inicia sesion");
     this.apiService.loading(this.mensajeLoading);   // efecto loading
     this.subscripciones.add(

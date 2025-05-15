@@ -5,6 +5,19 @@ html, body {
   box-sizing: border-box;
 }
 
+ion-header {
+  margin-top: 30px;
+}
+
+ion-toolbar {
+  --padding-start: 16px;
+  --padding-end: 16px;
+}
+
+ion-title {
+  text-align: center;
+}
+
 ion-back-button {
   color: #005BBB;
 }
@@ -33,15 +46,27 @@ ion-card {
   width: 100%;
 }
 
+ion-card-content ion-label{
+   font-size: 20px;
+}
+
 ion-item {
   --padding-start: 0;
   --padding-end: 0;
-  color: grey;
+  color: black;
   border-bottom: 1px solid #BDC3C7;
+}
+
+ion-item ion-icon {
+  color: #005BBB;
 }
 
 ion-label {
   font-weight: bold;
+} 
+
+ion-input{
+  color: rgb(105, 100, 100);  
 }
 
 ion-button {
@@ -57,6 +82,11 @@ ion-button {
 .boton {
   --background: #005BBB;
   color: white;
+}
+
+.historialVehiculo{
+   --background: #1e7a44;
+     color: white;
 }
 
 .cancelar {
@@ -100,15 +130,4 @@ ion-button {
   font-weight: bold;
 }
 
-ion-header {
-  margin-top: 30px;
-}
 
-ion-toolbar {
-  --padding-start: 16px;
-  --padding-end: 16px;
-}
-
-ion-title {
-  text-align: center;
-}

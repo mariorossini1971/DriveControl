@@ -1,3 +1,13 @@
+/* Espaciado en el header */
+ion-header {
+  margin-top: 30px;
+}
+
+ion-toolbar {
+  --padding-start: 16px;
+  --padding-end: 16px;
+}
+
 ion-back-button {
   color: #005BBB;
 }
@@ -69,12 +79,4 @@ ion-card-title {
   font-weight: bold;
 }
 
-/* Espaciado en el header */
-ion-header {
-  margin-top: 30px;
-}
 
-ion-toolbar {
-  --padding-start: 16px;
-  --padding-end: 16px;
-}

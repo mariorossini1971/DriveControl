@@ -1,3 +1,16 @@
+ion-header{
+      margin-top: 30px;
+
+      ion-toolbar {
+        --padding-start: 16px; /* Ajustar separación lateral */
+        --padding-end: 16px; /* Ajustar separación lateral */
+      }
+}
+
+ion-title {
+    text-align: center;
+}
+
 .button-container {
     display: flex;
     flex-direction: column;
@@ -10,10 +23,6 @@
 ion-button {
     width: 80%; /* Ajusta el ancho de los botones */
 } 
-
-ion-title {
-    text-align: center;
-}
 
 .footer-content {
     display: flex; /* Alinear elementos horizontalmente */
@@ -48,11 +57,3 @@ ion-icon {
     font-weight: bold; /* Opcional: negrita */
 }
 
-ion-header{
-      margin-top: 30px;
-
-      ion-toolbar {
-        --padding-start: 16px; /* Ajustar separación lateral */
-        --padding-end: 16px; /* Ajustar separación lateral */
-      }
-}

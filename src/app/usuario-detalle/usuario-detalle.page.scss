@@ -5,6 +5,23 @@ html, body {
   box-sizing: border-box;
 }
 
+ion-header {
+  margin-top: 30px;
+}
+
+ion-toolbar {
+  --padding-start: 16px;
+  --padding-end: 16px;
+}
+
+ion-title {
+  text-align: center;
+}
+
+ion-button {
+  margin-top: 10px;
+}
+
 ion-back-button {
   color: #005BBB;
 }
@@ -37,15 +54,19 @@ ion-card {
   width: 100%;
 }
 
+ion-card-content ion-label{
+   font-size: 20px;
+}
+
 ion-item {
   --padding-start: 0;
   --padding-end: 0;
-  color: grey;
+  color: black;
   border-bottom: 1px solid #BDC3C7;
 }
 
 ion-input {
-  color: grey;
+  color: rgb(105, 100, 100);
 }
 
 .guardar {
@@ -96,19 +117,4 @@ ion-icon {
   font-weight: bold;
 }
 
-ion-header {
-  margin-top: 30px;
-}
 
-ion-toolbar {
-  --padding-start: 16px;
-  --padding-end: 16px;
-}
-
-ion-title {
-  text-align: center;
-}
-
-ion-button {
-  margin-top: 10px;
-}
