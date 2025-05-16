@@ -83,6 +83,10 @@ ion-button {
   margin-right: auto;  
 }
 
+ion-input.capitalize input {
+  text-transform: capitalize;
+}
+
 .boton {
   --background: #005BBB;
   --color: white;

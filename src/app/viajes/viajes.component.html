@@ -46,11 +46,11 @@
     <ion-card-header class="user-header">
     <ion-card-title>
       <ion-icon name="person-outline" class="icon-card"></ion-icon>
-      Usuario: {{ viaje.nombre_conductor }} 
+      Usuario: {{ viaje.nombre_conductor | titlecase  }} 
     </ion-card-title>
     <ion-card-subtitle class="vehicle-info">
       <ion-icon name="car-outline" class="icon-card"></ion-icon>
-      <strong>Vehículo:</strong> {{viaje.marca}} - {{viaje.modelo}} <br>
+      <strong>Vehículo:</strong> {{viaje.marca | titlecase }} - {{viaje.modelo | titlecase }} <br>
       <p class="car-matricula"><strong>Matrícula:</strong> {{viaje.matricula}}</p>
     </ion-card-subtitle>
     </ion-card-header>

@@ -45,6 +45,7 @@ ion-card-header {
 .user-info {
   display: flex;
   flex-direction: column;
+  text-transform: capitalize;
 }
 
 /* Estilo del correo del usuario */
