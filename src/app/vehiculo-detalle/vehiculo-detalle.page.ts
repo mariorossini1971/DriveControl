@@ -5,6 +5,7 @@ import { NavController, AlertController } from '@ionic/angular';
 import { Subscription } from 'rxjs';
 import { Capacitor } from '@capacitor/core';
 
+
 @Component({
     selector: 'app-vehiculo-detalle',
     templateUrl: './vehiculo-detalle.page.html',
@@ -25,7 +26,6 @@ export class VehiculoDetallePage implements OnInit {
   };
   modo: 'crear' | 'ver' | 'verEditor' | 'editar' = 'ver';
   usuario: any;
-  historialViajes: any[] = [];
   colorBar: string = '#FFFFFF';
  
   constructor(
@@ -130,7 +130,6 @@ export class VehiculoDetallePage implements OnInit {
               this.apiService.deleteVehiculo(this.vehiculo.id_vehiculo).subscribe({
                 next: () => {
                   this.presentAlert('Eliminado', 'Vehículo eliminado correctamente');
-                 // this.navCtrl.navigateBack(['/vehiculos'],{ state: { origen: 'origen' } });
                   this.router.navigate(['/vehiculos'], { queryParams: { origen: 'dashboard' } });
 
                 },
@@ -166,34 +165,33 @@ export class VehiculoDetallePage implements OnInit {
 
   usuarioGuardado(){
     const usuarioGuardado = localStorage.getItem('usuario');
-  if (usuarioGuardado) {
-    this.usuario = JSON.parse(usuarioGuardado); // Recupera los datos del usuario
-  } else {
-    console.warn('Usuario no encontrado.');
-  }
+    if (usuarioGuardado) {
+      this.usuario = JSON.parse(usuarioGuardado); // Recupera los datos del usuario
+    } else {
+      this.presentAlert('Error', 'Usuario no encontrado');
+    }
   }
 
-async presentAlert (titulo:string, mensaje:string){
-  const alert = await this.alertController.create({
-    header:titulo,
-    message: mensaje,
-    buttons: ['OK']
-  });
-  await alert.present();
-}
-
-verHistorial() {
-  const id = this.vehiculo.id_vehiculo; // Cambia a id_vehiculo si esa es la propiedad correcta
-  console.log('ID del vehículo:', id);
-
-  if (id) {
-    this.router.navigate(['/historial-viajes'], { state: { idVehiculo: id } });
-  } else {
-    console.error('ID del vehículo no válido.');
+  async presentAlert (titulo:string, mensaje:string){
+    const alert = await this.alertController.create({
+      header:titulo,
+      message: mensaje,
+      buttons: ['OK']
+    });
+    await alert.present();
   }
-}
-ngOnDestroy() {
-  this.subscripciones.unsubscribe(); 
-}
+
+  verHistorial() {
+    const id = this.vehiculo.id_vehiculo; // Cambia a id_vehiculo si esa es la propiedad correcta
+    if (id) {
+      this.router.navigate(['/historial-viajes'], { state: { idVehiculo: id } });
+    } else {
+      this.presentAlert('Error', 'ID del vehículo no válido.');
+
+    }
+  }
+  ngOnDestroy() {
+    this.subscripciones.unsubscribe(); 
+  }
 
 }
