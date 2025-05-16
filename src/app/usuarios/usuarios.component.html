@@ -33,7 +33,7 @@
       </ion-grid>
 
       <ion-list>
-        <ion-card *ngFor="let usuario of usuariosFiltradosYOrdenados" (click)="verUsuario(usuario)" [ngClass]="{
+        <ion-card *ngFor="let usuario of usuariosFiltradosYOrdenados" class="custom-card" (click)="verUsuario(usuario)" [ngClass]="{
             'card-admin': usuario.rol === 'admin',
             'card-gestor': usuario.rol === 'gestor',
             'card-conductor': usuario.rol === 'conductor'

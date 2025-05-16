@@ -8,59 +8,17 @@ ion-title {
     text-align: center;
 }
 
+.custom-card {
+  margin-bottom: 16px;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
 /* Encabezado de tarjeta */
 ion-card-header {
   display: flex;
   align-items: center;
   gap: 10px;
-}
-
-/* Estilo de usuario en encabezado */
-.user-header {
-  display: flex;
-  align-items: flex-start;
-  gap: 10px;
-}
-
-.icon-card {
-  font-size: 30px;
-  color: #005BBB;
-  margin-right: 8px;
-  vertical-align: middle;
-}
-
-.user-info {
-  display: flex;
-  flex-direction: column;
-}
-
-.user-email {
-  margin-left: 28px;
-  font-size: 14px;
-  color: #555;
-}
-
-/* Tarjetas personalizadas */
-.custom-card {
-  margin-bottom: 16px;
-  border-radius: 12px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-
-  .card-actions {
-    display: flex;
-    justify-content: flex-end;
-    gap: 0.5rem;
-    padding: 0 1rem 0.5rem;
-  }
-
-  ion-button {
-    font-size: 0.9rem;
-    color: var(--ion-color-primary);
-
-    ion-icon {
-      margin-right: 4px;
-    }
-  }
 }
 
 /* Footer */

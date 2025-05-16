@@ -69,17 +69,16 @@ ion-text {
   color: rgb(105, 100, 100);
 }
 
+ion-card-content ion-label{
+   font-size: 14px;
+}
+
 /* Botones */
-.botonVolver, .cancelar {
+.botonVolver {
   height: 45px;
   margin-top: 20px;
   font-size: 18px;
-  text-transform: capitalize;
-}
-
-.cancelar {
-  --color: white;
-  --background: orange;
+  text-transform: capitalize;  
 }
 
 /* Footer */

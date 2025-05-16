@@ -4,6 +4,21 @@ ion-icon {
   color: #005BBB;
 }
 
+/* Ajustes para el encabezado */
+ion-header {
+  margin-top: 30px;
+}
+
+ion-toolbar {
+  --padding-start: 16px;
+  --padding-end: 16px;
+}
+
+/* Estilo para el título */
+ion-title {
+  text-align: center;
+}
+
 /* Estilo para el encabezado de la tarjeta */
 ion-card-header {
   display: flex;
@@ -115,17 +130,4 @@ ion-button ion-icon {
   font-weight: bold;
 }
 
-/* Ajustes para el encabezado */
-ion-header {
-  margin-top: 30px;
-}
 
-ion-toolbar {
-  --padding-start: 16px;
-  --padding-end: 16px;
-}
-
-/* Estilo para el título */
-ion-title {
-  text-align: center;
-}

@@ -7,6 +7,15 @@ ion-toolbar {
   --padding-end: 16px;
 }
 
+.ion-margin-top{
+  text-transform: capitalize;
+  font-size: 18px;
+  height: 45px;  
+  background-color: #005BBB;
+  color: white;
+  border-radius: 12px; 
+}
+
 .footer-content {
   display: flex;
   justify-content: space-between;

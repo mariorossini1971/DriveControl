@@ -7,16 +7,16 @@
 <ion-content [fullscreen]="true">
   <div class="button-container">
     
-    <ion-button *ngIf="rol === 'conductor'" expand="full" fill="solid" size="large"  [ngStyle]="{'--background': '#8E44AD ' }" (click)="iniciarViaje()">INICIAR VIAJE</ion-button>
-    <ion-button *ngIf="rol === 'conductor'" expand="full" fill="solid" size="large" [ngStyle]="{'--background': '#cb4335' }" (click)="verUsuario(usuarioRecuperado)">MI PERFIL</ion-button>
-    <ion-button *ngIf="rol === 'admin' || rol === 'gestor'" expand="full" fill="solid" size="large" [ngStyle]="{'--background': '#cb4335' }" (click)="verUsuario(usuario)">USUARIOS</ion-button>
-    <ion-button expand="full" fill="solid" size="large" [ngStyle]="{'--background': '#1e8449' }" (click)="verVehiculos()">VEHÍCULOS</ion-button>
-    <ion-button *ngIf="rol === 'admin' || rol === 'gestor'" expand="full" fill="solid" size="large" [ngStyle]="{'--background': '#005BBB'}" (click)="verViajes()">VIAJES</ion-button>
+    <ion-button *ngIf="rol === 'conductor'" expand="full" fill="solid" size="large"  [ngStyle]="{'--background': '#8E44AD ' }" (click)="iniciarViaje()">Iniciar Viaje</ion-button>
+    <ion-button *ngIf="rol === 'conductor'" expand="full" fill="solid" size="large" [ngStyle]="{'--background': '#cb4335' }" (click)="verUsuario(usuarioRecuperado)">Mi Perfil</ion-button>
+    <ion-button *ngIf="rol === 'admin' || rol === 'gestor'" expand="full" fill="solid" size="large" [ngStyle]="{'--background': '#cb4335' }" (click)="verUsuario(usuario)">Usuarios</ion-button>
+    <ion-button expand="full" fill="solid" size="large" [ngStyle]="{'--background': '#1e8449' }" (click)="verVehiculos()">Vehículos</ion-button>
+    <ion-button *ngIf="rol === 'admin' || rol === 'gestor'" expand="full" fill="solid" size="large" [ngStyle]="{'--background': '#005BBB'}" (click)="verViajes()">Viajes</ion-button>
     <ion-button *ngIf="rol === 'conductor'" expand="full" fill="solid" size="large" [ngStyle]="{'--background': '#005BBB '}" (click)="verViajes()">MIS VIAJES</ion-button>
-    <ion-button *ngIf="rol === 'conductor'" expand="full" fill="solid" size="large" [ngStyle]="{'--background': '#B2AE3A'}" (click)="verHelpConductor()">HELP</ion-button>
-    <ion-button *ngIf="rol === 'admin'" expand="full" fill="solid" size="large" [ngStyle]="{'--background': '#B2AE3A'}" (click)="verHelpAdministrador()">HELP</ion-button>
-    <ion-button *ngIf="rol === 'gestor'" expand="full" fill="solid" size="large" [ngStyle]="{'--background': '#B2AE3A'}" (click)="verHelpGestor()">HELP</ion-button>
-    <ion-button expand="full" fill="solid" size="large" [ngStyle]="{'--background': '#34495E'}" (click)="cerrarSesion()">CERRAR SESIÓN</ion-button>
+    <ion-button *ngIf="rol === 'conductor'" expand="full" fill="solid" size="large" [ngStyle]="{'--background': '#B2AE3A'}" (click)="verHelpConductor()">Help</ion-button>
+    <ion-button *ngIf="rol === 'admin'" expand="full" fill="solid" size="large" [ngStyle]="{'--background': '#B2AE3A'}" (click)="verHelpAdministrador()">Help</ion-button>
+    <ion-button *ngIf="rol === 'gestor'" expand="full" fill="solid" size="large" [ngStyle]="{'--background': '#B2AE3A'}" (click)="verHelpGestor()">Help</ion-button>
+    <ion-button expand="full" fill="solid" size="large" [ngStyle]="{'--background': '#34495E'}" (click)="cerrarSesion()">Cerrra Sesión</ion-button>
 
   </div>
 </ion-content>

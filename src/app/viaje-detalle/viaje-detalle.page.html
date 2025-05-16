@@ -80,20 +80,7 @@
             </ion-item>
 
             <div>
-              <ion-button expand="block" class="cancelar" (click)="cancelarEdicion()" *ngIf="modo === 'editar'">
-                Cancelar
-                <ion-icon slot="start" name="close-circle-outline"></ion-icon>
-              </ion-button>
-
-              <ion-button expand="block" color="danger" (click)="cancelar()" *ngIf="modo === 'crear'">Cancelar</ion-button>
-
-              <ion-button expand="full" color="danger" (click)="eliminarViaje()" *ngIf="modo === 'editar'">
-                Eliminar
-                <ion-icon slot="start" name="trash"></ion-icon>
-              </ion-button>
-
-              <ion-button class="botonVolver" expand="full" (click)="cancelarEdicion()"> Volver a Viajes
-                <ion-icon slot="start" name="return-down-back-outline"></ion-icon>
+              <ion-button class="botonVolver" expand="block" (click)="cancelarEdicion()"> Volver a Viajes
               </ion-button>
             </div>
           </form>

@@ -44,6 +44,10 @@ ion-card-title {
   margin-top: 8px;
 }
 
+ion-button::part(native) {
+  text-transform: capitalize !important;
+} 
+
 /* Footer */
 .footer-content {
   display: flex;

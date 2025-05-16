@@ -19,18 +19,11 @@ ion-card-header {
   border-radius: 12px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 
-  .card-actions {
-    display: flex;
-    justify-content: flex-end;
-    gap: 0.5rem;
-    padding: 0 1rem 0.5rem;
-  }
-
   ion-button {
     font-size: 0.9rem;
     color: var(--ion-color-primary);
 
-    ion-icon {
+  ion-icon {
       margin-right: 4px;
     }
   }

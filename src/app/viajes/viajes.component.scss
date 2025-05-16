@@ -2,6 +2,14 @@ ion-back-button{
   color: #005BBB;
 }
 
+ion-header{
+    margin-top: 30px;
+    ion-toolbar {
+      --padding-start: 16px; /* Ajustar separación lateral */
+      --padding-end: 16px; /* Ajustar separación lateral */
+    }
+}
+
 .custom-card {
     margin-bottom: 16px;
     border-radius: 12px;
@@ -28,6 +36,7 @@ ion-back-button{
     margin-right: 8px;
     vertical-align: middle
   }
+
   .icon-card-calendar{
     font-size: 14px;
     color: grey;
@@ -74,8 +83,12 @@ ion-back-button{
 
   .boton-detalles {
     text-align: center;
-    margin-top: 8px;
+    margin-top: 8px;    
   }
+
+  ion-button::part(native) {
+  text-transform: capitalize !important;
+} 
 
   .footer-content {
     display: flex; /* Alinear elementos horizontalmente */
@@ -113,10 +126,4 @@ ion-back-button{
       font-weight: bold; /* Opcional: negrita */
     }
   }
-  ion-header{
-    margin-top: 30px;
-    ion-toolbar {
-      --padding-start: 16px; /* Ajustar separación lateral */
-      --padding-end: 16px; /* Ajustar separación lateral */
-    }
-}
+  

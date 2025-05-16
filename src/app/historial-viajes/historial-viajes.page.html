@@ -17,7 +17,7 @@
         <ion-card-title>ID VIAJE: {{ viaje.id_viaje }}</ion-card-title>
       </ion-card-header>
 
-      <ion-card-content>
+      <ion-card-content>        
         <p *ngIf="viaje.fecha_inicio && viaje.fecha_inicio !== '0000-00-00 00:00:00'">
           <ion-icon name="calendar-outline" class="icon-card-calendar"></ion-icon>
           Inicio: {{ viaje.fecha_inicio | date: 'd \'de\' MMMM \'del\' y - HH:mm' }}
@@ -29,11 +29,11 @@
       </ion-card-content>
 
       <div class="boton-detalles">
-        <ion-button fill="outline" color="primary" shape="round" size="small" (click)="verViaje(viaje.id_viaje)">
+        <ion-button fill="outline" color="primary" shape="round" size="medium" (click)="verViaje(viaje.id_viaje)">
           Ver detalles
         </ion-button>
-      </div>
-    </ion-card>
+      </div>     
+     </ion-card>
   </ion-list>
 </ion-content>
 

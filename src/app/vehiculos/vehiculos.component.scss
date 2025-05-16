@@ -3,6 +3,20 @@ ion-back-button {
   color: #005BBB;
 }
 
+/* Estilos para el header */
+ion-header {
+  margin-top: 30px;
+}
+
+ion-toolbar {
+  --padding-start: 16px;
+  --padding-end: 16px;
+}
+
+ion-title {
+  text-align: center;
+}
+
 /* Estilos para los vehículos */
 .custom-card {
   margin-bottom: 16px;
@@ -39,6 +53,44 @@ ion-checkbox[checked] {
   color: #555;
 }
 
+/* Estilos de tarjetas para disponibilidad */
+.card-disponible {
+  border: 2px solid #10dc60;
+}
+
+.card-ocupado {
+  border: 2px solid #ed0b12;
+}
+
+/* Estilos de disponibilidad */
+.disponible-centrado {
+  text-align: center;
+  font-size: 16px;
+  font-weight: bold;
+  padding: 10px 0;
+}
+
+.disponible-text {
+  color: green;
+}
+
+.ocupado-text {
+  color: red;
+}
+
+/* Estilos para el botón de guardar */
+.botonGuardar {
+  width: 80%;
+  max-width: 80%;
+  height: 45px;
+  margin-top: 20px;
+  font-size: 18px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  text-transform: capitalize;
+}
+
 /* Estilos para el footer */
 .footer-content {
   display: flex;
@@ -66,53 +118,6 @@ ion-icon {
   font-weight: bold;
 }
 
-/* Estilos de tarjetas para disponibilidad */
-.card-disponible {
-  border: 2px solid #10dc60;
-}
 
-.card-ocupado {
-  border: 2px solid #ed0b12;
-}
 
-/* Estilos de disponibilidad */
-.disponible-centrado {
-  text-align: center;
-  font-size: 16px;
-  font-weight: bold;
-  padding: 10px 0;
-}
 
-.disponible-text {
-  color: green;
-}
-
-.ocupado-text {
-  color: red;
-}
-
-/* Estilos para el header */
-ion-header {
-  margin-top: 30px;
-}
-
-ion-toolbar {
-  --padding-start: 16px;
-  --padding-end: 16px;
-}
-
-ion-title {
-  text-align: center;
-}
-
-/* Estilos para el botón de guardar */
-.botonGuardar {
-  width: 80%;
-  max-width: 80%;
-  height: 45px;
-  margin-top: 20px;
-  font-size: 18px;
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
-}

@@ -18,28 +18,28 @@
           <form (ngSubmit)="guardarVehiculo()" *ngIf="vehiculo">
             <ion-item>
               <div class="item-content">
-              <ion-label position="floating">Matrícula</ion-label>
+              <ion-label position="stacked">Matrícula</ion-label>
               <ion-input [(ngModel)]="vehiculo.matricula" name="matricula" [readonly]="modo !== 'editar' && modo !== 'crear'" required></ion-input>
               </div>
               <ion-icon class="ion-align-self-center" slot="end" name="code-working-outline"></ion-icon>
              </ion-item>
             <ion-item>
-              <ion-label position="floating">Marca</ion-label>
+              <ion-label position="stacked">Marca</ion-label>
               <ion-input [(ngModel)]="vehiculo.marca" name="marca" [readonly]="modo !== 'editar' && modo !== 'crear'" required></ion-input>
               <ion-icon class="ion-align-self-center" slot="end" name="car-outline"></ion-icon>
             </ion-item>
             <ion-item>
-              <ion-label position="floating">Modelo</ion-label>
+              <ion-label position="stacked">Modelo</ion-label>
               <ion-input [(ngModel)]="vehiculo.modelo" name="modelo" [readonly]="modo !== 'editar' && modo !== 'crear'" required></ion-input>
               <ion-icon class="ion-align-self-center" slot="end" name="car-sport-outline"></ion-icon>
             </ion-item>
             <ion-item>
-              <ion-label position="floating">Año</ion-label>
+              <ion-label position="stacked">Año</ion-label>
               <ion-input [(ngModel)]="vehiculo.ano" name="ano" [readonly]="modo !== 'editar' && modo !== 'crear'" required></ion-input>
               <ion-icon class="ion-align-self-center" slot="end" name="calendar-outline"></ion-icon>
             </ion-item>
             <ion-item>
-              <ion-label position="floating">Disponible</ion-label>
+              <ion-label position="stacked">Disponible</ion-label>
               <ion-select [(ngModel)]="vehiculo.disponible" name="disponible" interface="popover" [disabled]="modo !== 'editar' && modo !== 'crear'">
                 <ion-select-option [value]="1">Sí</ion-select-option>
                 <ion-select-option [value]="0">No</ion-select-option>
@@ -48,24 +48,18 @@
             </ion-item>
 
             <div>
-              <ion-button expand="full" class="boton" type="submit" *ngIf="modo === 'crear' || modo === 'editar'">Guardar
-                <ion-icon slot="start" name="save-outline"></ion-icon>
+              <ion-button expand="block" class="boton" type="submit" *ngIf="modo === 'crear' || modo === 'editar'">Guardar               
               </ion-button>
               <ion-button expand="block" class="cancelar" (click)="cancelarEdicion()" *ngIf="modo === 'editar'">Cancelar
-                <ion-icon slot="start" name="close-circle-outline"></ion-icon>
               </ion-button>
-              <ion-button expand="block" color="danger" (click)="cancelar()" *ngIf="modo === 'crear'">Cancelar</ion-button>
-              <ion-button expand="full" color="danger" (click)="eliminarVehiculo()" *ngIf="modo === 'editar'">Eliminar
-                <ion-icon slot="start" name="trash"></ion-icon>
+              <ion-button expand="block" class=" danger" (click)="cancelar()" *ngIf="modo === 'crear'">Cancelar</ion-button>
+              <ion-button expand="block" class=" danger" (click)="eliminarVehiculo()" *ngIf="modo === 'editar'">Eliminar
               </ion-button>
-              <ion-button expand="full" class="boton" (click)="modo = 'editar'" *ngIf="modo === 'verEditor' && usuario.rol !== 'gestor'">Editar
-                <ion-icon slot="start" name="pencil"></ion-icon>
+              <ion-button expand="block" class="boton" (click)="modo = 'editar'" *ngIf="modo === 'verEditor' && usuario.rol !== 'gestor'">Editar
               </ion-button>
-              <ion-button expand="block" color="medium" (click)="cancelar()" *ngIf="modo === 'ver'">Volver a Vehiculos
-                <ion-icon slot="start" name="return-down-back-outline"></ion-icon>
+              <ion-button expand="block" class="boton" (click)="cancelar()" *ngIf="modo === 'ver'">Volver a Vehículos
               </ion-button>
-              <ion-button expand="block" class="historialVehiculo" (click)="verHistorial()" *ngIf="modo === 'verEditor'">Historial del Vehiculo
-                <ion-icon slot="start" name="archive-outline"></ion-icon>
+              <ion-button expand="block" class="historialVehiculo" (click)="verHistorial()" *ngIf="modo === 'verEditor'">Historial del Vehículo
               </ion-button>
             </div>
           </form>

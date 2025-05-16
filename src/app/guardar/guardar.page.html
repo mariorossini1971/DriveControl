@@ -20,8 +20,8 @@
     <ion-card-content>
       <ion-textarea
         [(ngModel)]="viaje$.getValue().comentario"
-        label="Comentarios"
-        label-placement="floating"
+        label="Comentarios" 
+        label-placement="stacked"
         fill="outline"
         placeholder="Escribe tus comentarios...(opcional)"
         rows="4"
@@ -30,7 +30,7 @@
     </ion-card-content>
   </ion-card>
 
-  <ion-button expand="block" shape="round" color="primary" class="ion-margin-top" (click)="guardarStore()"> 
+  <ion-button expand="block" class="ion-margin-top" (click)="guardarStore()"> 
     Guardar
   </ion-button>
 

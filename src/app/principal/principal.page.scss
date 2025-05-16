@@ -21,8 +21,13 @@ ion-title {
 }
 
 ion-button {
-    width: 80%; /* Ajusta el ancho de los botones */
+    width: 80%; /* Ajusta el ancho de los botones */      
 } 
+
+ion-button::part(native) {
+  text-transform: capitalize !important;
+  border-radius: 12px;  
+}
 
 .footer-content {
     display: flex; /* Alinear elementos horizontalmente */

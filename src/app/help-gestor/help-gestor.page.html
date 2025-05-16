@@ -16,24 +16,18 @@
   <ion-grid class="ion-padding">
     <ion-row class="ion-align-items-center">
       <ion-col size="12" size-md="6">
-        <ion-searchbar
-          [(ngModel)]="filtroTexto"
-          placeholder="Buscar en el manual"
-          debounce="300">
+        <ion-searchbar [(ngModel)]="filtroTexto" placeholder="Buscar en el manual" debounce="300">
         </ion-searchbar>
       </ion-col>
     </ion-row>
   </ion-grid>
 
   <ion-list>
-    <ion-card *ngFor="let tema of temasFiltrados">
+    <ion-card *ngFor="let tema of temasFiltrados" class="custom-card">
       <ion-card-header>
         <ion-card-title>{{ tema.titulo }}</ion-card-title>
             <ion-card-subtitle>{{ tema.subtitulo }}</ion-card-subtitle>
           </ion-card-header>
-          <!-- <ion-card-content>
-            <p>{{ tema.descripcion }}</p>
-          </ion-card-content> -->
           <ion-card-content [innerHTML]="tema.descripcion"></ion-card-content>
     </ion-card>
   </ion-list>
