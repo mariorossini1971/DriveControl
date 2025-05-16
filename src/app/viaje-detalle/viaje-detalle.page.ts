@@ -3,7 +3,6 @@ import { Router } from '@angular/router';
 import { ApiService } from '../api.service';
 import { NavController, AlertController } from '@ionic/angular';  
 import { HttpClient } from '@angular/common/http';
-import { Geolocation } from '@capacitor/geolocation';
 import { MenuController } from '@ionic/angular';
 import { Subscription } from 'rxjs';
 import { Capacitor } from '@capacitor/core';
@@ -105,7 +104,6 @@ export class ViajeDetallePage implements OnInit {
       this.navCtrl.navigateBack('/viajes');
 
     }
-
   }
 
   cancelarEdicion() {
@@ -177,51 +175,14 @@ export class ViajeDetallePage implements OnInit {
     );
 }
 
-
-  // async obtenerUbicacion(id_viaje: number) {
-  //   let id: number = id_viaje;
-  //   this.subscripciones.add (
-  //     this.apiService.getCoordenadasById(id).subscribe({
-  //       next: (response) => {
-  //         console.log("Coordenadas obtenidas:", response);
-  //         this.coordenadas.lngInicial = response[0].lngInicial;
-  //         this.coordenadas.latInicial = response[0].latInicial;
-  //         this.coordenadas.lngFinal = response[0].lngFinal;
-  //         this.coordenadas.latFinal = response[0].latFinal;
-         
-  //         this.calculadireccion(this.coordenadas.latInicial, this.coordenadas.lngInicial).then(direccion => {
-  //           this.direccionInicio = direccion;
-  //           console.log("Dirección Inicial:", this.direccionInicio);
-  //         }).catch(error => {
-  //           console.error("Error al calcular dirección inicial:", error);
-  //           this.direccionInicio = "Error al obtener dirección";
-  //         });
-      
-  //         this.calculadireccion(this.coordenadas.latFinal, this.coordenadas.lngFinal).then(direccion => {
-  //           this.direccionFinal = direccion;
-  //           console.log("Dirección Final:", this.direccionFinal);
-  //         }).catch(error => {
-  //           console.error("Error al calcular dirección Final:", error);
-  //           this.direccionInicio = "Error al obtener dirección";
-  //         });
-  //       },
-  //       error: (error) => {
-  //         console.error("Error al obtener coordenadas:", error);
-  //       }
-  //     })
-  // );
-  // }
-
-  calculadireccion(lat: number, lng: number): Promise<string> {
+  calculadireccion(lat: number, lng: number): Promise<string> {     // paso las coordenadas a Geoapify y me hace geolocalización inversa
     return new Promise((resolve, reject) => {
-        const apiKey = '57356b10fa564f7188ec06c8a6982641';
-        const url = `https://api.geoapify.com/v1/geocode/reverse?lat=${lat}&lon=${lng}&apiKey=${apiKey}`;
-     // const url = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`;
+      const apiKey = '57356b10fa564f7188ec06c8a6982641';
+      const url = `https://api.geoapify.com/v1/geocode/reverse?lat=${lat}&lon=${lng}&apiKey=${apiKey}`;
       this.subscripciones.add (
         this.http.get(url).subscribe({
           next: (data: any) => {
             if (data && data.features.length > 0) {
-            //  const numero = data.address.house_number || "Sin número";
               const calle = data.features[0].properties.address_line1 || 'Calle desconocida';
               const ciudad = data.features[0].properties.city || 'Ciudad desconocida';
     
@@ -254,12 +215,11 @@ export class ViajeDetallePage implements OnInit {
     this.subscripciones.add (
       this.apiService.getRol().subscribe(rol => {
         this.rol = rol;
-        console.log("Rol actual   * * * ", this.rol);
       })
     );
     this.cdr.detectChanges();
-
   }
+
   ngOnDestroy() {
     this.subscripciones.unsubscribe(); 
   }

@@ -1,11 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, BehaviorSubject } from 'rxjs';
-import { tap } from 'rxjs/operators';
 import { HttpHeaders } from '@angular/common/http';
 import { LoadingController } from '@ionic/angular';
 import { Usuario } from './models/usuario.model';
-import { Geolocation } from '@capacitor/geolocation';
 import { StatusBar } from '@capacitor/status-bar'
 
 const apiUrl = 'https://nice-roan-whippet.glitch.me/api';
@@ -223,105 +221,95 @@ export class ApiService {
     }
   }
 
-  // Método para actualizar el rol manualmente
-  actualizarRol(nuevoRol: string): void {
-    this.rolBehaviorSubject.next(nuevoRol); // Cambia el rol globalmente
-    localStorage.setItem('rol', nuevoRol); // Actualiza en localStorage
-    console.log('Rol actualizado a:', nuevoRol);
+    // Método para actualizar el rol manualmente
+    actualizarRol(nuevoRol: string): void {
+      this.rolBehaviorSubject.next(nuevoRol); // Cambia el rol globalmente
+      localStorage.setItem('rol', nuevoRol); // Actualiza en localStorage
+      console.log('Rol actualizado a:', nuevoRol);
+    }
+
+
+    setRol(rol: string){
+      this.rolBehaviorSubject.next(rol);
+      console.log('he grabado el rol: ', this.rolBehaviorSubject.value);
+    }
+    getRol(){
+      return this.rolBehaviorSubject.asObservable();
+    }
+
+  /////////////////////////////   vehiculo  observable ////////////////////////////////////
+
+    setModeloSeleccionado(modelo: string) {
+      this.miCocheBehaviorSubject.next(modelo);
+    }
+
+    getModeloSeleccionado() {
+      return this.miCocheBehaviorSubject.asObservable();
+    }
+    setIdCoche(idCoche: number) {
+      this.miIdCocheBehaviorSubject.next(idCoche);
+    }
+    getIdCoche(){
+      return this.miIdCocheBehaviorSubject.asObservable();
+    }
+
+    //////////////////////////////// VIAJE /////////////////////////////////
+    setNewItem(item:any){
+      this.newItemSubject.next(item);
+    }
+    getNewItem(){
+      return this.newItemSubject.asObservable();
+    }
+    getNewItemValue(): any {
+      return this.newItemSubject.getValue();
+    }
+    //// coordenadas
+    setNewCoordenadas(item:any){
+      this.newCoordenadasSubject.next(item);
+    }
+    getNewCoordenadas(){
+      return this.newCoordenadasSubject.asObservable();
+    }
+
+
+    setCocheSelec(id_Vehiculo: number, coche: any): Observable<any>{
+      return this.http.put(`${apiUrl}/vehiculos/${id_Vehiculo}`, coche);
+    }
+    
+    getCocheSeleccionado() {
+      return this.cocheSelBehaviorSubject.asObservable();
+    }
+
+    // Setter: Actualiza el valor del BehaviorSubject
+    setCocheSeleccionado(coche: any) {
+      this.cocheSelBehaviorSubject.next(coche);
+    }
+
+  actualizarUsuario(usuario: Usuario): void {
+    this.usuarioSubject.next(usuario);
   }
+  /////////  USUARIO ////////////////////////////////
 
 
-  setRol(rol: string){
-    this.rolBehaviorSubject.next(rol);
-    console.log('he grabado el rol: ', this.rolBehaviorSubject.value);
+  //////////////////   LOADING ////////////////////////
+
+  async loading(mensaje: string){
+    const loading = await this.LoadingController.create({
+      spinner: 'bubbles',
+      //duration: 5000,
+      message: mensaje,
+
+    });
+    return await loading.present();
+
   }
-  getRol(){
-    return this.rolBehaviorSubject.asObservable();
+  //////////////////////////// CIERRE SESION ////////////////////////
+  /* LIMPIO MEMORIA */
+  cerrarSesion(){
+    localStorage.clear();
+    sessionStorage.clear();
+    console.log('Sesión cerrada');
   }
-
-/////////////////////////////   vehiculo  observable ////////////////////////////////////
-
-  setModeloSeleccionado(modelo: string) {
-    // this.objetoModeloSeleccionado.next(modelo);
-    this.miCocheBehaviorSubject.next(modelo);
-  }
-
-  getModeloSeleccionado() {
-    return this.miCocheBehaviorSubject.asObservable();
-  }
-  setIdCoche(idCoche: number) {
-    this.miIdCocheBehaviorSubject.next(idCoche);
-  }
-  getIdCoche(){
-    return this.miIdCocheBehaviorSubject.asObservable();
-  }
-
-  //////////////////////////////// VIAJE /////////////////////////////////
-  setNewItem(item:any){
-    this.newItemSubject.next(item);
-  }
-  getNewItem(){
-    return this.newItemSubject.asObservable();
-  }
-  getNewItemValue(): any {
-    return this.newItemSubject.getValue();
-  }
-  //// coordenadas
-  setNewCoordenadas(item:any){
-    this.newCoordenadasSubject.next(item);
-  }
-  getNewCoordenadas(){
-    return this.newCoordenadasSubject.asObservable();
-  }
-
-
-  setCocheSelec(id_Vehiculo: number, coche: any): Observable<any>{
-    return this.http.put(`${apiUrl}/vehiculos/${id_Vehiculo}`, coche);
-  }
-  
-  getCocheSeleccionado() {
-    return this.cocheSelBehaviorSubject.asObservable();
-  }
-
-  // Setter: Actualiza el valor del BehaviorSubject
-  setCocheSeleccionado(coche: any) {
-    this.cocheSelBehaviorSubject.next(coche);
-  }
-
-
-
-
-////////////////////////////////////////////////////////////////////////////////
-actualizarUsuario(usuario: Usuario): void {
-  this.usuarioSubject.next(usuario);
-}
-/////////  USUARIO ////////////////////////////////
-
-
-//////////////////   LOADING ////////////////////////
-
-async loading(mensaje: string){
-  const loading = await this.LoadingController.create({
-    spinner: 'bubbles',
-    //duration: 5000,
-    message: mensaje,
-
-  });
-  return await loading.present();
-
-}
-//////////////////////////// CIERRE SESION ////////////////////////
-/* LIMPIO MEMORIA */
-cerrarSesion(){
-  // localStorage.removeItem('token');
-  // localStorage.removeItem('usuario');
-  // localStorage.removeItem('rol');
-  localStorage.clear();
-  sessionStorage.clear();
-  console.log('Sesión cerrada');
-}
-
-
 
 }
 

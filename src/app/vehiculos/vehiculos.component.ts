@@ -3,7 +3,7 @@ import { ApiService } from '../api.service';
 import { Router,ActivatedRoute } from '@angular/router';
 import { Usuario } from '../models/usuario.model';
 import { BehaviorSubject, Subscription } from 'rxjs';
-import { MenuController } from '@ionic/angular';
+import { AlertController, MenuController } from '@ionic/angular';
 import { Capacitor } from '@capacitor/core';
 
 
@@ -18,7 +18,6 @@ export class VehiculosComponent implements OnDestroy {
 
   private subscripciones = new Subscription(); 
   vehiculos: any[] = [];
-  modeloSeleccionado: string = "";
   disponible: boolean = false;
   mensajeLoading: string =  'cargando datos';
   rol : string | null = '';
@@ -26,13 +25,7 @@ export class VehiculosComponent implements OnDestroy {
   vehiculoSeleccionado: any = null;
   idVehiculo: number = 0;
 
-  cocheDisponible: boolean = true;
-  cocheReservado: boolean = true;
-
   public usuario: Usuario = new Usuario(0,'', '','','',0);
-  public usuarioRecuperado: Usuario = new Usuario(0,'','','','',0);
-  public rol$ = new BehaviorSubject<string>('');
-
   mostrar: boolean = true;
   origen: string = '';
   filtroTexto: string = '';
@@ -48,25 +41,25 @@ export class VehiculosComponent implements OnDestroy {
     private cdr: ChangeDetectorRef,
     private menuCtrl: MenuController,
     private route: ActivatedRoute,
+    private alertController: AlertController,
+    
   ) { }
 
    ngOnInit() {
     this.controlRol();
     this.controlPagina();
     this.activarMenu();
-   // this.cargarDatosVehiculos();
     this.usuarioGuardado();
-    console.log('usuarioGuardado en principal: ', this.usuario.nombre);
     if (Capacitor.isNativePlatform()) {                     ///// El If es para controlar que no estamos en PC
         this.apiService.setStatusBarColor(this.colorBar);
       };
   }
 
-    ionViewWillEnter(){
-      this.controlPagina();
-      this.cargarDatosVehiculos();
-      this.cdr.detectChanges();
-    }
+  ionViewWillEnter(){
+    this.controlPagina();
+    this.cargarDatosVehiculos();
+    this.cdr.detectChanges();
+  }
 
   controlRol(){
     this.subscripciones.add (
@@ -89,49 +82,41 @@ export class VehiculosComponent implements OnDestroy {
 
 
   controlPagina() {
-    console.log("ENTRO EN CONTROL PAGINA");
     try {
       this.subscripciones.add (
         this.route.queryParams.subscribe(params => {
           if (params['origen']) {
             this.origen = params['origen'];
-            console.log("Origen recibido correctamente:", this.origen);
-    
             if (this.origen === 'dashboard') {
               this.mostrar = false;
             } else {
               this.mostrar = true;
             }
-    
             this.cdr.detectChanges(); // Forzar actualización
           } else {
             console.log("No se recibió el estado esperado.");
             this.mostrar = true;
             this.cdr.detectChanges(); // Forzar actualización
           }
-    
-          console.log("-------------------Muestro :", this.mostrar);
         })
     );
     } catch (error) {
       console.error("Error en controlPagina:", error);
     }
   }
-    
-   
+       
   cargarDatosVehiculos(){
     this.apiService.loading(this.mensajeLoading);
     this.subscripciones.add (
       this.apiService.getVehiculos().subscribe((data: any[]) => {
         this.apiService.LoadingController.dismiss();
         if (this.origen !== 'dashboard'){
-          // this.vehiculos = data.filter(vehiculo => vehiculo.disponible == true);   //filtro solo los disponibles
           data = data.filter(vehiculo => vehiculo.disponible == true);   //filtro solo los disponibles
         }
         this.vehiculos = data;
         console.log(data);
       })
-  );
+    );
     this.cdr.detectChanges(); // Forzar la actualización
   }
 
@@ -154,81 +139,83 @@ export class VehiculosComponent implements OnDestroy {
           disponible: this.disponible   
         };
         if (this.vehiculoSeleccionado) {
-
-   //         this.modeloSeleccionado = this.vehiculoSeleccionado.modelo;
-     //       this.idVehiculo = this.vehiculoSeleccionado.id_vehiculo;
-              this.idVehiculo = coche.id_vehiculo;
-     //       this.apiService.setModeloSeleccionado(this.modeloSeleccionado);
-            this.apiService.setIdCoche(this.idVehiculo);
-
-            this.apiService.setCocheSeleccionado(coche);     //////////////////////            
-            console.log("id guardado:", this.apiService.idCoche);
-            console.log("id guardado idVehiculo:", this.idVehiculo);
-            
-            this.apiService.updateEstadoVehiculo(this.idVehiculo, 0).subscribe({
-              next: (response) => {
-                console.log("Estado actualizado correctamente:", response);
-              },
-              error: (error) => {
-                console.error("Error en la actualización:", error);
-              }
-            });
-            this.cambiaPagina();
+            this.idVehiculo = coche.id_vehiculo;
+            this.apiService.setIdCoche(this.idVehiculo);   // guardo el id del vehiculo
+            this.apiService.setCocheSeleccionado(coche);     // guardo el coche seleccionado             
+            this.subscripciones.add (
+              this.apiService.updateEstadoVehiculo(this.idVehiculo, 0).subscribe({
+                next: (response) => {
+                  console.log("Estado actualizado correctamente:", response);
+                },
+                error: (error) => {
+                  console.error("Error en la actualización:", error);
+                  this.presentAlert('Error', 'Error en la actualización:');
+                }
+              })
+           );
+          this.cambiaPagina();
 
         } else {
-            console.log("No hay vehículo seleccionado.");
+            this.presentAlert('Error', 'o hay vehículo seleccionado.');
         }
       }
-      cambiaPagina(){
-        this.router.navigate(['/home']);
-      }
+  cambiaPagina(){
+    this.router.navigate(['/home']);
+  }
       
-      verVehiculo(vehiculo: any){
-        if(this.rol === 'conductor'){
-          this.router.navigate(['/vehiculo-detalle'],{ state: {vehiculo, modo: 'ver' } }); 
-        } else{
-            this.router.navigate(['/vehiculo-detalle'],{ state: {vehiculo, modo: 'verEditor' } });
-          }
-        
-      }
-
-      nuevoVehiculo(){
-        this.router.navigate(['/vehiculo-detalle'], { state: { modo: 'crear' } });
-      }
-
-      usuarioGuardado(){
-        const usuarioGuardado = localStorage.getItem('usuario');
-      if (usuarioGuardado) {
-        this.usuario = JSON.parse(usuarioGuardado); // Recupera los datos del usuario
-      } else {
-        console.warn('Usuario no encontrado.');
-      }
-      }
-get vehiculosFiltradosYOrdenados() {
-    return this.vehiculos
-      .filter(vehiculos => {
-        const texto = this.filtroTexto.toLowerCase();
-        return (
-        
-          vehiculos.marca.toLowerCase().includes(texto) ||
-          vehiculos.modelo.toLowerCase().includes(texto) ||
-          vehiculos.matricula.toLowerCase().includes(texto)
-        );
-      })
-      .sort((a, b) => {
-        const valA = a.marca.toLowerCase();
-        const valB = b.marca.toLowerCase();
-        
-        if (this.ordenDireccion === 'asc') {
-          return valA.localeCompare(valB); // Orden ascendente
-        } else {
-          return valB.localeCompare(valA); // Orden descendente
-        }
-      });
+  verVehiculo(vehiculo: any){
+    if(this.rol === 'conductor'){
+      this.router.navigate(['/vehiculo-detalle'],{ state: {vehiculo, modo: 'ver' } }); 
+    } else{
+        this.router.navigate(['/vehiculo-detalle'],{ state: {vehiculo, modo: 'verEditor' } });
+      }       
   }
 
-      ngOnDestroy() {
-        this.subscripciones.unsubscribe(); 
-      }
+  nuevoVehiculo(){
+    this.router.navigate(['/vehiculo-detalle'], { state: { modo: 'crear' } });
+  }
+
+  usuarioGuardado(){
+    const usuarioGuardado = localStorage.getItem('usuario');
+    if (usuarioGuardado) {
+      this.usuario = JSON.parse(usuarioGuardado); // Recupera los datos del usuario
+    } else {
+      this.presentAlert('Error', 'Usuario no encontrado');
+    }
+  }
+  get vehiculosFiltradosYOrdenados() {
+      return this.vehiculos
+        .filter(vehiculos => {
+          const texto = this.filtroTexto.toLowerCase();
+          return (
+          
+            vehiculos.marca.toLowerCase().includes(texto) ||
+            vehiculos.modelo.toLowerCase().includes(texto) ||
+            vehiculos.matricula.toLowerCase().includes(texto)
+          );
+        })
+        .sort((a, b) => {
+          const valA = a.marca.toLowerCase();
+          const valB = b.marca.toLowerCase();
+          
+          if (this.ordenDireccion === 'asc') {
+            return valA.localeCompare(valB); // Orden ascendente
+          } else {
+            return valB.localeCompare(valA); // Orden descendente
+          }
+        });
+  }
+  
+  async presentAlert (titulo:string, mensaje:string){
+    const alert = await this.alertController.create({
+      header:titulo,
+      message: mensaje,
+      buttons: ['OK']
+    });
+    await alert.present();
+  }
+  ngOnDestroy() {
+    this.subscripciones.unsubscribe(); 
+  }
 
 }

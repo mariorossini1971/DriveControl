@@ -16,7 +16,7 @@ import { Subscription } from 'rxjs';
 
 export class UsuarioDetallePage implements OnInit {
 
-    private subscripciones = new Subscription(); 
+  private subscripciones = new Subscription(); 
       
   
   usuario: any = {
@@ -27,6 +27,7 @@ export class UsuarioDetallePage implements OnInit {
     rol:'',
     contrasena:''
   };
+  
   modo: 'crear' | 'ver' | 'editar' = 'ver';
   idUsuarioActual: string = ''; // id usuario logueado
   rolLogueado: string =''; 
@@ -56,7 +57,6 @@ export class UsuarioDetallePage implements OnInit {
   ionViewWillEnter(){
     this.activarMenu();
     this.controlRol();
-//    this.funcionPrincipal(); 
   }
   
   guardarUsuario(){
@@ -89,7 +89,6 @@ export class UsuarioDetallePage implements OnInit {
           this.navCtrl.navigateBack(['/usuarios']);
         },
         error:() => {
-          console.error("Error al crear usuario", Error); // Log de error
           this.presentAlert('Error', 'No se pudo crear el usuario');
         }
       });
@@ -98,34 +97,31 @@ export class UsuarioDetallePage implements OnInit {
     if (this.modo === 'editar' && this.usuario.id_usuario){
         const datosUsuario = { ...this.usuario };
         if(this.contrasenaControl === this.usuario.contrasena){
-            console.log( "**************************contraseñas igiales")
             delete datosUsuario.contrasena;
         }
-        console.log("contraseña:    ",datosUsuario.contraseña)
-        this.apiService.updateUsuario(this.usuario.id_usuario, datosUsuario).subscribe({
-          next: (response) => {
-            console.log('Respuesta del servidor:', response);
-            this.presentAlert('Éxito', 'Usuario actualizado correctamente');
-           if(this.rolLogueado === 'conductor'){
-               this.navCtrl.navigateBack(['/principal']);
-           }else{
-              this.navCtrl.navigateBack(['/usuarios']);
-           }
-          },
-          error: (err) => {
-            console.error('Error al actualizar:', err);
-            this.presentAlert('Error', 'No se pudo actualizar el usuario');
-          }
-        });
-      }   
-    } 
+        this.subscripciones.add(
+            this.apiService.updateUsuario(this.usuario.id_usuario, datosUsuario).subscribe({
+            next: (response) => {
+              this.presentAlert('Éxito', 'Usuario actualizado correctamente');
+              if(this.rolLogueado === 'conductor'){
+                  this.navCtrl.navigateBack(['/principal']);
+              }else{
+                  this.navCtrl.navigateBack(['/usuarios']);
+              }
+            },
+            error: (err) => {
+              console.error('Error al actualizar:', err);
+              this.presentAlert('Error', 'No se pudo actualizar el usuario');
+            }
+          })
+        );
+     }   
+  } 
   
 
-  cancelarEdicion() {
-    
+  cancelarEdicion() {   
     this.modo = 'ver'; // Cambiar de vuelta al modo de vista (no edición)
     //this.navCtrl.navigateBack(['/principal']);
-
   }
 
   async eliminarUsuario(){
@@ -173,7 +169,7 @@ export class UsuarioDetallePage implements OnInit {
     this.navCtrl.navigateBack(['/usuarios']);
   }
 
-async presentAlert (titulo:string, mensaje:string){
+  async presentAlert (titulo:string, mensaje:string){
     const alert = await this.alertController.create({
       header:titulo,
       message: mensaje,
@@ -196,9 +192,7 @@ async presentAlert (titulo:string, mensaje:string){
       if (this.modo === 'crear') {
         return;
       }else if (state['usuario']){
-    
-        this.usuario = state['usuario'];
-
+       this.usuario = { ...state['usuario'] }   //copia exacta si no no se porque no me lee contraseña
         console.log('Usuario cargado: ', this.usuario); // Verifica que el usuario tiene un id
         this.contrasenaControl = this.usuario.contrasena;
         console.log("contraseña = ", this.contrasenaControl);
@@ -217,33 +211,38 @@ async presentAlert (titulo:string, mensaje:string){
     
   }
 
-activarMenu(){
-  if (this.rolLogueado === 'admin' || this.rolLogueado === 'gestor') {
-    this.menuCtrl.enable(true, 'menuAdmin'); // Activa el menú de administrador
-    this.menuCtrl.enable(false, 'menu'); // Desactiva el menú de conductor
-  } else if (this.rolLogueado === 'conductor') {
-    this.menuCtrl.enable(true, 'menu'); // Activa el menú de conductor
-    this.menuCtrl.enable(false, 'menuAdmin'); // Desactiva el menú de administrador
-  }
-}
-
-controlRol(){
-  this.apiService.cargarRol();
-  this.apiService.rol$.subscribe((rol) => {
-    this.rolLogueado = rol; // Actualiza el valor local
-  });
-  this.cdr.detectChanges();
-  try {
-    const usuarioLogueado = localStorage.getItem('usuario');
-    if (usuarioLogueado) {
-     const usuariolog = JSON.parse(usuarioLogueado); 
-      this.idUsuarioActual = usuariolog.id_usuario;
-      this.nombre = usuariolog.nombre;
-      this.cdr.detectChanges();
+ activarMenu(){
+    if (this.rolLogueado === 'admin' || this.rolLogueado === 'gestor') {
+      this.menuCtrl.enable(true, 'menuAdmin'); // Activa el menú de administrador
+      this.menuCtrl.enable(false, 'menu'); // Desactiva el menú de conductor
+    } else if (this.rolLogueado === 'conductor') {
+      this.menuCtrl.enable(true, 'menu'); // Activa el menú de conductor
+      this.menuCtrl.enable(false, 'menuAdmin'); // Desactiva el menú de administrador
     }
-  } catch (error) {
-    console.error('Error al leer el usuario desde localStorage:', error);
   }
-}
+
+  controlRol(){
+    this.apiService.cargarRol();
+    this.subscripciones.add(
+        this.apiService.rol$.subscribe((rol) => {
+        this.rolLogueado = rol; // Actualiza el valor local
+      })
+    );
+    this.cdr.detectChanges();
+    try {
+      const usuarioLogueado = localStorage.getItem('usuario');
+      if (usuarioLogueado) {
+      const usuariolog = JSON.parse(usuarioLogueado); 
+        this.idUsuarioActual = usuariolog.id_usuario;
+        this.nombre = usuariolog.nombre;
+        this.cdr.detectChanges();
+      }
+    } catch (error) {
+      console.error('Error al leer el usuario desde localStorage:', error);
+    }
+   }
+  ngOnDestroy() {
+      this.subscripciones.unsubscribe(); 
+  }
 
 }

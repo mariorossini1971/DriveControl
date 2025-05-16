@@ -23,7 +23,7 @@ export class ViajesComponent implements OnInit {
 
   private subscripciones = new Subscription(); 
   viajes: any[] = [];
-  control: number = 0;
+ // control: number = 0;
   mensajeLoading: string = 'cargando datos..';
   rol : string | null = '';
   idUsuario: number = 0;

@@ -24,7 +24,7 @@ export class LoginPage implements OnInit {
   public password = '';
   public mensajeLoading = 'Iniciando sesión..';
   public usuario: Usuario = new Usuario(0,'', '','','',0);
-  private rol$: Subscription = new Subscription();
+ // private rol$: Subscription = new Subscription();
   public colorBar: string ='#005BBB';
   public username: string = '';
   private subscripciones = new Subscription(); 
