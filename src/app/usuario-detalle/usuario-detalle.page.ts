@@ -57,6 +57,7 @@ export class UsuarioDetallePage implements OnInit {
   ionViewWillEnter(){
     this.activarMenu();
     this.controlRol();
+  //  this.funcionPrincipal(); 
   }
   
   guardarUsuario(){
@@ -192,11 +193,13 @@ export class UsuarioDetallePage implements OnInit {
       if (this.modo === 'crear') {
         return;
       }else if (state['usuario']){
-       this.usuario = { ...state['usuario'] }   //copia exacta si no no se porque no me lee contraseña
-        console.log('Usuario cargado: ', this.usuario); // Verifica que el usuario tiene un id
+
+        setTimeout(() => {   // me espero para cargar bien los datos, no se porque tarda !!!
+        this.usuario = { ...state['usuario'] };
         this.contrasenaControl = this.usuario.contrasena;
-        console.log("contraseña = ", this.contrasenaControl);
-      
+        console.log("Contraseña después de esperar:", this.contrasenaControl);
+        }, 500);
+        this.cdr.detectChanges();
       } else if ( this.modo === 'editar' || this.modo === 'ver'){
         this.presentAlert('Error', 'No se proporcionó el usuario a editar/ver');
         this.navCtrl.navigateBack('/usuarios');
